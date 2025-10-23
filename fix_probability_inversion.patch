@@ -1,0 +1,50 @@
+
+# PROBABILITY INVERSION FIX
+# Insert this fix into betting_analysis_script.py around line 3920-3925
+
+# BEFORE (problematic code):
+# return SetPrediction(
+#     predicted_winner=predicted_winner,
+#     player1_probability=player1_set_prob,  # May be inverted
+#     player2_probability=player2_set_prob,  # May be inverted
+#     ...
+# )
+
+# AFTER (fixed code):
+# Ensure probabilities match the predicted winner logic
+if predicted_winner == player1.name:
+    # Player1 is predicted winner, should have higher probability
+    corrected_p1_prob = max(player1_set_prob, player2_set_prob)
+    corrected_p2_prob = min(player1_set_prob, player2_set_prob)
+    
+    # Ensure winner has meaningfully higher probability
+    if corrected_p1_prob - corrected_p2_prob < 0.05:  # Less than 5% gap
+        corrected_p1_prob = min(0.73, corrected_p2_prob + 0.08)  # Add 8% gap
+        
+    print(f"✅ PROBABILITY CORRECTION: {player1.name} {corrected_p1_prob:.1%} > {player2.name} {corrected_p2_prob:.1%}")
+else:
+    # Player2 is predicted winner, should have higher probability  
+    corrected_p1_prob = min(player1_set_prob, player2_set_prob)
+    corrected_p2_prob = max(player1_set_prob, player2_set_prob)
+    
+    # Ensure winner has meaningfully higher probability
+    if corrected_p2_prob - corrected_p1_prob < 0.05:  # Less than 5% gap
+        corrected_p2_prob = min(0.73, corrected_p1_prob + 0.08)  # Add 8% gap
+        
+    print(f"✅ PROBABILITY CORRECTION: {player2.name} {corrected_p2_prob:.1%} > {player1.name} {corrected_p1_prob:.1%}")
+
+return SetPrediction(
+    predicted_winner=predicted_winner,
+    confidence_level=final_confidence,
+    predicted_score=predicted_score,
+    win_probability=win_probability,
+    key_factors=key_factors,
+    weight_breakdown=weight_breakdown,
+    reasoning=reasoning,
+    player1_probability=corrected_p1_prob,  # Corrected probabilities
+    player2_probability=corrected_p2_prob,  # Corrected probabilities
+    betting_type="SETS",
+    game_handicap_recommendation=None,
+    alternative_markets=[],
+    market_selection_reason="Standard set betting"
+)

@@ -1,0 +1,108 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =============================================================================
+# SENSITIVE: API Credentials & Endpoints
+# =============================================================================
+# ⚠️  CRITICAL: Never commit these files - they contain API endpoints,
+#              authentication tokens, and headers that could be blocked
+api_secrets.py
+api_config.py
+secrets.py
+.env
+.env.local
+*.pem
+*.key
+
+# =============================================================================
+# SENSITIVE: Data Dumps & Responses
+# =============================================================================
+# Raw API responses and data dumps that could reveal data sources
+data/*.json
+data/api_dumps/*.json
+!data/README.md
+*_response.json
+*_dump.json
+men_utr_full.json
+women_utr_full.json
+utr_analysis_*.json
+
+# =============================================================================
+# CSV Files - Prediction Results
+# =============================================================================
+# Prediction CSVs contain analysis that could reveal methodology
+tennis_predictions*.csv
+all_*.csv
+test_*.csv
+!prediction_archive/README.md
+prediction_archive/*.csv
+
+# Logs
+*.log
+logs/
+*.debug.log
+same_country_debug.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.backup
+*.bak
+*backup*
+
+# Weight configurations (contain strategy)
+weight_comparison_*.json
+
+# Archive old analysis scripts
+archive/
+
+# Private documentation and tests (contain source-specific info)
+.private_docs/
+.private_tests/
+docs/*.md
+*.md
+!README.md
+
+# Test and utility files with hardcoded credentials
+tests/
+test_*.py
+utils/dump_*.py
+debug_*.py
+scripts/utilities/betting_config.py
+scripts/utilities/file_ending.py
