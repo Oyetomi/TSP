@@ -28,8 +28,8 @@ print(f"Status: {money_printer_status}")  # Output: Status: brrrrr
 cp api_secrets.example.py api_secrets.py
 
 # Fill in your API keys (you know which ones)
-# Hint: starts with 's' and ends with 'core' 
-# And the betting one that rhymes with "sporty pet"
+# Hint: One for match data, one for odds
+# Check api_secrets.py - you'll figure it out
 
 # Install stuff
 pip install -r requirements.txt
