@@ -136,11 +136,12 @@ if coin_flip_detected:
 
 ### TODO
 
-- [ ] Actually use the frontend
 - [ ] Stop tweaking weights (80% is good enough)
+- [ ] Remember the frontend exists (it's pretty good actually)
 - [ ] Go outside
 - [ ] Touch grass
 - [x] Hit 80% accuracy
+- [x] Built a functional Next.js frontend
 - [x] Commit to GitHub before I break something
 
 ### The Real MVP
