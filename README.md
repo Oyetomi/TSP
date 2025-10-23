@@ -8,7 +8,7 @@ A tennis prediction system that actually works. Started as a weekend project, ev
 
 A completely over-engineered tennis prediction system that:
 - Started as a weekend project
-- Turned into a full-blown ML-inspired beast
+- Turned into a full-blown statistical analysis beast
 - Actually predicts tennis matches at **~79% accuracy**
 - Makes bookies nervous (probably)
 - Has more files than a tax return
@@ -91,6 +91,8 @@ I have like 12 different `all_*.csv` files with different weight configs:
 Current winner: **2-year mode with loss analysis improvements** = ~79% 👑
 
 ### The Secret Sauce
+
+This is a **statistical model**, not ML. Just weighted math and skip logic:
 
 ```python
 # The magic formula (don't steal this, it took forever)
