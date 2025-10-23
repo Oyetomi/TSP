@@ -1,22 +1,22 @@
 # TSP - Tennis Set Prediction
 
-## ~75% Accuracy
+## ~79% Accuracy
 
-A tennis prediction system that actually works. Started as a weekend project, evolved into something that consistently predicts at 75%. Even Sinner loses sometimes.
+A tennis prediction system that actually works. Started as a weekend project, evolved into something that consistently predicts at 79%. Even Sinner loses sometimes.
 
 ### What is this?
 
 A completely over-engineered tennis prediction system that:
 - Started as a weekend project
 - Turned into a full-blown ML-inspired beast
-- Actually predicts tennis matches at **~75% accuracy**
+- Actually predicts tennis matches at **~79% accuracy**
 - Makes bookies nervous (probably)
 - Has more files than a tax return
 
 ### Does it work?
 
 ```python
-accuracy = 0.75  # Pretty solid
+accuracy = 0.79  # Pretty damn good
 money_printer_status = "working" if accuracy > 0.70 else "needs_work"
 print(f"Status: {money_printer_status}")  # Output: Status: working
 ```
@@ -66,7 +66,7 @@ v3.0: 62% accuracy (ok now we're talking)
 v4.0: 68% accuracy (hot streak!)
 v5.0: 73% accuracy (getting solid)
 v6.0: 74% accuracy (nice)
-v7.0: ~75% accuracy (even Sinner loses sometimes)
+v7.0: ~79% accuracy (wait what)
 ```
 
 ### What Went Wrong (and then right)
@@ -77,7 +77,7 @@ v7.0: ~75% accuracy (even Sinner loses sometimes)
 4. **Fourth version**: Multi-year blending → 68% accuracy 🔥
 5. **Fifth version**: Enhanced form weighting → 73% accuracy 💪
 6. **Sixth version**: Loss analysis (Kypson/Engel taught me lessons) → 74% accuracy 🧠
-7. **Current version**: Everything + opponent quality penalties → **~75% accuracy** (tennis is unpredictable)
+7. **Current version**: Everything + opponent quality penalties → **~79% accuracy** (even Sinner loses sometimes)
 
 ### Configuration Files
 
@@ -88,7 +88,7 @@ I have like 12 different `all_*.csv` files with different weight configs:
 - `all_ML_OPTIMIZED_2024.csv` - When I pretended I knew ML
 - etc.
 
-Current winner: **2-year mode with loss analysis improvements** = ~75% 👑
+Current winner: **2-year mode with loss analysis improvements** = ~79% 👑
 
 ### The Secret Sauce
 
@@ -136,11 +136,11 @@ if coin_flip_detected:
 
 ### TODO
 
-- [ ] Stop tweaking weights (75% is solid)
+- [ ] Stop tweaking weights (79% is really solid)
 - [ ] Remember the frontend exists (it's pretty good actually)
 - [ ] Go outside
 - [ ] Touch grass
-- [x] Hit 75% accuracy (consistently)
+- [x] Hit 79% accuracy (consistently)
 - [x] Built a functional Next.js frontend
 - [x] Commit to GitHub before I break something
 
@@ -157,18 +157,18 @@ if prediction.should_skip:
 This is for research purposes only. Also, I'm not responsible if you:
 - Lose money betting
 - Get addicted to tweaking weights
-- Keep optimizing after hitting 75%
+- Keep optimizing after hitting 79%
 - Develop an unhealthy obsession with set win rates
 - Check predictions at 3am
 
 ### Final Thoughts
 
-~75% accuracy. On tennis predictions. With over-engineered Python code and too many CSV files.
+~79% accuracy. On tennis predictions. With over-engineered Python code and too many CSV files.
 
-Even Sinner loses sometimes. But we're still winning. 🏆
+Even Sinner loses sometimes. But we're winning a lot. 🏆
 
 ---
 
-*Last updated: When it stabilized at ~75% and I accepted that tennis is unpredictable (October 2025)*
+*Last updated: When it hit 79% and I stopped touching it (October 2025)*
 
 *"If it ain't broke, don't commit more changes"* - Ancient programmer wisdom
