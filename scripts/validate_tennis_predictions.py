@@ -17,26 +17,32 @@ from curl_cffi.requests import AsyncSession
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 
+# Add parent directory to path to import api_secrets
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    from api_secrets import PRIMARY_DATA_CONFIG
+except ImportError:
+    print("⚠️  Warning: api_secrets.py not found. Using placeholder config.")
+    PRIMARY_DATA_CONFIG = {
+        'base_url': 'https://www.example.com',
+        'headers': {},
+        'cookies': {}
+    }
+
 class TennisPredictionValidator:
     def __init__(self):
         self.results = []
         self.session = None
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Referer': 'https://www.matchdata-api.example.com/',
-            'Origin': 'https://www.matchdata-api.example.com',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-        }
+        self.base_url = PRIMARY_DATA_CONFIG.get('base_url', 'https://www.example.com')
+        self.headers = PRIMARY_DATA_CONFIG.get('headers', {})
+        self.cookies = PRIMARY_DATA_CONFIG.get('cookies', {})
     
     async def __aenter__(self):
         """Async context manager entry"""
         self.session = AsyncSession(
             headers=self.headers,
+            cookies=self.cookies,
             impersonate="chrome120",
             timeout=30
         )
@@ -89,7 +95,7 @@ class TennisPredictionValidator:
     async def get_tennis_matches_for_date(self, date_str: str) -> List[Dict]:
         """Get tennis matches for a specific date using MatchDataProvider API"""
         try:
-            url = f"https://www.matchdata-api.example.com/api/v1/sport/tennis/scheduled-events/{date_str}"
+            url = f"{self.base_url}/api/v1/sport/tennis/scheduled-events/{date_str}"
             
             response = await self.session.get(url)
             
@@ -217,7 +223,7 @@ class TennisPredictionValidator:
             print(f"   📊 Fetching results for event {event_id}...")
             
             # Use the existing MatchDataProvider integration from the player service
-            url = f"https://www.matchdata-api.example.com/api/v1/event/{event_id}"
+            url = f"{self.base_url}/api/v1/event/{event_id}"
             
             response = await self.session.get(url)
             
