@@ -1,8 +1,8 @@
-# 🎾 Tennis Money Printer Go Brrrr 💰
+# TSP - Tennis Set Prediction
 
-## Status: **80% ACCURACY BABY!** 🚀
+## 80% Accuracy Achieved
 
-Yeah, you read that right. EIGHTY PERCENT. This thing actually works.
+A tennis prediction system that actually works. Started as a weekend project, evolved into something that consistently predicts at 80%.
 
 ### What is this?
 
