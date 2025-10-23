@@ -157,9 +157,9 @@ if prediction.should_skip:
 This is for research purposes only. Also, I'm not responsible if you:
 - Lose money betting
 - Get addicted to tweaking weights
-- Spend 6 months on a "weekend project"
-- Try to explain your code to non-technical friends
+- Keep optimizing after hitting 80%
 - Develop an unhealthy obsession with set win rates
+- Check predictions at 3am
 
 ### Final Thoughts
 
