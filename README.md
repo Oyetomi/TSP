@@ -85,7 +85,7 @@ I have like 12 different `all_*.csv` files with different weight configs:
 - `all_HOT_STREAK_74PCT_BACKUP.csv` - The OG that hit 74%
 - `all_LOSS_ANALYSIS_FIX_V1.csv` - After fixing the Kypson disaster
 - `all_ULTRA_CONSERVATIVE_90PCT.csv` - For when I'm feeling scared
-- `all_ML_OPTIMIZED_2024.csv` - When I pretended I knew ML
+- `all_ML_OPTIMIZED_2024.csv` - ML-inspired weights (not actual ML, just fancy tuning)
 - etc.
 
 Current winner: **2-year mode with loss analysis improvements** = ~79% 👑
