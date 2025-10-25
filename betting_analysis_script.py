@@ -3420,7 +3420,7 @@ class TennisBettingAnalyzer:
                     else:
                         key_factors.append(f"{player1.name} has better ATP/WTA ranking (#{p1_ranking} vs #{p2_ranking})")
                     
-                    score_contribution = self.WEIGHTS['atp_ranking'] * atp_factor
+                    score_contribution = self.WEIGHTS.get('atp_ranking', self.WEIGHTS.get('ranking_advantage', 0.10)) * atp_factor
                     player1_score += score_contribution
                     print(f"   ✅ {player1.name} +{score_contribution:.3f} | Running total: P1={player1_score:.3f}, P2={player2_score:.3f}")
                 else:
@@ -3436,7 +3436,7 @@ class TennisBettingAnalyzer:
                     else:
                         key_factors.append(f"{player2.name} has better ATP/WTA ranking (#{p2_ranking} vs #{p1_ranking})")
                     
-                    score_contribution = self.WEIGHTS['atp_ranking'] * atp_factor
+                    score_contribution = self.WEIGHTS.get('atp_ranking', self.WEIGHTS.get('ranking_advantage', 0.10)) * atp_factor
                     player2_score += score_contribution
                     print(f"   ✅ {player2.name} +{score_contribution:.3f} | Running total: P1={player1_score:.3f}, P2={player2_score:.3f}")
                 
