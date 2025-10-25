@@ -121,8 +121,8 @@ class PredictionConfig:
         
         # Multi-Year Statistics Configuration
         self.MULTI_YEAR_STATS = {
-            'enable_three_year_stats': False,     # Master toggle: False = 2 years (2024-2025), True = 3 years (2023-2024-2025)
-            'years_to_fetch': 2,                  # Number of years to fetch (2 or 3)
+            'enable_three_year_stats': True,      # Master toggle: False = 2 years (2024-2025), True = 3 years (2023-2024-2025)
+            'years_to_fetch': 3,                  # Number of years to fetch (2 or 3)
             'min_years_required': 2,              # Minimum years with data required (e.g., 2 out of 3)
             'year_weights': {
                 'two_year_mode': {
