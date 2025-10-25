@@ -5073,6 +5073,11 @@ class TennisBettingAnalyzer:
         # Initialize CSV file variable to prevent "referenced before assignment" errors
         csv_file = None
         
+        # Network failure circuit breaker
+        consecutive_network_failures = 0
+        network_failure_threshold = 3  # Stop after 3 consecutive network failures
+        network_failure_wait_time = 30  # Wait 30 seconds before retrying
+        
         try:
             # Get scheduled events from MatchDataProvider
             from datetime import date
@@ -5303,6 +5308,7 @@ class TennisBettingAnalyzer:
             
             def analyze_single_match(match_pair):
                 """Analyze a single match - this function runs in its own thread"""
+                nonlocal consecutive_network_failures  # Allow modification of outer variable
                 try:
                     # Extract MatchDataProvider and OddsProvider data
                     match_data_match = match_pair['match_data_match']
@@ -5395,9 +5401,13 @@ class TennisBettingAnalyzer:
                             player2_profile = future2.result(timeout=45)
                             
                         print(f"[Thread-{thread_id}] ✅ Concurrent fetch successful!")
+                        consecutive_network_failures = 0  # Reset on success
                             
                     except (concurrent.futures.TimeoutError, Exception) as e:
                         print(f"[Thread-{thread_id}]    ⚠️ Concurrent fetch failed ({type(e).__name__}), trying sequential with retries...")
+                        
+                        # Track last error for network failure detection
+                        last_error = None
                         
                         # Sequential retry for player 1
                         for attempt in range(3):
@@ -5405,6 +5415,7 @@ class TennisBettingAnalyzer:
                                 player1_profile = self.get_enhanced_player_profile(match_data_match['home_team'].id, surface=surface)
                                 break
                             except Exception as e:
+                                last_error = e
                                 if attempt == 2:
                                     print(f"[Thread-{thread_id}]    ❌ Failed to fetch {player1_name} profile after 3 attempts: {e}")
                                     break
@@ -5416,6 +5427,7 @@ class TennisBettingAnalyzer:
                                 player2_profile = self.get_enhanced_player_profile(match_data_match['away_team'].id, surface=surface)
                                 break
                             except Exception as e:
+                                last_error = e
                                 if attempt == 2:
                                     print(f"[Thread-{thread_id}]    ❌ Failed to fetch {player2_name} profile after 3 attempts: {e}")
                                     break
@@ -5428,6 +5440,25 @@ class TennisBettingAnalyzer:
                             missing_players.append(player1_name)
                         if not player2_profile:
                             missing_players.append(player2_name)
+                        
+                        # Check if this is a network failure (connection timeout)
+                        # If so, increment the consecutive failure counter
+                        if 'last_error' in locals() and last_error and ('Connection timed out' in str(last_error) or 'curl: (28)' in str(last_error)):
+                            consecutive_network_failures += 1
+                            print(f"[Thread-{thread_id}] 🌐 Network failure detected ({consecutive_network_failures}/{network_failure_threshold})")
+                            
+                            # Check if we've hit the threshold
+                            if consecutive_network_failures >= network_failure_threshold:
+                                print(f"\n⚠️⚠️⚠️ NETWORK FAILURE CIRCUIT BREAKER TRIGGERED ⚠️⚠️⚠️")
+                                print(f"   Detected {consecutive_network_failures} consecutive network failures")
+                                print(f"   Pausing for {network_failure_wait_time} seconds to allow network recovery...")
+                                import time
+                                time.sleep(network_failure_wait_time)
+                                print(f"   Attempting to continue...")
+                                consecutive_network_failures = 0  # Reset after wait
+                        else:
+                            # Not a network failure, reset counter
+                            consecutive_network_failures = 0
                         
                         print(f"[Thread-{thread_id}] ❌ SKIPPING MATCH: {player1_name} vs {player2_name}")
                         print(f"[Thread-{thread_id}]    Reason: Unable to fetch real data for: {', '.join(missing_players)}")
