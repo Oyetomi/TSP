@@ -1,0 +1,43 @@
+{
+  "configs": {
+    "CLUTCH_V1_20251025": {
+      "name": "Clutch-Focused Configuration V1",
+      "description": "Increased clutch/surface weights, reduced form weight after Fonseca/Munar analysis. Better for tight matches.",
+      "created": "2025-10-25",
+      "weights": {
+        "set_performance": 0.3,
+        "recent_form": 0.18,
+        "clutch_factor": 0.13,
+        "surface_performance": 0.13,
+        "momentum": 0.11,
+        "ranking_advantage": 0.1,
+        "physical_factors": 0.05
+      },
+      "features": {
+        "tiebreak_performance": false,
+        "pressure_performance": false,
+        "serve_dominance": false,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": true
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-10-25"
+      }
+    }
+  },
+  "active_config": "CLUTCH_V1_20251025",
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2025-10-25",
+    "total_configs": 1
+  }
+}
