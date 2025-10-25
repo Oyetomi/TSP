@@ -3240,7 +3240,7 @@ class TennisBettingAnalyzer:
                 total_matches2 = recent_form2.get('matches_analyzed', 0)
                 
                 if total_matches1 > 0:
-                    quality_match_pct1 = quality_perf1['matches_vs_quality'] / total_matches1 if total_matches1 > 0 else 0
+                    quality_match_pct1 = quality_perf1.get('matches_played', quality_perf1.get('matches_vs_quality', 0)) / total_matches1 if total_matches1 > 0 else 0
                     if quality_match_pct1 < quality_threshold:
                         opponent_quality_penalty1 = 1.0 - penalty_amount
                         print(f"\n⚠️ OPPONENT QUALITY PENALTY - {player1.name}:")
@@ -3248,7 +3248,7 @@ class TennisBettingAnalyzer:
                         print(f"   📉 Applying {penalty_amount:.1%} penalty to set performance (likely inflated by weak competition)")
                 
                 if total_matches2 > 0:
-                    quality_match_pct2 = quality_perf2['matches_vs_quality'] / total_matches2 if total_matches2 > 0 else 0
+                    quality_match_pct2 = quality_perf2.get('matches_played', quality_perf2.get('matches_vs_quality', 0)) / total_matches2 if total_matches2 > 0 else 0
                     if quality_match_pct2 < quality_threshold:
                         opponent_quality_penalty2 = 1.0 - penalty_amount
                         print(f"\n⚠️ OPPONENT QUALITY PENALTY - {player2.name}:")
@@ -3353,7 +3353,7 @@ class TennisBettingAnalyzer:
                     else:
                         key_factors.append(f"{player1.name} has superior UTR skill ({p1_utr:.2f} vs {p2_utr:.2f})")
                     
-                    score_contribution = self.WEIGHTS['utr_rating'] * utr_factor
+                    score_contribution = self.WEIGHTS.get('utr_rating', self.WEIGHTS.get('ranking_advantage', 0.10)) * utr_factor
                     player1_score += score_contribution
                     print(f"   ✅ {player1.name} +{score_contribution:.3f} | Running total: P1={player1_score:.3f}, P2={player2_score:.3f}")
                     if player1.utr_verified:
@@ -3371,7 +3371,7 @@ class TennisBettingAnalyzer:
                     else:
                         key_factors.append(f"{player2.name} has superior UTR skill ({p2_utr:.2f} vs {p1_utr:.2f})")
                     
-                    score_contribution = self.WEIGHTS['utr_rating'] * utr_factor
+                    score_contribution = self.WEIGHTS.get('utr_rating', self.WEIGHTS.get('ranking_advantage', 0.10)) * utr_factor
                     player2_score += score_contribution
                     print(f"   ✅ {player2.name} +{score_contribution:.3f} | Running total: P1={player1_score:.3f}, P2={player2_score:.3f}")
                     if player2.utr_verified:
