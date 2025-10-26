@@ -3157,9 +3157,11 @@ class TennisBettingAnalyzer:
             total_matches1 = (recent_match_count1 * 0.75) + (comprehensive_matches1 * 0.25)
             total_matches2 = (recent_match_count2 * 0.75) + (comprehensive_matches2 * 0.25)
             
-            # Confidence factor: reaches 100% confidence at 20 matches, scales linearly below
-            confidence1 = min(total_matches1 / 20.0, 1.0)
-            confidence2 = min(total_matches2 / 20.0, 1.0)
+            # STRICTER THRESHOLD: reaches 100% confidence at 35 matches (was 20)
+            # This addresses the "hot streak illusion" from small samples
+            SAMPLE_CONFIDENCE_THRESHOLD = 35.0
+            confidence1 = min(total_matches1 / SAMPLE_CONFIDENCE_THRESHOLD, 1.0)
+            confidence2 = min(total_matches2 / SAMPLE_CONFIDENCE_THRESHOLD, 1.0)
             
             # Apply confidence weighting: (actual_rate * confidence) + (50% * (1 - confidence))
             set_win_rate1 = (raw_rate1 * confidence1) + (0.50 * (1 - confidence1))
@@ -3168,11 +3170,11 @@ class TennisBettingAnalyzer:
             print(f"\n⚖️ SAMPLE-SIZE WEIGHTED SET WIN RATES:")
             print(f"   📊 {player1.name}:")
             print(f"      Raw rate: {raw_rate1:.1%} from {total_matches1:.1f} matches")
-            print(f"      Confidence: {confidence1:.1%} (100% at 20+ matches)")
+            print(f"      Confidence: {confidence1:.1%} (100% at {SAMPLE_CONFIDENCE_THRESHOLD:.0f}+ matches)")
             print(f"      Adjusted rate: {set_win_rate1:.1%} (regressed toward 50% by {(1-confidence1)*100:.1f}%)")
             print(f"   📊 {player2.name}:")
             print(f"      Raw rate: {raw_rate2:.1%} from {total_matches2:.1f} matches")
-            print(f"      Confidence: {confidence2:.1%} (100% at 20+ matches)")
+            print(f"      Confidence: {confidence2:.1%} (100% at {SAMPLE_CONFIDENCE_THRESHOLD:.0f}+ matches)")
             print(f"      Adjusted rate: {set_win_rate2:.1%} (regressed toward 50% by {(1-confidence2)*100:.1f}%)")
             
             # IMPROVED: Use fair ranking threshold for quality opposition analysis
@@ -3268,6 +3270,37 @@ class TennisBettingAnalyzer:
                 print(f"   ⚠️ {player1.name}: Insufficient quality opposition data ({quality_perf1['total_sets']} sets), using 0% bonus")
             if not quality_perf2['has_sufficient_data']:
                 print(f"   ⚠️ {player2.name}: Insufficient quality opposition data ({quality_perf2['total_sets']} sets), using 0% bonus")
+            
+            # RANKING GAP PENALTY: Discount set_performance advantage when lower-ranked player looks better
+            # This addresses "hot streak illusion" where #116 player looks better than #44 player
+            ranking_gap_penalty1 = 1.0
+            ranking_gap_penalty2 = 1.0
+            
+            if opponent_ranking_for_p1 and opponent_ranking_for_p2:
+                ranking_gap = abs(opponent_ranking_for_p1 - opponent_ranking_for_p2)
+                
+                # Apply penalty if ranking gap > 50 places AND lower-ranked player has better set_performance
+                if ranking_gap > 50:
+                    if opponent_ranking_for_p1 > opponent_ranking_for_p2 and set_performance1 > set_performance2:
+                        # P1 is lower ranked but looks better - apply penalty to P1
+                        penalty_factor = min(ranking_gap / 200.0, 0.30)  # Max 30% penalty
+                        ranking_gap_penalty1 = 1.0 - penalty_factor
+                        print(f"\n⚠️ RANKING GAP PENALTY:")
+                        print(f"   {player1.name} ranked #{opponent_ranking_for_p1} vs {player2.name} ranked #{opponent_ranking_for_p2}")
+                        print(f"   Gap: {ranking_gap} places - Applying {penalty_factor:.1%} penalty to {player1.name}'s set performance")
+                        print(f"   Reason: Lower-ranked player's hot streak may not hold against class")
+                    elif opponent_ranking_for_p2 > opponent_ranking_for_p1 and set_performance2 > set_performance1:
+                        # P2 is lower ranked but looks better - apply penalty to P2
+                        penalty_factor = min(ranking_gap / 200.0, 0.30)  # Max 30% penalty
+                        ranking_gap_penalty2 = 1.0 - penalty_factor
+                        print(f"\n⚠️ RANKING GAP PENALTY:")
+                        print(f"   {player2.name} ranked #{opponent_ranking_for_p2} vs {player1.name} ranked #{opponent_ranking_for_p1}")
+                        print(f"   Gap: {ranking_gap} places - Applying {penalty_factor:.1%} penalty to {player2.name}'s set performance")
+                        print(f"   Reason: Lower-ranked player's hot streak may not hold against class")
+            
+            # Apply ranking gap penalty
+            set_performance1 *= ranking_gap_penalty1
+            set_performance2 *= ranking_gap_penalty2
             
             set_diff = set_performance1 - set_performance2
             print(f"   📊 Performance Difference: {set_diff:+.3f}")

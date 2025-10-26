@@ -32,12 +32,43 @@
         "roi": 0.0,
         "last_updated": "2025-10-25"
       }
+    },
+    "CLUTCH_V2_20251026": {
+      "name": "Class Over Form V2",
+      "description": "Fixed hot-streak bias. Respects ranking class over recent form. Addresses L.Sun vs A.Li and Fonseca vs Munar losses. Ranking +50%, Form -20%.",
+      "created": "2025-10-26",
+      "weights": {
+        "set_performance": 0.3,
+        "recent_form": 0.12,
+        "clutch_factor": 0.15,
+        "surface_performance": 0.15,
+        "momentum": 0.08,
+        "ranking_advantage": 0.15,
+        "physical_factors": 0.05
+      },
+      "features": {
+        "tiebreak_performance": false,
+        "pressure_performance": false,
+        "serve_dominance": false,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-10-26"
+      }
     }
   },
-  "active_config": "CLUTCH_V1_20251025",
+  "active_config": "CLUTCH_V2_20251026",
   "metadata": {
     "version": "1.0",
-    "last_updated": "2025-10-25",
-    "total_configs": 1
+    "last_updated": "2025-10-26",
+    "total_configs": 2
   }
 }
