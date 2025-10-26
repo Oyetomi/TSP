@@ -64,18 +64,19 @@
         "last_updated": "2025-10-26"
       }
     },
-    "HOT_STREAK_V1": {
-      "name": "Hot Streak Configuration",
-      "description": "Emphasizes recent form and momentum. For catching players on a hot streak. Ignores long-term class differences.",
+    "HOT_STREAK_74PCT": {
+      "name": "Hot Streak 74% Baseline",
+      "description": "Original 74% accuracy baseline weights. Balanced approach with strong set performance and recent form focus.",
       "created": "2025-10-26",
       "weights": {
-        "recent_form": 0.35,
-        "momentum": 0.2,
-        "set_performance": 0.2,
+        "set_performance": 0.28,
+        "recent_form": 0.2,
+        "momentum": 0.11,
         "surface_performance": 0.1,
-        "clutch_factor": 0.08,
-        "ranking_advantage": 0.05,
-        "physical_factors": 0.02
+        "clutch_factor": 0.09,
+        "ranking_advantage": 0.09,
+        "return_of_serve": 0.08,
+        "physical_factors": 0.05
       },
       "features": {
         "tiebreak_performance": false,
@@ -83,7 +84,9 @@
         "serve_dominance": false,
         "enhanced_year_blending": true,
         "crowd_sentiment": true,
-        "dual_weighted_form": true
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": true
       },
       "performance": {
         "total_bets": 0,
@@ -96,7 +99,7 @@
       }
     }
   },
-  "active_config": "HOT_STREAK_V1",
+  "active_config": "HOT_STREAK_74PCT",
   "metadata": {
     "version": "1.0",
     "last_updated": "2025-10-26",
