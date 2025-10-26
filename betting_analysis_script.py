@@ -3193,8 +3193,10 @@ class TennisBettingAnalyzer:
             avg_matches_analyzed = matches_analyzed / 2 if matches_analyzed > 0 else 0
             
             # Get individual player data for hard minimum checks
-            player1_sets = quality_perf1['total_sets']
-            player2_sets = quality_perf2['total_sets']
+            # CRITICAL: Use TOTAL sets from ALL matches, not just quality opposition!
+            # quality_perf only counts sets vs ranked opponents - could be 0 even if player played 2 sets
+            player1_sets = recent_form1.get('form_data', {}).get('total_sets_won', 0) + recent_form1.get('form_data', {}).get('total_sets_lost', 0)
+            player2_sets = recent_form2.get('form_data', {}).get('total_sets_won', 0) + recent_form2.get('form_data', {}).get('total_sets_lost', 0)
             player1_matches = recent_form1.get('matches_analyzed', 0)
             player2_matches = recent_form2.get('matches_analyzed', 0)
             min_sets = min(player1_sets, player2_sets)
