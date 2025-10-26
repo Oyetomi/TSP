@@ -17,7 +17,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 
 - **Prediction Accuracy**: ~79%
 - **Analysis Depth**: Multi-year statistical modeling
-- **Data Sources**: SofaScore match data, UTR ratings, ATP/WTA rankings
+- **Data Sources**: Professional match data, UTR ratings, ATP/WTA rankings
 - **Prediction Focus**: +1.5 set markets (player wins ≥1 set)
 
 ---
@@ -64,8 +64,8 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **Features**: Real-time filtering, match selection, odds integration
 
 ### Data Sources
-- **Match Data**: SofaScore (public endpoints)
-- **Odds**: SportyBet (public API)
+- **Match Data**: Professional tennis data providers
+- **Odds**: Leading bookmaker APIs
 - **Player Ratings**: UTR (Universal Tennis Rating)
 - **Rankings**: ATP/WTA official rankings
 
@@ -197,21 +197,21 @@ Matches are automatically excluded when:
 
 ---
 
-## Data Sources
+## Data Acquisition
 
-### Odds Provider
-Data fetched from SportyBet for:
-- Real-time odds fetching
+### Odds Data
+Real-time odds sourced from leading bookmakers:
 - +1.5 and +2.5 set markets
+- Multiple bookmaker comparison
 - Automated bet slip generation
-- Share code creation
+- Live odds updates
 
-### Match Data Source
-Data fetched from SofaScore includes:
-- Comprehensive match history
-- Player statistics
+### Match Data
+Comprehensive match data includes:
+- Historical match records
+- Player performance statistics
 - Head-to-head records
-- Tournament information
+- Tournament and surface information
 
 ---
 
