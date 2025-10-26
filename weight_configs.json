@@ -97,12 +97,48 @@
         "roi": 0.0,
         "last_updated": "2025-10-26"
       }
+    },
+    "FORM_OPTIMIZED_OCT2025": {
+      "name": "Form-Optimized October 2025",
+      "description": "Enhanced configuration with recent form emphasis (23%) and new granular features: serve dominance, pressure performance, tiebreak performance. Reduced ranking weight for better edge detection.",
+      "created": "2025-10-26",
+      "weights": {
+        "set_performance": 0.3,
+        "recent_form": 0.23,
+        "utr_rating": 0.1,
+        "ranking_advantage": 0.08,
+        "return_of_serve": 0.08,
+        "surface_performance": 0.08,
+        "momentum": 0.05,
+        "serve_dominance": 0.03,
+        "pressure_performance": 0.03,
+        "tiebreak_performance": 0.02
+      },
+      "features": {
+        "tiebreak_performance": true,
+        "pressure_performance": true,
+        "serve_dominance": true,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": true
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-10-26"
+      }
     }
   },
-  "active_config": "HOT_STREAK_74PCT",
+  "active_config": "FORM_OPTIMIZED_OCT2025",
   "metadata": {
     "version": "1.0",
     "last_updated": "2025-10-26",
-    "total_configs": 3
+    "total_configs": 4
   }
 }
