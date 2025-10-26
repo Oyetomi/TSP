@@ -3192,9 +3192,17 @@ class TennisBettingAnalyzer:
             matches_analyzed = recent_form1.get('matches_analyzed', 0) + recent_form2.get('matches_analyzed', 0)
             avg_matches_analyzed = matches_analyzed / 2 if matches_analyzed > 0 else 0
             
+            # Get individual player data for hard minimum checks
+            player1_sets = quality_perf1['total_sets']
+            player2_sets = quality_perf2['total_sets']
+            player1_matches = recent_form1.get('matches_analyzed', 0)
+            player2_matches = recent_form2.get('matches_analyzed', 0)
+            min_sets = min(player1_sets, player2_sets)
+            min_matches = min(player1_matches, player2_matches)
+            
             data_quality_check = self.config.check_data_quality_gates(
-                set_sample_size=total_sets_analyzed,
-                match_sample_size=int(avg_matches_analyzed),
+                set_sample_size=min_sets,  # Use MINIMUM, not total!
+                match_sample_size=min_matches,  # Use MINIMUM, not average!
                 surface_quality="strong"  # Placeholder - could be enhanced
             )
             
@@ -3203,7 +3211,9 @@ class TennisBettingAnalyzer:
                 print(f"\n🚫 CRITICAL DATA INSUFFICIENCY - SKIPPING MATCH!")
                 print(f"   Risk Level: {data_quality_check['risk_level']}")
                 print(f"   Reason: {data_quality_check['skip_reason']}")
-                print(f"   ⚠️  Making predictions on {total_sets_analyzed} sets would be random noise")
+                print(f"   📊 {player1.name}: {player1_sets} sets, {player1_matches} matches")
+                print(f"   📊 {player2.name}: {player2_sets} sets, {player2_matches} matches")
+                print(f"   ⚠️  Making predictions with {min_sets} min sets / {min_matches} min matches would be random noise")
                 
                 # Log the skip
                 self.skip_logger.log_skip(
