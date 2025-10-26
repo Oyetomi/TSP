@@ -5504,20 +5504,32 @@ class TennisBettingAnalyzer:
                         if not player2_profile:
                             missing_players.append(player2_name)
                         
-                        # Check if this is a network failure (connection timeout)
+                        # Check if this is a network failure (DNS, connection timeout, etc.)
                         # If so, increment the consecutive failure counter
-                        if 'last_error' in locals() and last_error and ('Connection timed out' in str(last_error) or 'curl: (28)' in str(last_error)):
+                        error_str = str(last_error) if 'last_error' in locals() and last_error else ""
+                        is_network_failure = (
+                            'Connection timed out' in error_str or 
+                            'curl: (28)' in error_str or
+                            'Could not resolve host' in error_str or  # DNS failure
+                            'curl: (6)' in error_str or  # DNS resolution error
+                            'curl: (7)' in error_str or  # Failed to connect
+                            'curl: (35)' in error_str  # SSL/connection error
+                        )
+                        
+                        if is_network_failure:
                             consecutive_network_failures += 1
                             print(f"[Thread-{thread_id}] 🌐 Network failure detected ({consecutive_network_failures}/{network_failure_threshold})")
+                            print(f"[Thread-{thread_id}]    Error: {error_str[:100]}")
                             
                             # Check if we've hit the threshold
                             if consecutive_network_failures >= network_failure_threshold:
                                 print(f"\n⚠️⚠️⚠️ NETWORK FAILURE CIRCUIT BREAKER TRIGGERED ⚠️⚠️⚠️")
                                 print(f"   Detected {consecutive_network_failures} consecutive network failures")
-                                print(f"   Pausing for {network_failure_wait_time} seconds to allow network recovery...")
+                                print(f"   Network is likely down - pausing for {network_failure_wait_time} seconds...")
+                                print(f"   Error type: DNS/Connection failure")
                                 import time
                                 time.sleep(network_failure_wait_time)
-                                print(f"   Attempting to continue...")
+                                print(f"   Attempting to continue after network recovery wait...")
                                 consecutive_network_failures = 0  # Reset after wait
                         else:
                             # Not a network failure, reset counter
