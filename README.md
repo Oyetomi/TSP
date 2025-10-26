@@ -64,8 +64,8 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **Features**: Real-time filtering, match selection, odds integration
 
 ### Data Sources
-- **Match Data**: SofaScore API
-- **Odds**: SportyBet integration
+- **Match Data**: SofaScore (public endpoints)
+- **Odds**: SportyBet (public API)
 - **Player Ratings**: UTR (Universal Tennis Rating)
 - **Rankings**: ATP/WTA official rankings
 
@@ -197,17 +197,17 @@ Matches are automatically excluded when:
 
 ---
 
-## API Integration
+## Data Sources
 
 ### Odds Provider
-Integrates with SportyBet API for:
+Data fetched from SportyBet for:
 - Real-time odds fetching
 - +1.5 and +2.5 set markets
 - Automated bet slip generation
 - Share code creation
 
-### Match Data Provider
-SofaScore integration provides:
+### Match Data Source
+Data fetched from SofaScore includes:
 - Comprehensive match history
 - Player statistics
 - Head-to-head records
