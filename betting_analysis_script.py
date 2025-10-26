@@ -5337,8 +5337,8 @@ class TennisBettingAnalyzer:
                     # Prepare CSV headers
                     csv_fieldnames = [
                         'date', 'time', 'event_id', 'tournament', 'surface',
-                        'player1_name', 'player1_age', 'player1_gender', 'player1_country', 'player1_ranking', 'player1_utr_rating', 'player1_form_score',
-                        'player2_name', 'player2_age', 'player2_gender', 'player2_country', 'player2_ranking', 'player2_utr_rating', 'player2_form_score',
+                        'player1_id', 'player1_name', 'player1_age', 'player1_gender', 'player1_country', 'player1_ranking', 'player1_utr_rating', 'player1_form_score',
+                        'player2_id', 'player2_name', 'player2_age', 'player2_gender', 'player2_country', 'player2_ranking', 'player2_utr_rating', 'player2_form_score',
                         'predicted_winner', 'predicted_score', 'confidence', 'win_probability',
                         'player1_set_probability', 'player2_set_probability',  # Add individual probabilities
                         'recommended_bet', 'key_factors', 'reasoning', 'weight_breakdown',
@@ -5755,6 +5755,7 @@ class TennisBettingAnalyzer:
                         'event_id': match_data_match['event_id'],
                         'tournament': tournament.name if tournament else 'Unknown',
                         'surface': surface,
+                        'player1_id': match_data_match['home_team'].id,
                         'player1_name': player1_name,
                         'player1_age': player1_profile.age,
                         'player1_gender': self._convert_gender(player1_profile.gender),
@@ -5762,6 +5763,7 @@ class TennisBettingAnalyzer:
                         'player1_ranking': player1_profile.atp_ranking or player1_profile.wta_ranking,
                         'player1_utr_rating': player1_profile.utr_rating,
                         'player1_form_score': player1_profile.recent_form_score,
+                        'player2_id': match_data_match['away_team'].id,
                         'player2_name': player2_name,
                         'player2_age': player2_profile.age,
                         'player2_gender': self._convert_gender(player2_profile.gender),
