@@ -173,15 +173,18 @@ Matches are automatically excluded when:
 
 ---
 
-## Validated Results
+## Production Dataset Analysis
 
 **HOT_STREAK_74PCT Configuration** (Sept 22 - Oct 1, 2025)
 
-### Dataset Overview
-- **1,191** matches analyzed across 10 days
-- **1,166** predictions made (97.9% acceptance rate)
-- **116.6** average predictions per day
+### Prediction Volume
+- **1,191** total rows in dataset
+- **733** duplicates removed (same match predicted multiple times)
+- **458** unique predictions generated
+- **45.8** average unique predictions per day
 - **69.4%** high-confidence predictions (≥73% win probability)
+
+> **Note**: Raw dataset contained significant duplicates. After deduplication, 458 unique match predictions remain. These statistics represent prediction quality metrics. **Actual win/loss validation requires completed match results** - this dataset is from September 2025 and requires post-match verification.
 
 ### Prediction Distribution
 
@@ -199,15 +202,26 @@ Matches are automatically excluded when:
 - Men's Matches: 773 (66.3%)
 - Women's Matches: 393 (33.7%)
 
-### Quality Metrics
-- **Average Win Probability**: 68.5%
-- **Median Win Probability**: 73.0%
+### Prediction Quality Metrics
+- **Average Predicted Win Probability**: 68.5%
+- **Median Predicted Win Probability**: 73.0%
 - **Skip Rate**: 2.1% (25 matches excluded for data quality)
+- **Actual Win Rate**: Requires post-match result validation
 
 ### Tournament Coverage
 Top analyzed tournaments: Beijing (439 matches), Tokyo (94), Shanghai (65), Orleans (67), Lisbon (58), and 10+ international challenger events.
 
 **Risk Management**: Only 2.1% of matches were skipped, demonstrating strong data quality standards while maintaining high prediction volume.
+
+### Win/Loss Tracking
+
+To validate actual prediction accuracy:
+
+1. **Post-Match Verification**: Compare predictions against final match results
+2. **Tracking Script**: Use result verification tools to match `event_id` with outcomes
+3. **Performance Metrics**: Calculate actual win rate, ROI, and confidence calibration
+
+**Why This Matters**: Predicted win probability (68.5%) represents the model's confidence. Actual win rate validation shows real-world performance. Historical testing suggests 79% accuracy, but each dataset should be independently validated.
 
 ---
 
