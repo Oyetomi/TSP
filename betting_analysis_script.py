@@ -3198,6 +3198,24 @@ class TennisBettingAnalyzer:
                 surface_quality="strong"  # Placeholder - could be enhanced
             )
             
+            # CRITICAL: Check if match should be skipped due to insufficient data
+            if data_quality_check.get('should_skip', False):
+                print(f"\n🚫 CRITICAL DATA INSUFFICIENCY - SKIPPING MATCH!")
+                print(f"   Risk Level: {data_quality_check['risk_level']}")
+                print(f"   Reason: {data_quality_check['skip_reason']}")
+                print(f"   ⚠️  Making predictions on {total_sets_analyzed} sets would be random noise")
+                
+                # Log the skip
+                self.skip_logger.log_skip(
+                    reason_type="INSUFFICIENT_DATA",
+                    player1_name=player1.name,
+                    player2_name=player2.name,
+                    tournament=tournament_name,
+                    surface=surface,
+                    details=data_quality_check['skip_reason']
+                )
+                return None  # Skip this match
+            
             if data_quality_check['apply_discounts']:
                 print(f"\n⚠️ DATA QUALITY GATES TRIGGERED!")
                 print(f"   Risk Level: {data_quality_check['risk_level']}")

@@ -177,6 +177,8 @@ class PredictionConfig:
             # Data Quality Thresholds
             'minimum_set_sample_size': 25,             # Minimum sets for reliable performance data
             'minimum_match_sample_size': 15,           # Minimum matches for form analysis
+            'absolute_minimum_sets': 5,                # HARD SKIP: Skip match entirely if ANY player has < 5 sets
+            'absolute_minimum_matches': 3,             # HARD SKIP: Skip match entirely if ANY player has < 3 matches
             'surface_quality_discount': 0.5,           # Discount factor for poor quality surface data
             'form_quality_discount': 0.3,              # Discount factor for small form samples
             
@@ -490,8 +492,23 @@ class PredictionConfig:
             'form_discount': 1.0,
             'surface_discount': 1.0,
             'warnings': [],
-            'risk_level': 'LOW'
+            'risk_level': 'LOW',
+            'should_skip': False,
+            'skip_reason': ''
         }
+        
+        # HARD SKIP: Check absolute minimums (too little data = random predictions)
+        if set_sample_size < self.RISK_MANAGEMENT['absolute_minimum_sets']:
+            result['should_skip'] = True
+            result['skip_reason'] = f'Insufficient set data: {set_sample_size} sets < {self.RISK_MANAGEMENT["absolute_minimum_sets"]} minimum (predictions would be random noise)'
+            result['risk_level'] = 'CRITICAL'
+            return result
+        
+        if match_sample_size < self.RISK_MANAGEMENT['absolute_minimum_matches']:
+            result['should_skip'] = True
+            result['skip_reason'] = f'Insufficient match data: {match_sample_size} matches < {self.RISK_MANAGEMENT["absolute_minimum_matches"]} minimum (predictions would be random noise)'
+            result['risk_level'] = 'CRITICAL'
+            return result
         
         # Check set sample size
         if set_sample_size < self.RISK_MANAGEMENT['minimum_set_sample_size']:
