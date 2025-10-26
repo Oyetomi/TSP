@@ -1,182 +1,304 @@
-# TSP - Tennis Set Prediction
+# Tennis Set Prediction System
 
-## ~79% Accuracy
+## 79% Prediction Accuracy
 
-A tennis prediction system that actually works. Started as a weekend project, evolved into something that consistently predicts at 79%. Even Sinner loses sometimes.
+A statistical tennis prediction system specializing in +1.5 set betting markets. Built on advanced statistical analysis, multi-year performance data, and comprehensive risk management.
 
 ![Tennis Prediction Dashboard](assets/prediction-dashboard.png)
-*Live prediction interface showing 8 matches with comprehensive analysis*
-
-### What is this?
-
-A completely over-engineered tennis prediction system that:
-- Started as a weekend project
-- Turned into a full-blown statistical analysis beast
-- Actually predicts tennis matches at **~79% accuracy**
-- Makes bookies nervous (probably)
-- Has more files than a tax return
-
-### Does it work?
-
-```python
-accuracy = 0.79  # Pretty damn good
-money_printer_status = "working" if accuracy > 0.70 else "needs_work"
-print(f"Status: {money_printer_status}")  # Output: Status: working
-```
-
-### Setup (if future me forgets)
-
-```bash
-# Copy the secret sauce
-cp api_secrets.example.py api_secrets.py
-
-# Fill in your API keys (you know which ones)
-# Hint: One for match data, one for odds
-# Check api_secrets.py - you'll figure it out
-
-# Install stuff
-pip install -r requirements.txt
-
-# Make money... I mean, run predictions
-python3.9 main.py
-```
-
-### Features That Actually Matter
-
-- ✅ **Multi-year stats blending** (because one year is for amateurs)
-- ✅ **Surface-specific analysis** (clay ≠ grass, who knew?)
-- ✅ **UTR ratings** (because ATP rankings lie)
-- ✅ **Recent form weighting** (hot streaks are real)
-- ✅ **Opponent quality penalties** (no more inflated stats from weak opponents)
-- ✅ **Coin flip detection** (skip the 50/50s like a boss)
-- ✅ **Injury checking** (no betting on broken players)
-- ✅ **Mental toughness metrics** (because tennis is 90% mental and 10% not getting psyched out)
-- ✅ **Interactive dashboard** (filter by surface, confidence, edge, rankings, and more)
-- ✅ **Risk management** (automatic Bagel risk warnings and data quality checks)
-- ✅ **Smart filtering** (exclude same country, rank gaps, and problem matches)
-
-### Features That Don't Matter But Took Forever
-
-- 🎨 Next.js frontend (it looks cool though)
-- 📊 Weight configuration manager with 47 different configs
-- 🔍 5-tier skip logic system (overkill? maybe. effective? yes.)
-- 📝 Loss analysis improvements (learned from every L)
-- 🎯 Tournament classifier (Grand Slams hit different)
-
-### The Journey
-
-```
-v1.0: 45% accuracy (yikes)
-v2.0: 55% accuracy (getting there)
-v3.0: 62% accuracy (ok now we're talking)
-v4.0: 68% accuracy (hot streak!)
-v5.0: 73% accuracy (getting solid)
-v6.0: 74% accuracy (nice)
-v7.0: ~79% accuracy (wait what)
-```
-
-### What Went Wrong (and then right)
-
-1. **First version**: Trusted ATP rankings blindly → 45% accuracy 🤡
-2. **Second version**: Added UTR ratings → 55% accuracy 📈
-3. **Third version**: Surface filtering → 62% accuracy 🎾
-4. **Fourth version**: Multi-year blending → 68% accuracy 🔥
-5. **Fifth version**: Enhanced form weighting → 73% accuracy 💪
-6. **Sixth version**: Loss analysis (Kypson/Engel taught me lessons) → 74% accuracy 🧠
-7. **Current version**: Everything + opponent quality penalties → **~79% accuracy** (even Sinner loses sometimes)
-
-### Configuration Files
-
-I have like 12 different `all_*.csv` files with different weight configs:
-- `all_HOT_STREAK_74PCT_BACKUP.csv` - The OG that hit 74%
-- `all_LOSS_ANALYSIS_FIX_V1.csv` - After fixing the Kypson disaster
-- `all_ULTRA_CONSERVATIVE_90PCT.csv` - For when I'm feeling scared
-- `all_ML_OPTIMIZED_2024.csv` - ML-inspired weights (not actual ML, just fancy tuning)
-- etc.
-
-Current winner: **2-year mode with loss analysis improvements** = ~79% 👑
-
-### The Secret Sauce
-
-This is a **statistical model**, not ML. Just weighted math and skip logic:
-
-```python
-# The magic formula (don't steal this, it took forever)
-weighted_score = (
-    set_performance * 0.28 +  # Historical dominance
-    recent_form * 0.16 +       # Are they hot or not?
-    utr_rating * 0.15 +        # Real skill level
-    ranking_advantage * 0.22 + # Who's better on paper?
-    # ... and like 10 more factors
-)
-
-# Plus a bunch of skip logic that prevents stupid bets
-if coin_flip_detected:
-    return "SKIP THIS GARBAGE"
-```
-
-### Files You'll Never Look At Again
-
-- All the `debug_*.py` files (there are like 20)
-- `.private_docs/` - 50+ markdown files documenting every mistake
-- `.private_tests/` - Tests I wrote once and never ran
-- `archive/` - The graveyard of bad ideas
-- Everything in `scripts/` - "I'll need this later" (narrator: he didn't)
-
-### Things I Learned
-
-1. **More data ≠ better predictions** (quality > quantity)
-2. **Hot streaks are real** (recent form is king)
-3. **Set win rates lie** (if you only play weak opponents)
-4. **UTR > ATP ranking** (for predictions at least)
-5. **When in doubt, skip the match** (coin flips are -EV)
-6. **Clay specialists exist** (Nadal has entered the chat)
-7. **Injuries matter** (duh, but I had to code a checker)
-
-### Tech Stack
-
-- Python 3.9 (because 3.13 broke curl-cffi)
-- FastAPI (for the API I never use)
-- Next.js (for the frontend I look at once)
-- Pandas (data frames go brr)
-- curl-cffi (because requests got blocked)
-- A LOT of hope and caffeine ☕
-
-### TODO
-
-- [ ] Stop tweaking weights (79% is really solid)
-- [ ] Remember the frontend exists (it's pretty good actually)
-- [ ] Go outside
-- [ ] Touch grass
-- [x] Hit 79% accuracy (consistently)
-- [x] Built a functional Next.js frontend
-- [x] Commit to GitHub before I break something
-
-### The Real MVP
-
-```python
-# The actual hero of this codebase
-if prediction.should_skip:
-    return None  # Saved me from so many bad bets
-```
-
-### Disclaimer
-
-This is for research purposes only. Also, I'm not responsible if you:
-- Lose money betting
-- Get addicted to tweaking weights
-- Keep optimizing after hitting 79%
-- Develop an unhealthy obsession with set win rates
-- Check predictions at 3am
-
-### Final Thoughts
-
-~79% accuracy. On tennis predictions. With over-engineered Python code and too many CSV files.
-
-Even Sinner loses sometimes. But we're winning a lot. 🏆
+*Interactive prediction dashboard with real-time analysis and filtering*
 
 ---
 
-*Last updated: When it hit 79% and I stopped touching it (October 2025)*
+## Overview
 
-*"If it ain't broke, don't commit more changes"* - Ancient programmer wisdom
+A data-driven tennis prediction system that analyzes player performance across multiple dimensions to predict match outcomes with 79% accuracy. The system focuses on +1.5 set predictions, identifying matches where the favored player is likely to win at least one set.
+
+### Key Metrics
+
+- **Prediction Accuracy**: ~79%
+- **Analysis Depth**: Multi-year statistical modeling
+- **Data Sources**: SofaScore match data, UTR ratings, ATP/WTA rankings
+- **Prediction Focus**: +1.5 set markets (player wins ≥1 set)
+
+---
+
+## Core Features
+
+### Statistical Analysis
+- **Multi-year performance blending** - Weighted analysis across 2-3 years of data
+- **Surface-specific modeling** - Separate analysis for Hard, Clay, and Grass courts
+- **Opponent quality adjustment** - Performance normalized against opponent strength
+- **Recent form emphasis** - Current performance weighted more heavily
+- **UTR integration** - Universal Tennis Rating for true skill assessment
+
+### Risk Management
+- **Data quality gates** - Automatic skip for insufficient data samples
+- **Sample size thresholds** - Minimum match/set requirements enforced
+- **Ranking gap penalties** - Hot streak detection prevents false signals
+- **Bagel risk indicators** - High-risk match identification
+- **Confidence scoring** - Match-by-match reliability assessment
+
+### Advanced Features
+- **Mental toughness metrics** - Clutch performance and competitive resilience
+- **Return of serve analysis** - Hannah Fry principle implementation
+- **Momentum tracking** - Recent match trends and streaks
+- **Tournament classification** - Grand Slam vs regular tournament adjustments
+- **Injury filtering** - Automatic exclusion of recently injured players
+
+---
+
+## Technical Architecture
+
+### Backend
+- **Language**: Python 3.9
+- **API Framework**: FastAPI
+- **Data Processing**: Pandas, NumPy
+- **HTTP Client**: curl-cffi (bypasses rate limiting)
+- **Prediction Model**: Statistical weighted analysis (not ML)
+
+### Frontend
+- **Framework**: Next.js 14 with TypeScript
+- **UI Library**: shadcn/ui components
+- **Styling**: Tailwind CSS
+- **State Management**: SWR for data fetching
+- **Features**: Real-time filtering, match selection, odds integration
+
+### Data Sources
+- **Match Data**: SofaScore API
+- **Odds**: SportyBet integration
+- **Player Ratings**: UTR (Universal Tennis Rating)
+- **Rankings**: ATP/WTA official rankings
+
+---
+
+## Installation
+
+### Prerequisites
+```bash
+Python 3.9+
+Node.js 18+ (for frontend)
+```
+
+### Backend Setup
+```bash
+# Clone repository
+git clone https://github.com/yourusername/tennis-set-prediction.git
+cd tennis-set-prediction
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Configure API credentials
+cp api_secrets.example.py api_secrets.py
+# Edit api_secrets.py with your API keys
+```
+
+### Frontend Setup
+```bash
+cd frontend
+pnpm install
+
+# Configure environment
+cp .env.example .env.local
+# Edit .env.local with API endpoints
+
+# Run development server
+pnpm dev
+```
+
+---
+
+## Usage
+
+### Running Predictions
+```bash
+# Generate predictions for today's matches
+python3.9 main.py
+
+# Run with specific date
+python3.9 main.py --date 2025-10-26
+
+# Run backend server
+python3.9 run_server.py
+```
+
+### Accessing the Dashboard
+```bash
+cd frontend
+pnpm dev
+# Navigate to http://localhost:3000
+```
+
+---
+
+## Prediction Model
+
+### Weight Configuration (FORM_OPTIMIZED_OCT2025)
+
+| Factor | Weight | Description |
+|--------|--------|-------------|
+| Set Performance | 30% | Historical set win rate against quality opponents |
+| Recent Form | 23% | Current performance and momentum |
+| UTR Rating | 10% | Universal skill assessment |
+| Ranking Advantage | 8% | ATP/WTA ranking differential |
+| Return of Serve | 8% | Return game effectiveness |
+| Surface Performance | 8% | Court-specific win rates |
+| Momentum | 5% | Recent match trends |
+| Serve Dominance | 3% | Ace rate and first serve percentage |
+| Pressure Performance | 3% | Break point conversion |
+| Tiebreak Performance | 2% | Clutch performance in tiebreaks |
+
+### Skip Logic
+
+Matches are automatically excluded when:
+- Either player has < 5 sets of data (insufficient sample)
+- Either player has 0 current-year matches on surface (pure extrapolation)
+- Either player has < 30% win rate with ≥4 matches (extreme poor form indicator)
+- Network data quality issues detected
+
+---
+
+## Performance History
+
+| Version | Accuracy | Key Improvement |
+|---------|----------|----------------|
+| v1.0 | 45% | Initial ATP ranking-based model |
+| v2.0 | 55% | Added UTR ratings |
+| v3.0 | 62% | Surface-specific analysis |
+| v4.0 | 68% | Multi-year data blending |
+| v5.0 | 73% | Enhanced form weighting |
+| v6.0 | 74% | Loss analysis and opponent quality |
+| **v7.0** | **79%** | Hot streak detection and data quality gates |
+
+---
+
+## Dashboard Features
+
+### Match Filtering
+- Surface type (Hard, Clay, Grass)
+- Gender (Men's, Women's)
+- Confidence level (Low, Medium, High)
+- Edge percentage thresholds
+- Odds ranges
+- Risk levels
+
+### Selection Tools
+- Bulk match selection
+- Player-specific betting (dual mode)
+- Random selection for testing
+- Same-country exclusion
+- Ranking-based filters
+
+### Risk Indicators
+- Bagel risk warnings (0-6 set potential)
+- Data quality assessments
+- Sample size indicators
+- Ranking gap alerts
+
+---
+
+## API Integration
+
+### Odds Provider
+Integrates with SportyBet API for:
+- Real-time odds fetching
+- +1.5 and +2.5 set markets
+- Automated bet slip generation
+- Share code creation
+
+### Match Data Provider
+SofaScore integration provides:
+- Comprehensive match history
+- Player statistics
+- Head-to-head records
+- Tournament information
+
+---
+
+## Configuration Management
+
+### Weight Profiles
+Multiple pre-configured weight profiles available:
+- `FORM_OPTIMIZED_OCT2025` - Current active (79% accuracy)
+- `HOT_STREAK_74PCT` - Original baseline
+- `CLUTCH_V2_20251026` - Class over form emphasis
+
+### Multi-Year Modes
+- 2-year mode: 70% current, 30% previous year
+- 3-year mode: Blended weighted analysis
+
+---
+
+## Project Structure
+
+```
+tennis-set-prediction/
+├── app/                    # FastAPI application
+│   ├── core/              # Configuration
+│   ├── models/            # Data models
+│   ├── routers/           # API endpoints
+│   └── services/          # Business logic
+├── frontend/              # Next.js dashboard
+│   ├── src/
+│   │   ├── app/          # Pages and API routes
+│   │   └── components/   # React components
+├── scripts/               # Analysis scripts
+├── tests/                 # Test suites
+└── utils/                 # Utility functions
+```
+
+---
+
+## Development
+
+### Adding New Weight Configurations
+```python
+from weight_config_manager import config_manager
+
+config_manager.add_config(
+    code_name="MY_CONFIG",
+    name="My Configuration",
+    description="Description here",
+    weights={...},
+    features={...}
+)
+```
+
+### Running Tests
+```bash
+pytest tests/
+```
+
+---
+
+## Disclaimer
+
+This system is designed for research and educational purposes. Users should:
+- Understand betting involves financial risk
+- Implement proper bankroll management
+- Verify predictions independently
+- Comply with local gambling regulations
+- Use predictions as one input in decision-making
+
+Past performance does not guarantee future results.
+
+---
+
+## License
+
+MIT License - See LICENSE file for details
+
+---
+
+## Contact & Support
+
+For questions, issues, or contributions:
+- Open an issue on GitHub
+- Submit a pull request
+- Contact: [your-email]
+
+---
+
+*Last Updated: October 2025*
+*Current Version: 7.0*
+*Status: Production*
