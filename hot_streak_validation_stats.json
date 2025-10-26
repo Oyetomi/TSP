@@ -1,0 +1,27 @@
+{
+  "generated_at": "2025-10-26T22:13:22.967114",
+  "file_analyzed": "all_HOT_STREAK_74PCT_BACKUP.csv",
+  "date_range": "2025-09-22 to 2025-10-01",
+  "days_analyzed": 10,
+  "total_matches": 1191,
+  "predictions_made": 1166,
+  "matches_skipped": 25,
+  "acceptance_rate": 0.979009235936188,
+  "avg_win_probability": 0.6854085728249458,
+  "high_confidence_count": 809,
+  "confidence_distribution": {
+    "Low": 762,
+    "Medium": 388,
+    "High": 16
+  },
+  "surface_distribution": {
+    "Hardcourt outdoor": 849,
+    "Hardcourt indoor": 117,
+    "Red clay": 199,
+    "Unknown": 1
+  },
+  "gender_distribution": {
+    "Male": 773,
+    "Female": 393
+  }
+}
