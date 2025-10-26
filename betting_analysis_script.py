@@ -2241,15 +2241,17 @@ class TennisBettingAnalyzer:
                 print(f"\n{reason}")
                 return True, reason
             
-            # TIER 2 CHECK: Check if BOTH players are performing poorly in current year
-            p1_poor = (p1_matches >= MIN_MATCHES_THRESHOLD and p1_win_rate < POOR_PERFORMANCE_THRESHOLD)
-            p2_poor = (p2_matches >= MIN_MATCHES_THRESHOLD and p2_win_rate < POOR_PERFORMANCE_THRESHOLD)
-            
-            if p1_poor and p2_poor:
-                reason = (f"Both players have poor {current_year} performance on {surface}: "
-                         f"{player1.name} {p1_win_rate:.1%} ({p1_wins}/{p1_matches}), "
-                         f"{player2.name} {p2_win_rate:.1%} ({p2_wins}/{p2_matches})")
-                return True, reason
+            # TIER 2 CHECK DISABLED FOR +1.5 SETS BETTING
+            # "Both poor" doesn't matter for +1.5 sets - one will still win a set!
+            # Only skip if performance is SO BAD it indicates data quality issues
+            # 
+            # OLD LOGIC (REMOVED):
+            # p1_poor = (p1_matches >= MIN_MATCHES_THRESHOLD and p1_win_rate < POOR_PERFORMANCE_THRESHOLD)
+            # p2_poor = (p1_matches >= MIN_MATCHES_THRESHOLD and p2_win_rate < POOR_PERFORMANCE_THRESHOLD)
+            # if p1_poor and p2_poor: skip  ← Wrong for +1.5 sets!
+            #
+            # KEY INSIGHT: +1.5 sets is about RELATIVE performance, not absolute.
+            # Even Kawa (33%) vs Bronzetti (39%) - Bronzetti is clearly better!
             
             # Also skip if one player is extremely poor (< 30% with 4+ matches)
             EXTREME_POOR_THRESHOLD = 0.30
@@ -2265,21 +2267,19 @@ class TennisBettingAnalyzer:
                          f"{p2_win_rate:.1%} ({p2_wins}/{p2_matches} matches)")
                 return True, reason
             
-            # TIER 3 CHECK: Skip if BOTH players are mediocre/struggling (< 50% with 5+ matches)
-            # This catches low-quality matches where both players are coin flips
-            MEDIOCRE_THRESHOLD = 0.50
-            MEDIOCRE_MATCHES_THRESHOLD = 5
-            
-            p1_mediocre = (p1_matches >= MEDIOCRE_MATCHES_THRESHOLD and p1_win_rate < MEDIOCRE_THRESHOLD)
-            p2_mediocre = (p2_matches >= MEDIOCRE_MATCHES_THRESHOLD and p2_win_rate < MEDIOCRE_THRESHOLD)
-            
-            if p1_mediocre and p2_mediocre:
-                reason = (f"🎲 COIN FLIP MATCH - Both players mediocre {current_year} performance on {surface}: "
-                         f"{player1.name} {p1_win_rate:.1%} ({p1_wins}/{p1_matches}), "
-                         f"{player2.name} {p2_win_rate:.1%} ({p2_wins}/{p2_matches}). "
-                         f"Low-quality match with unpredictable outcome")
-                print(f"\n{reason}")
-                return True, reason
+            # TIER 3 CHECK DISABLED FOR +1.5 SETS BETTING
+            # "Both mediocre" (<50%) doesn't matter - we predict based on RELATIVE performance!
+            #
+            # OLD LOGIC (REMOVED):
+            # MEDIOCRE_THRESHOLD = 0.50
+            # if p1_mediocre and p2_mediocre: skip ← Wrong for +1.5 sets!
+            #
+            # EXAMPLE: Player A (45%) vs Player B (48%) on surface
+            # - Both < 50% (mediocre)
+            # - But Player B is CLEARLY better (+3% edge)
+            # - Player B should win at least one set!
+            #
+            # Only skip for data quality issues (TIER 0/1) or extreme cases (< 30%)
             
             return False, ""
             
