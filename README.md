@@ -4,6 +4,9 @@
 
 A tennis prediction system that actually works. Started as a weekend project, evolved into something that consistently predicts at 79%. Even Sinner loses sometimes.
 
+![Tennis Prediction Dashboard](assets/prediction-dashboard.png)
+*Live prediction interface showing 8 matches with comprehensive analysis*
+
 ### What is this?
 
 A completely over-engineered tennis prediction system that:
@@ -48,6 +51,9 @@ python3.9 main.py
 - ✅ **Coin flip detection** (skip the 50/50s like a boss)
 - ✅ **Injury checking** (no betting on broken players)
 - ✅ **Mental toughness metrics** (because tennis is 90% mental and 10% not getting psyched out)
+- ✅ **Interactive dashboard** (filter by surface, confidence, edge, rankings, and more)
+- ✅ **Risk management** (automatic Bagel risk warnings and data quality checks)
+- ✅ **Smart filtering** (exclude same country, rank gaps, and problem matches)
 
 ### Features That Don't Matter But Took Forever
 
