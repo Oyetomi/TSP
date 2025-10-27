@@ -133,22 +133,14 @@ class OddsProvider:
         if self.access_token:
             self.cookies['accessToken'] = self.access_token
     
-    def get_tennis_markets(self, page_num: int = 1, page_size: int = 20, start_time: int = None, end_time: int = None) -> Dict[str, Any]:
+    def get_tennis_markets(self, page_num: int = 1, page_size: int = 20) -> Dict[str, Any]:
         """
-        Get tennis matches available for betting from odds provider with time filtering
+        Get tennis matches available for betting from odds provider
+        Note: API returns ALL matches regardless of date - filtering happens client-side
         """
         url = f"{self.base_url}/wapConfigurableEventsByOrder"
         
-        # Use provided times or default to next 72 hours (3 days)
-        if not start_time or not end_time:
-            from datetime import datetime, timedelta
-            now = datetime.now()
-            start_time = int(now.timestamp() * 1000)  # Current time in milliseconds
-            end_time = int((now + timedelta(hours=72)).timestamp() * 1000)  # Next 72 hours (3 days)
-        
         payload = {
-            "startTime": start_time,
-            "endTime": end_time,
             "productId": 3,
             "sportId": "sr:sport:5",  # Tennis sport ID
             "order": 0,
@@ -185,30 +177,30 @@ class OddsProvider:
             print(f"Error fetching odds provider markets: {e}")
             return {}
     
-    def get_available_matches(self, date: str = None, start_time: int = None, end_time: int = None) -> List[BookmakerMatch]:
+    def get_available_matches(self, target_date: str = None) -> List[BookmakerMatch]:
         """
-        Convert odds provider events to BookmakerMatch format using time-based filtering and full pagination
+        Fetch ALL available matches from odds provider and filter client-side by target_date.
+        API returns all matches regardless of date - we paginate through everything then filter.
+        
+        Args:
+            target_date: Date string in YYYY-MM-DD format. If None, returns all matches.
         """
         matches = []
         page_num = 1
         page_size = 20
         
-        # Default: fetch matches for current day only (if no explicit range provided)
-        if not start_time or not end_time:
-            from datetime import datetime, timedelta
-            now = datetime.now()
-            # Fetch entire current day (00:00 to 23:59)
-            start_of_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
-            end_of_today = now.replace(hour=23, minute=59, second=59, microsecond=999999)
-            start_time = int(start_of_today.timestamp() * 1000)
-            end_time = int(end_of_today.timestamp() * 1000)
-        
+        # Parse target date for client-side filtering
         from datetime import datetime
-        print(f"📅 Fetching matches from: {datetime.fromtimestamp(start_time/1000).strftime('%Y-%m-%d %H:%M')} to {datetime.fromtimestamp(end_time/1000).strftime('%Y-%m-%d %H:%M')}")
+        target_date_obj = None
+        if target_date:
+            target_date_obj = datetime.strptime(target_date, '%Y-%m-%d').date()
+            print(f"📅 Fetching all matches, will filter for: {target_date}")
+        else:
+            print(f"📅 Fetching all available matches (no date filter)")
         
         while True:
             print(f"📖 Fetching odds provider page {page_num}...")
-            tennis_data = self.get_tennis_markets(page_num=page_num, page_size=page_size, start_time=start_time, end_time=end_time)
+            tennis_data = self.get_tennis_markets(page_num=page_num, page_size=page_size)
             
             if not tennis_data:
                 break
@@ -227,9 +219,17 @@ class OddsProvider:
                         event_id = event.get('eventId', '')
                         home_team = event.get('homeTeamName', '')
                         away_team = event.get('awayTeamName', '')
+                        event_time = event.get('eventTime', 0)  # Timestamp in milliseconds
                         
                         if not home_team or not away_team:
                             continue
+                        
+                        # Client-side date filtering (if target_date specified)
+                        if target_date_obj and event_time:
+                            event_datetime = datetime.fromtimestamp(event_time / 1000)
+                            event_date = event_datetime.date()
+                            if event_date != target_date_obj:
+                                continue  # Skip matches not on target date
                         
                         # Skip doubles matches (check for "/" in team names)
                         if '/' in home_team or '/' in away_team:
@@ -312,7 +312,12 @@ class OddsProvider:
                 print("⚠️ Reached page limit (50), stopping pagination")
                 break
         
-        print(f"📊 Processed {len(matches)} total available matches with real odds across {page_num-1} pages")
+        # Summary
+        if target_date_obj:
+            print(f"📊 Fetched all pages, filtered to {len(matches)} matches for {target_date}")
+        else:
+            print(f"📊 Fetched {len(matches)} total matches across {page_num-1} pages")
+        
         return matches
     
     def normalize_player_name(self, name: str) -> str:
@@ -5224,19 +5229,9 @@ class TennisBettingAnalyzer:
             
             print(f"🎾 Found {len(singles_matches)} upcoming singles matches (after deduplication)")
             
-            # STEP 2: Get OddsProvider matches once (batch fetch) for target date only
+            # STEP 2: Get OddsProvider matches (fetches ALL, filters client-side by target_date)
             print(f"🔍 Fetching OddsProvider markets for {target_date}...")
-            # Calculate time range for target date (entire day, not 72 hours)
-            target_datetime = datetime.strptime(target_date, '%Y-%m-%d')
-            start_of_day = target_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-            end_of_day = target_datetime.replace(hour=23, minute=59, second=59, microsecond=999999)
-            start_time_ms = int(start_of_day.timestamp() * 1000)
-            end_time_ms = int(end_of_day.timestamp() * 1000)
-            
-            odds_provider_matches_raw = self.bookmaker.get_available_matches(
-                start_time=start_time_ms, 
-                end_time=end_time_ms
-            )
+            odds_provider_matches_raw = self.bookmaker.get_available_matches(target_date=target_date)
             
             # Deduplicate OddsProvider matches by event_id
             odds_provider_matches = []
