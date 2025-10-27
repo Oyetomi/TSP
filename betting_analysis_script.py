@@ -5136,10 +5136,14 @@ class TennisBettingAnalyzer:
         # Initialize CSV file variable to prevent "referenced before assignment" errors
         csv_file = None
         
-        # Network failure circuit breaker
+        # Network failure circuit breaker (thread-safe)
         consecutive_network_failures = 0
         network_failure_threshold = 3  # Stop after 3 consecutive network failures
-        network_failure_wait_time = 30  # Wait 30 seconds before retrying
+        network_failure_wait_time = 60  # Wait 60 seconds before retrying
+        import threading
+        network_failure_lock = threading.Lock()
+        network_paused = threading.Event()
+        network_paused.set()  # Start in "running" state (not paused)
         
         try:
             # Get scheduled events from MatchDataProvider
@@ -5372,6 +5376,15 @@ class TennisBettingAnalyzer:
             def analyze_single_match(match_pair):
                 """Analyze a single match - this function runs in its own thread"""
                 nonlocal consecutive_network_failures  # Allow modification of outer variable
+                
+                # Wait if network is paused (circuit breaker active)
+                if not network_paused.is_set():
+                    import threading
+                    thread_id = threading.current_thread().ident % 1000
+                    print(f"[Thread-{thread_id}] ⏸️  Waiting for network recovery...")
+                    network_paused.wait()  # Block until network is available again
+                    print(f"[Thread-{thread_id}] ✅ Network recovered, resuming...")
+                
                 try:
                     # Extract MatchDataProvider and OddsProvider data
                     match_data_match = match_pair['match_data_match']
@@ -5464,7 +5477,8 @@ class TennisBettingAnalyzer:
                             player2_profile = future2.result(timeout=45)
                             
                         print(f"[Thread-{thread_id}] ✅ Concurrent fetch successful!")
-                        consecutive_network_failures = 0  # Reset on success
+                        with network_failure_lock:
+                            consecutive_network_failures = 0  # Reset on success
                             
                     except (concurrent.futures.TimeoutError, Exception) as e:
                         print(f"[Thread-{thread_id}]    ⚠️ Concurrent fetch failed ({type(e).__name__}), trying sequential with retries...")
@@ -5516,24 +5530,43 @@ class TennisBettingAnalyzer:
                             'curl: (35)' in error_str  # SSL/connection error
                         )
                         
-                        if is_network_failure:
-                            consecutive_network_failures += 1
-                            print(f"[Thread-{thread_id}] 🌐 Network failure detected ({consecutive_network_failures}/{network_failure_threshold})")
-                            print(f"[Thread-{thread_id}]    Error: {error_str[:100]}")
-                            
-                            # Check if we've hit the threshold
-                            if consecutive_network_failures >= network_failure_threshold:
-                                print(f"\n⚠️⚠️⚠️ NETWORK FAILURE CIRCUIT BREAKER TRIGGERED ⚠️⚠️⚠️")
-                                print(f"   Detected {consecutive_network_failures} consecutive network failures")
-                                print(f"   Network is likely down - pausing for {network_failure_wait_time} seconds...")
-                                print(f"   Error type: DNS/Connection failure")
-                                import time
-                                time.sleep(network_failure_wait_time)
-                                print(f"   Attempting to continue after network recovery wait...")
-                                consecutive_network_failures = 0  # Reset after wait
-                        else:
-                            # Not a network failure, reset counter
-                            consecutive_network_failures = 0
+                        # Thread-safe network failure handling
+                        with network_failure_lock:
+                            if is_network_failure:
+                                consecutive_network_failures += 1
+                                print(f"[Thread-{thread_id}] 🌐 Network failure detected ({consecutive_network_failures}/{network_failure_threshold})")
+                                print(f"[Thread-{thread_id}]    Error: {error_str[:100]}")
+                                
+                                # Check if we've hit the threshold
+                                if consecutive_network_failures >= network_failure_threshold:
+                                    # PAUSE ALL THREADS
+                                    network_paused.clear()  # Signal all threads to pause
+                                    
+                                    print(f"\n{'='*90}")
+                                    print(f"⚠️⚠️⚠️ NETWORK FAILURE CIRCUIT BREAKER TRIGGERED ⚠️⚠️⚠️")
+                                    print(f"{'='*90}")
+                                    print(f"   🚨 Detected {consecutive_network_failures} consecutive network failures")
+                                    print(f"   🌐 Network is likely down - ALL THREADS PAUSED")
+                                    print(f"   ⏸️  Waiting {network_failure_wait_time} seconds for network recovery...")
+                                    print(f"   🔍 Error type: DNS/Connection failure")
+                                    print(f"   ⏳ Current thread will wait, other threads blocked at next match")
+                                    print(f"{'='*90}\n")
+                                    
+                                    import time
+                                    time.sleep(network_failure_wait_time)
+                                    
+                                    print(f"\n{'='*90}")
+                                    print(f"✅ RESUMING AFTER NETWORK WAIT")
+                                    print(f"{'='*90}")
+                                    print(f"   🔄 Attempting to continue after {network_failure_wait_time}s wait...")
+                                    print(f"   🚀 All threads will resume processing")
+                                    print(f"{'='*90}\n")
+                                    
+                                    consecutive_network_failures = 0  # Reset after wait
+                                    network_paused.set()  # Resume all threads
+                            else:
+                                # Not a network failure, reset counter
+                                consecutive_network_failures = 0
                         
                         print(f"[Thread-{thread_id}] ❌ SKIPPING MATCH: {player1_name} vs {player2_name}")
                         print(f"[Thread-{thread_id}]    Reason: Unable to fetch real data for: {', '.join(missing_players)}")
