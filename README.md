@@ -32,6 +32,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **UTR integration** - Universal Tennis Rating for true skill assessment
 
 ### Risk Management
+- **73% Confidence Cap** - Universal maximum to prevent overconfidence (validation-driven)
 - **Data quality gates** - Automatic skip for insufficient data samples
 - **Sample size thresholds** - Minimum match/set requirements enforced
 - **Ranking gap penalties** - Hot streak detection prevents false signals
@@ -156,6 +157,31 @@ Matches are automatically excluded when:
 - Either player has 0 current-year matches on surface (pure extrapolation)
 - Either player has < 30% win rate with ≥4 matches (extreme poor form indicator)
 - Network data quality issues detected
+
+### 73% Confidence Cap
+
+**Problem Identified:**
+Validation analysis revealed systematic overconfidence in the 75%-85% range. All predictions with 75.8%-85.0% confidence that failed were straight-set defeats (0 sets won), indicating the model was overestimating win probability in this range.
+
+**Solution:**
+Universal 73% maximum confidence cap applied to all predictions:
+- **Match probability**: Capped at 73%
+- **Set probability**: Capped at 73%
+- **Rationale**: Based on historical validation data showing consistent pattern of overconfidence above this threshold
+
+**Impact:**
+- Prevents overconfident predictions that would lead to poor risk assessment
+- Maintains realistic expectations even for seemingly dominant matchups
+- Improves betting discipline by acknowledging inherent match uncertainty
+- Aligns prediction confidence with actual historical win rates
+
+**Example:**
+```
+Before cap: Player A 85% confidence → straight-set loss (0 sets)
+After cap:  Player A 73% confidence → appropriate risk assessment
+```
+
+This conservative approach prioritizes accuracy over optimism, ensuring predictions remain grounded in validated performance data.
 
 ---
 
