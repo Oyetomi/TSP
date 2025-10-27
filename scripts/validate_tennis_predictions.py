@@ -95,7 +95,7 @@ class TennisPredictionValidator:
     async def get_tennis_matches_for_date(self, date_str: str) -> List[Dict]:
         """Get tennis matches for a specific date using MatchDataProvider API"""
         try:
-            url = f"{self.base_url}/api/v1/sport/tennis/scheduled-events/{date_str}"
+            url = f"{self.base_url}/sport/tennis/scheduled-events/{date_str}"
             
             response = await self.session.get(url)
             
@@ -223,7 +223,7 @@ class TennisPredictionValidator:
             print(f"   📊 Fetching results for event {event_id}...")
             
             # Use the existing MatchDataProvider integration from the player service
-            url = f"{self.base_url}/api/v1/event/{event_id}"
+            url = f"{self.base_url}/event/{event_id}"
             
             response = await self.session.get(url)
             
