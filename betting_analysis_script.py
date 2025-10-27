@@ -193,14 +193,18 @@ class OddsProvider:
         page_num = 1
         page_size = 20
         
-        # Calculate time range for better filtering (next 72 hours, 3 days)
+        # Default: fetch matches for current day only (if no explicit range provided)
         if not start_time or not end_time:
             from datetime import datetime, timedelta
             now = datetime.now()
-            start_time = int(now.timestamp() * 1000)
-            end_time = int((now + timedelta(hours=72)).timestamp() * 1000)
+            # Fetch entire current day (00:00 to 23:59)
+            start_of_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            end_of_today = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+            start_time = int(start_of_today.timestamp() * 1000)
+            end_time = int(end_of_today.timestamp() * 1000)
         
-        print(f"📅 Time range: {datetime.fromtimestamp(start_time/1000)} to {datetime.fromtimestamp(end_time/1000)}")
+        from datetime import datetime
+        print(f"📅 Fetching matches from: {datetime.fromtimestamp(start_time/1000).strftime('%Y-%m-%d %H:%M')} to {datetime.fromtimestamp(end_time/1000).strftime('%Y-%m-%d %H:%M')}")
         
         while True:
             print(f"📖 Fetching odds provider page {page_num}...")
@@ -5220,9 +5224,19 @@ class TennisBettingAnalyzer:
             
             print(f"🎾 Found {len(singles_matches)} upcoming singles matches (after deduplication)")
             
-            # STEP 2: Get OddsProvider matches once (batch fetch)
-            print("🔍 Fetching OddsProvider markets...")
-            odds_provider_matches_raw = self.bookmaker.get_available_matches()
+            # STEP 2: Get OddsProvider matches once (batch fetch) for target date only
+            print(f"🔍 Fetching OddsProvider markets for {target_date}...")
+            # Calculate time range for target date (entire day, not 72 hours)
+            target_datetime = datetime.strptime(target_date, '%Y-%m-%d')
+            start_of_day = target_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+            end_of_day = target_datetime.replace(hour=23, minute=59, second=59, microsecond=999999)
+            start_time_ms = int(start_of_day.timestamp() * 1000)
+            end_time_ms = int(end_of_day.timestamp() * 1000)
+            
+            odds_provider_matches_raw = self.bookmaker.get_available_matches(
+                start_time=start_time_ms, 
+                end_time=end_time_ms
+            )
             
             # Deduplicate OddsProvider matches by event_id
             odds_provider_matches = []
