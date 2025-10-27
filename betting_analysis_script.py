@@ -5573,14 +5573,33 @@ class TennisBettingAnalyzer:
                                     
                                     consecutive_network_failures = 0  # Reset after wait
                                     network_paused.set()  # Resume all threads
+                                    
+                                    # RETRY this match after network recovery
+                                    print(f"[Thread-{thread_id}] 🔄 RETRYING MATCH AFTER NETWORK RECOVERY: {player1_name} vs {player2_name}")
+                                    try:
+                                        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+                                            future1 = executor.submit(self.get_enhanced_player_profile, match_data_match['home_team'].id, surface=surface)
+                                            future2 = executor.submit(self.get_enhanced_player_profile, match_data_match['away_team'].id, surface=surface)
+                                            
+                                            player1_profile = future1.result(timeout=45)
+                                            player2_profile = future2.result(timeout=45)
+                                            
+                                        print(f"[Thread-{thread_id}] ✅ Retry successful after network recovery!")
+                                        # If successful, clear missing_players so we can continue
+                                        missing_players = []
+                                    except Exception as e:
+                                        print(f"[Thread-{thread_id}] ❌ Retry failed after network recovery: {e}")
+                                        # Keep missing_players list, will skip below
                             else:
                                 # Not a network failure, reset counter
                                 consecutive_network_failures = 0
                         
-                        print(f"[Thread-{thread_id}] ❌ SKIPPING MATCH: {player1_name} vs {player2_name}")
-                        print(f"[Thread-{thread_id}]    Reason: Unable to fetch real data for: {', '.join(missing_players)}")
-                        print(f"[Thread-{thread_id}]    🚫 NO FALLBACK PROFILES - Cannot make reliable predictions")
-                        return None  # Skip this match completely
+                        # Only skip if we still don't have profiles (either non-network failure or retry failed)
+                        if not player1_profile or not player2_profile:
+                            print(f"[Thread-{thread_id}] ❌ SKIPPING MATCH: {player1_name} vs {player2_name}")
+                            print(f"[Thread-{thread_id}]    Reason: Unable to fetch real data for: {', '.join(missing_players)}")
+                            print(f"[Thread-{thread_id}]    🚫 NO FALLBACK PROFILES - Cannot make reliable predictions")
+                            return None  # Skip this match completely
                     
                     # ADDITIONAL: Check data quality issues in the profiles we did get
                     should_skip, skip_reason = self.should_skip_match_due_to_data_quality(player1_profile, player2_profile)
