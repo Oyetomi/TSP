@@ -173,12 +173,51 @@
         "roi": 0.0,
         "last_updated": "2025-10-28"
       }
+    },
+    "SERVE_STRENGTH_OCT2025": {
+      "name": "Serve Strength October 2025",
+      "description": "Fixes RESEARCH_OPTIMIZED by using actual serve statistics (aces, 1st serve %) instead of useless return-of-serve (~25% for everyone). Enables serve_dominance feature which calculates real differentiation: 40% aces + 60% first serve win rate. Also adds break point performance for pressure situations. Research shows serve is 80%+ accurate predictor.",
+      "created": "2025-10-28",
+      "weights": {
+        "set_performance": 0.24,
+        "serve_dominance": 0.20,
+        "recent_form": 0.16,
+        "surface_performance": 0.12,
+        "mental_toughness": 0.10,
+        "sets_in_losses": 0.06,
+        "pressure_performance": 0.06,
+        "atp_ranking": 0.04,
+        "utr_rating": 0.02,
+        "momentum": 0.0,
+        "clutch_factor": 0.0,
+        "physical_factors": 0.0,
+        "return_of_serve": 0.0
+      },
+      "features": {
+        "tiebreak_performance": false,
+        "pressure_performance": true,
+        "serve_dominance": true,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": false
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-10-28"
+      }
     }
   },
-  "active_config": "RESEARCH_OPTIMIZED_OCT2025",
+  "active_config": "SERVE_STRENGTH_OCT2025",
   "metadata": {
     "version": "1.0",
     "last_updated": "2025-10-28",
-    "total_configs": 5
+    "total_configs": 6
   }
 }
