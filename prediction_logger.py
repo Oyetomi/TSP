@@ -295,32 +295,35 @@ class PredictionLogger:
         self.logger.info("🏆 ENHANCED STATISTICS ANALYSIS:")
         self.logger.info("-" * 50)
         
-        # Tiebreak Performance
-        self.logger.info("🏆 Tiebreak Performance:")
-        self.logger.info(f"  {player1_name}: {tiebreak_stats['player1']:.1%}")
-        self.logger.info(f"  {player2_name}: {tiebreak_stats['player2']:.1%}")
-        if abs(tiebreak_stats['player1'] - tiebreak_stats['player2']) > 0.1:
-            advantage = player1_name if tiebreak_stats['player1'] > tiebreak_stats['player2'] else player2_name
-            self.logger.info(f"  ✅ Advantage: {advantage}")
-        self.logger.info("")
+        # Tiebreak Performance (only if enabled)
+        if tiebreak_stats is not None:
+            self.logger.info("🏆 Tiebreak Performance:")
+            self.logger.info(f"  {player1_name}: {tiebreak_stats['player1']:.1%}")
+            self.logger.info(f"  {player2_name}: {tiebreak_stats['player2']:.1%}")
+            if abs(tiebreak_stats['player1'] - tiebreak_stats['player2']) > 0.1:
+                advantage = player1_name if tiebreak_stats['player1'] > tiebreak_stats['player2'] else player2_name
+                self.logger.info(f"  ✅ Advantage: {advantage}")
+            self.logger.info("")
         
-        # Pressure Performance
-        self.logger.info("🔥 Pressure Performance (Break Points):")
-        self.logger.info(f"  {player1_name}: {pressure_stats['player1']:.1%}")
-        self.logger.info(f"  {player2_name}: {pressure_stats['player2']:.1%}")
-        if abs(pressure_stats['player1'] - pressure_stats['player2']) > 0.1:
-            advantage = player1_name if pressure_stats['player1'] > pressure_stats['player2'] else player2_name
-            self.logger.info(f"  ✅ Advantage: {advantage}")
-        self.logger.info("")
+        # Pressure Performance (only if enabled)
+        if pressure_stats is not None:
+            self.logger.info("🔥 Pressure Performance (Break Points):")
+            self.logger.info(f"  {player1_name}: {pressure_stats['player1']:.1%}")
+            self.logger.info(f"  {player2_name}: {pressure_stats['player2']:.1%}")
+            if abs(pressure_stats['player1'] - pressure_stats['player2']) > 0.1:
+                advantage = player1_name if pressure_stats['player1'] > pressure_stats['player2'] else player2_name
+                self.logger.info(f"  ✅ Advantage: {advantage}")
+            self.logger.info("")
         
-        # Serve Dominance
-        self.logger.info("🎯 Serve Dominance:")
-        self.logger.info(f"  {player1_name}: {serve_stats['player1']:.1%}")
-        self.logger.info(f"  {player2_name}: {serve_stats['player2']:.1%}")
-        if abs(serve_stats['player1'] - serve_stats['player2']) > 0.1:
-            advantage = player1_name if serve_stats['player1'] > serve_stats['player2'] else player2_name
-            self.logger.info(f"  ✅ Advantage: {advantage}")
-        self.logger.info("")
+        # Serve Dominance (only if enabled)
+        if serve_stats is not None:
+            self.logger.info("🎯 Serve Dominance:")
+            self.logger.info(f"  {player1_name}: {serve_stats['player1']:.1%}")
+            self.logger.info(f"  {player2_name}: {serve_stats['player2']:.1%}")
+            if abs(serve_stats['player1'] - serve_stats['player2']) > 0.1:
+                advantage = player1_name if serve_stats['player1'] > serve_stats['player2'] else player2_name
+                self.logger.info(f"  ✅ Advantage: {advantage}")
+            self.logger.info("")
 
     def log_key_factors(self, key_factors: List[str]):
         """Log key deciding factors"""
