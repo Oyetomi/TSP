@@ -22,7 +22,8 @@ class PredictionConfig:
             'return_of_serve': 0.08         # 8%  - Hannah Fry: "1% better at returning = amplified advantage"
         }
         
-        # Enhanced statistics feature toggles
+        # Enhanced statistics feature toggles - LOAD FROM ACTIVE CONFIG
+        # These are fallback defaults if weight_configs.json can't be loaded
         self.ENHANCED_FEATURES = {
             'tiebreak_performance': False,   # Disable due to low frequency/sample size issues
             'pressure_performance': False,   # Disable - covered by clutch_factor
@@ -33,6 +34,18 @@ class PredictionConfig:
             'hannah_fry_amplification': True, # Hannah Fry's mathematical tennis insights
             'return_of_serve_focus': True    # Focus on return-of-serve performance
         }
+        
+        # ✅ LOAD FEATURE TOGGLES FROM ACTIVE WEIGHT CONFIGURATION
+        try:
+            from weight_config_manager import config_manager
+            active_config = config_manager.get_active_config()
+            if active_config and 'features' in active_config:
+                # Override defaults with active config features
+                self.ENHANCED_FEATURES.update(active_config['features'])
+                print(f"✅ Loaded feature toggles from active config: {config_manager.get_active_code_name()}")
+        except Exception as e:
+            print(f"⚠️ Could not load features from weight_configs.json: {e}")
+            print(f"⚠️ Using default ENHANCED_FEATURES from prediction_config.py")
         
         # Game Handicap vs Set Betting Thresholds (empirically derived from UTR analysis)
         self.BETTING_STRATEGY = {
