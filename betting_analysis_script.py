@@ -5897,7 +5897,10 @@ class TennisBettingAnalyzer:
                     return result
                     
                 except Exception as e:
+                    import traceback
                     print(f"[Thread-{thread_id}]    ❌ Error analyzing match: {e}")
+                    print(f"[Thread-{thread_id}]    📍 Full traceback:")
+                    traceback.print_exc()
                     return None
             
             # Process all matches concurrently
