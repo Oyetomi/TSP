@@ -212,12 +212,54 @@
         "roi": 0.0,
         "last_updated": "2025-10-28"
       }
+    },
+    "SERVE_STRENGTH_V2_OCT2025": {
+      "name": "Serve Strength V2 October 2025 - Clutch Re-enabled",
+      "description": "Post-Ruud loss analysis fix. Re-enables clutch_factor at 6% (Altmaier had +9.5% clutch edge that was ignored). Reduces serve slightly, eliminates UTR (was misleading in Ruud case), reduces ranking bias. Adds surface-specific serve amplification for indoor hardcourt. Implements aggressive sample size confidence caps (<15 sets = max 68%, <10 sets = max 60%, <5 sets = max 50%).",
+      "created": "2025-10-30",
+      "weights": {
+        "set_performance": 0.23,
+        "serve_dominance": 0.19,
+        "recent_form": 0.16,
+        "surface_performance": 0.12,
+        "mental_toughness": 0.10,
+        "clutch_factor": 0.06,
+        "sets_in_losses": 0.06,
+        "pressure_performance": 0.06,
+        "atp_ranking": 0.02,
+        "utr_rating": 0.0,
+        "momentum": 0.0,
+        "physical_factors": 0.0,
+        "return_of_serve": 0.0
+      },
+      "features": {
+        "tiebreak_performance": false,
+        "pressure_performance": true,
+        "serve_dominance": true,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": false,
+        "surface_specific_serve_boost": true,
+        "aggressive_sample_size_caps": true,
+        "data_quality_crowd_gating": true
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-10-30"
+      }
     }
   },
-  "active_config": "SERVE_STRENGTH_OCT2025",
+  "active_config": "SERVE_STRENGTH_V2_OCT2025",
   "metadata": {
     "version": "1.0",
-    "last_updated": "2025-10-28",
-    "total_configs": 6
+    "last_updated": "2025-10-30",
+    "total_configs": 7
   }
 }

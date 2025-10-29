@@ -134,8 +134,8 @@ class PredictionConfig:
         
         # Multi-Year Statistics Configuration
         self.MULTI_YEAR_STATS = {
-            'enable_three_year_stats': False,     # Master toggle: False = 2 years (2024-2025), True = 3 years (2023-2024-2025)
-            'years_to_fetch': 2,                  # Number of years to fetch (2 or 3)
+            'enable_three_year_stats': True,      # Master toggle: False = 2 years (2024-2025), True = 3 years (2023-2024-2025)
+            'years_to_fetch': 3,                  # Number of years to fetch (2 or 3)
             'min_years_required': 2,              # Minimum years with data required (e.g., 2 out of 3)
             'year_weights': {
                 'two_year_mode': {
@@ -190,7 +190,7 @@ class PredictionConfig:
             # Data Quality Thresholds
             'minimum_set_sample_size': 25,             # Minimum sets for reliable performance data
             'minimum_match_sample_size': 15,           # Minimum matches for form analysis
-            'absolute_minimum_sets': 5,                # HARD SKIP: Skip match entirely if ANY player has < 5 sets
+            'absolute_minimum_sets': 5,                # HARD SKIP: Skip match entirely if ANY player has < 5 sets (Ruud had 2 sets = random noise)
             'absolute_minimum_matches': 3,             # HARD SKIP: Skip match entirely if ANY player has < 3 matches
             'surface_quality_discount': 0.5,           # Discount factor for poor quality surface data
             'form_quality_discount': 0.3,              # Discount factor for small form samples

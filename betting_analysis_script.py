@@ -3233,7 +3233,7 @@ class TennisBettingAnalyzer:
                     player2_name=player2.name,
                     tournament=tournament_name,
                     surface=surface,
-                    details=data_quality_check['skip_reason']
+                    reason=data_quality_check['skip_reason']
                 )
                 return None  # Skip this match
             
@@ -3669,16 +3669,26 @@ class TennisBettingAnalyzer:
             print(f"   🎾 {player1.name}: {serve_dom1:.1%} serve dominance")
             print(f"   🎾 {player2.name}: {serve_dom2:.1%} serve dominance")
             
+            # 🆕 SURFACE-SPECIFIC SERVE AMPLIFICATION (Post-Ruud loss analysis)
+            # Indoor hardcourt = serve-heavy surface → amplify serve weight by 1.5x
+            serve_weight = self.WEIGHTS.get('serve_dominance', 0)
+            surface_specific_boost_enabled = prediction_config.ENHANCED_FEATURES.get('surface_specific_serve_boost', False)
+            
+            if surface_specific_boost_enabled and surface and 'indoor' in surface.lower():
+                original_weight = serve_weight
+                serve_weight = min(serve_weight * 1.5, 0.30)  # Cap at 30%
+                print(f"   🏠 INDOOR HARDCOURT DETECTED → Serve weight amplified: {original_weight:.1%} → {serve_weight:.1%}")
+            
             serve_diff = serve_dom1 - serve_dom2
             if abs(serve_diff) > 0.1:  # 10% difference threshold
                 if serve_diff > 0:
-                    player1_score += self.WEIGHTS.get('serve_dominance', 0) * serve_diff
+                    player1_score += serve_weight * serve_diff
                     key_factors.append(f"{player1.name} serves more effectively ({serve_dom1:.1%} vs {serve_dom2:.1%})")
-                    print(f"   ✅ {player1.name} advantage: +{self.WEIGHTS.get('serve_dominance', 0) * serve_diff:.3f} points")
+                    print(f"   ✅ {player1.name} advantage: +{serve_weight * serve_diff:.3f} points")
                 else:
-                    player2_score += self.WEIGHTS.get('serve_dominance', 0) * abs(serve_diff)
+                    player2_score += serve_weight * abs(serve_diff)
                     key_factors.append(f"{player2.name} serves more effectively ({serve_dom2:.1%} vs {serve_dom1:.1%})")
-                    print(f"   ✅ {player2.name} advantage: +{self.WEIGHTS.get('serve_dominance', 0) * abs(serve_diff):.3f} points")
+                    print(f"   ✅ {player2.name} advantage: +{serve_weight * abs(serve_diff):.3f} points")
             
             weight_breakdown['serve'] = f"P1: {serve_dom1:.1%}, P2: {serve_dom2:.1%}"
         
@@ -4047,6 +4057,50 @@ class TennisBettingAnalyzer:
         player1_set_prob = self._calculate_set_probability(player1_match_prob, is_best_of_five)
         player2_set_prob = self._calculate_set_probability(player2_match_prob, is_best_of_five)
         
+        # 🆕 AGGRESSIVE SAMPLE SIZE CONFIDENCE CAP (Post-Ruud loss analysis)
+        # If either player has insufficient data, hard cap confidence to prevent overconfidence
+        aggressive_caps_enabled = prediction_config.ENHANCED_FEATURES.get('aggressive_sample_size_caps', False)
+        if aggressive_caps_enabled:
+            try:
+                # Get sample sizes for both players
+                enhanced_stats_p1 = self.stats_handler.get_enhanced_player_statistics(player1.id, surface)
+                enhanced_stats_p2 = self.stats_handler.get_enhanced_player_statistics(player2.id, surface)
+                
+                sample_sizes_p1 = enhanced_stats_p1.get('sample_sizes', {})
+                sample_sizes_p2 = enhanced_stats_p2.get('sample_sizes', {})
+                
+                # Get SETS count (not matches) for more accurate sample size assessment
+                sets_p1 = sample_sizes_p1.get('sets', sample_sizes_p1.get('matches', 0) * 2)  # Fallback: estimate 2 sets/match
+                sets_p2 = sample_sizes_p2.get('sets', sample_sizes_p2.get('matches', 0) * 2)
+                
+                min_sets = min(sets_p1, sets_p2)
+                
+                print(f"\n🎯 AGGRESSIVE SAMPLE SIZE CAPS:")
+                print(f"   {player1.name}: {sets_p1} sets")
+                print(f"   {player2.name}: {sets_p2} sets")
+                print(f"   Minimum: {min_sets} sets")
+                
+                sample_size_cap = None
+                if min_sets < 5:
+                    sample_size_cap = 0.50
+                    print(f"   ⚠️ <5 sets → HARD CAP: 50%")
+                elif min_sets < 10:
+                    sample_size_cap = 0.60
+                    print(f"   ⚠️ <10 sets → HARD CAP: 60%")
+                elif min_sets < 15:
+                    sample_size_cap = 0.68
+                    print(f"   ⚠️ <15 sets → HARD CAP: 68%")
+                else:
+                    print(f"   ✅ ≥15 sets → Normal 73% cap applies")
+                
+                if sample_size_cap:
+                    player1_set_prob = min(player1_set_prob, sample_size_cap)
+                    player2_set_prob = min(player2_set_prob, sample_size_cap)
+                    print(f"   📉 Capped probabilities: P1: {player1_set_prob:.1%}, P2: {player2_set_prob:.1%}")
+                    
+            except Exception as e:
+                print(f"   ⚠️ Error applying sample size caps: {e}")
+        
         # Apply bounds with 73% OVERCONFIDENCE PROTECTION
         # This ensures set probabilities also respect our validation-based confidence cap
         player1_set_prob = max(0.25, min(0.73, player1_set_prob))
@@ -4246,14 +4300,52 @@ class TennisBettingAnalyzer:
             # Get tournament level for high-profile considerations
             tournament_level = "Unknown"  # Could be enhanced with tournament data
             
-            crowd_sentiment_data = self.analyze_crowd_sentiment_confidence(
-                event_id=event_id,
-                predicted_winner=predicted_winner, 
-                player1_name=player1.name,
-                player2_name=player2.name,
-                base_confidence=base_confidence_score,
-                tournament_level=tournament_level
-            )
+            # 🆕 DATA QUALITY CROWD GATING (Post-Ruud loss analysis)
+            # Only use crowd sentiment when both players have sufficient data
+            use_crowd_sentiment = True
+            crowd_gating_enabled = prediction_config.ENHANCED_FEATURES.get('data_quality_crowd_gating', False)
+            
+            if crowd_gating_enabled:
+                try:
+                    # Get sample sizes for both players
+                    enhanced_stats_p1 = self.stats_handler.get_enhanced_player_statistics(player1.id, surface)
+                    enhanced_stats_p2 = self.stats_handler.get_enhanced_player_statistics(player2.id, surface)
+                    
+                    sample_sizes_p1 = enhanced_stats_p1.get('sample_sizes', {})
+                    sample_sizes_p2 = enhanced_stats_p2.get('sample_sizes', {})
+                    
+                    sets_p1 = sample_sizes_p1.get('sets', sample_sizes_p1.get('matches', 0) * 2)
+                    sets_p2 = sample_sizes_p2.get('sets', sample_sizes_p2.get('matches', 0) * 2)
+                    
+                    min_sets = min(sets_p1, sets_p2)
+                    
+                    if min_sets < 10:
+                        use_crowd_sentiment = False
+                        print(f"\n🚫 CROWD SENTIMENT DISABLED (data quality gating):")
+                        print(f"   Minimum sample size: {min_sets} sets < 10 sets threshold")
+                        print(f"   Crowd often misled by rankings/reputation when players have thin data")
+                except Exception as e:
+                    print(f"   ⚠️ Error checking crowd gating: {e}")
+            
+            if use_crowd_sentiment:
+                crowd_sentiment_data = self.analyze_crowd_sentiment_confidence(
+                    event_id=event_id,
+                    predicted_winner=predicted_winner, 
+                    player1_name=player1.name,
+                    player2_name=player2.name,
+                    base_confidence=base_confidence_score,
+                    tournament_level=tournament_level
+                )
+            else:
+                # Skip crowd sentiment analysis - data quality too low
+                crowd_sentiment_data = {
+                    'adjusted_confidence': base_confidence_score,
+                    'crowd_analysis': "Crowd sentiment disabled (insufficient player data)",
+                    'confidence_adjustment': 0.0,
+                    'crowd_favorite': 'Unknown',
+                    'crowd_percentage': 0,
+                    'vote_volume': 'Disabled'
+                }
             
             # CIRCUIT BREAKER DISABLED - Trust the model over crowd sentiment
             # Contrarian betting is often where the value is. Objective data filters (TIER 0-3, form validation,
@@ -5142,8 +5234,11 @@ class TennisBettingAnalyzer:
         
         print(f"🎾 Analyzing tennis matches for {target_date}")
         
-        # Initialize CSV file variable to prevent "referenced before assignment" errors
+        # Initialize CSV file variables to prevent "referenced before assignment" errors
         csv_file = None
+        config_csv_file = None
+        config_csv_writer = None
+        config_csv_path = None
         
         # Network failure circuit breaker (thread-safe)
         consecutive_network_failures = 0
@@ -5369,9 +5464,46 @@ class TennisBettingAnalyzer:
                         print(f"📄 CSV initialized: {csv_file_path}")
                     else:
                         print(f"📄 Appending to CSV: {csv_file_path}")
+                    
+                    # ✅ ALSO WRITE TO CONFIG-SPECIFIC CSV FILE
+                    config_csv_file = None
+                    config_csv_writer = None
+                    try:
+                        from weight_config_manager import config_manager
+                        from prediction_config import PredictionConfig
+                        
+                        active_config_name = config_manager.get_active_code_name()
+                        
+                        # Check if 3-year mode is enabled and append suffix
+                        pred_config = PredictionConfig()
+                        year_suffix = ""
+                        if pred_config.MULTI_YEAR_STATS.get('enable_three_year_stats', False):
+                            year_suffix = "_3YEAR"
+                        
+                        config_csv_path = f"all_{active_config_name}{year_suffix}.csv"
+                        
+                        # Check if config file exists to determine append mode
+                        import os
+                        config_file_exists = os.path.exists(config_csv_path)
+                        config_file_mode = 'a' if config_file_exists else 'w'
+                        
+                        config_csv_file = open(config_csv_path, config_file_mode, newline='', encoding='utf-8')
+                        config_csv_writer = csv.DictWriter(config_csv_file, fieldnames=csv_fieldnames)
+                        
+                        # Only write header if creating new file
+                        if not config_file_exists:
+                            config_csv_writer.writeheader()
+                            print(f"📄 Config CSV created: {config_csv_path}")
+                        else:
+                            print(f"📄 Appending to config CSV: {config_csv_path}")
+                    except Exception as e:
+                        print(f"⚠️ Warning: Could not initialize config-specific CSV: {e}")
+                        config_csv_writer = None
+                        
                 except Exception as e:
                     print(f"❌ Error initializing CSV: {e}")
                     csv_writer = None
+                    config_csv_writer = None
             
             # STEP 5: Now do expensive analysis only on matched pairs (CONCURRENT PROCESSING)
             analysis_results = []
@@ -5556,22 +5688,29 @@ class TennisBettingAnalyzer:
                                     print(f"{'='*90}")
                                     print(f"   🚨 Detected {consecutive_network_failures} consecutive network failures")
                                     print(f"   🌐 Network is likely down - ALL THREADS PAUSED")
-                                    print(f"   ⏸️  Waiting {network_failure_wait_time} seconds for network recovery...")
                                     print(f"   🔍 Error type: DNS/Connection failure")
-                                    print(f"   ⏳ Current thread will wait, other threads blocked at next match")
+                                    print(f"   ⏸️  All other threads are now waiting...")
+                                    print(f"")
+                                    print(f"   💡 Check your network connection")
+                                    print(f"   ⌨️  Press ENTER to continue when ready (Ctrl+C to abort)")
                                     print(f"{'='*90}\n")
                                     
-                                    import time
-                                    time.sleep(network_failure_wait_time)
+                                    # INTERACTIVE: Wait for user to press ENTER
+                                    try:
+                                        input()  # Wait for ENTER key
+                                    except (KeyboardInterrupt, EOFError):
+                                        print(f"\n❌ User aborted - exiting gracefully")
+                                        import sys
+                                        sys.exit(0)
                                     
                                     print(f"\n{'='*90}")
-                                    print(f"✅ RESUMING AFTER NETWORK WAIT")
+                                    print(f"✅ RESUMING PROCESSING (User confirmed)")
                                     print(f"{'='*90}")
-                                    print(f"   🔄 Attempting to continue after {network_failure_wait_time}s wait...")
+                                    print(f"   🔄 Attempting to continue...")
                                     print(f"   🚀 All threads will resume processing")
                                     print(f"{'='*90}\n")
                                     
-                                    consecutive_network_failures = 0  # Reset after wait
+                                    consecutive_network_failures = 0  # Reset after user confirmation
                                     network_paused.set()  # Resume all threads
                                     
                                     # RETRY this match after network recovery
@@ -5922,6 +6061,11 @@ class TennisBettingAnalyzer:
                         if csv_writer:
                             csv_writer.writerow(result)
                             csv_file.flush()  # Force write to disk
+                        
+                        # Also write to config-specific CSV
+                        if config_csv_writer:
+                            config_csv_writer.writerow(result)
+                            config_csv_file.flush()  # Force write to disk
                     else:
                         analysis_insufficient_data_skipped += 1
                     
@@ -5937,6 +6081,14 @@ class TennisBettingAnalyzer:
                 except Exception as e:
                     print(f"❌ Error closing CSV file: {e}")
             
+            # Close config-specific CSV file
+            if config_csv_file:
+                try:
+                    config_csv_file.close()
+                    print(f"📄 Config CSV file closed: {config_csv_path}")
+                except Exception as e:
+                    print(f"❌ Error closing config CSV file: {e}")
+            
             print(f"✅ Completed analysis of {analyzed_count} matches")
             if analysis_insufficient_data_skipped > 0:
                 print(f"⚠️ Skipped {analysis_insufficient_data_skipped} matches during analysis due to insufficient player data")
@@ -5944,10 +6096,15 @@ class TennisBettingAnalyzer:
             
         except Exception as e:
             print(f"Error analyzing scheduled matches: {e}")
-            # Make sure to close CSV file even on error
+            # Make sure to close CSV files even on error
             if csv_file:
                 try:
                     csv_file.close()
+                except:
+                    pass
+            if config_csv_file:
+                try:
+                    config_csv_file.close()
                 except:
                     pass
             return []
