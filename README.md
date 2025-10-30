@@ -406,14 +406,98 @@ pytest tests/
 
 ## Disclaimer
 
-This system is designed for research and educational purposes. Users should:
-- Understand betting involves financial risk
-- Implement proper bankroll management
-- Verify predictions independently
-- Comply with local gambling regulations
-- Use predictions as one input in decision-making
+**IMPORTANT: READ THIS DISCLAIMER CAREFULLY BEFORE USING THIS SOFTWARE**
 
-Past performance does not guarantee future results.
+### Purpose and Intended Use
+
+This software is provided **solely for research and educational purposes**. It demonstrates statistical modeling, data analysis, and machine learning concepts applied to sports predictions. The system is intended for:
+- Academic research and study
+- Learning about statistical modeling techniques
+- Understanding data analysis methodologies
+- Educational exploration of prediction systems
+
+### NOT Financial or Betting Advice
+
+**This software does NOT constitute:**
+- Financial advice
+- Betting recommendations
+- Guaranteed predictions
+- Investment guidance
+- Professional gambling advice
+
+**DO NOT use this software for actual betting or gambling activities.** The predictions are statistical models and should not be relied upon for real-world betting decisions.
+
+### No Warranties or Guarantees
+
+- **No accuracy guarantees**: Past performance (78-80% accuracy) does not guarantee future results
+- **No reliability warranties**: Predictions may be incorrect, incomplete, or outdated
+- **No suitability guarantees**: The software may not be suitable for your particular use case
+- **"AS IS" basis**: Software is provided "as is" without warranties of any kind
+
+### Legal Compliance
+
+**Users are solely responsible for:**
+- Complying with all applicable local, state, and federal laws regarding gambling and betting
+- Understanding gambling regulations in their jurisdiction
+- Verifying the legality of any betting activities before engaging in them
+- Obtaining necessary licenses or permissions if required
+
+**The authors and contributors of this software:**
+- Do not endorse or promote gambling
+- Are not responsible for illegal use of this software
+- Are not liable for any legal consequences of using this software
+
+### Financial Risk Warning
+
+**Betting involves significant financial risk:**
+- You may lose money
+- Past performance does not indicate future results
+- No prediction system is infallible
+- Always bet responsibly and within your means
+- Never bet more than you can afford to lose
+
+### Data and Privacy
+
+- This software may access third-party APIs and data sources
+- Users are responsible for complying with data source terms of service
+- No user data is collected or stored by this software
+- Users must ensure their own data practices comply with applicable privacy laws
+
+### Third-Party Services
+
+This software may integrate with third-party services and APIs. Users are responsible for:
+- Complying with third-party terms of service
+- Understanding data usage policies
+- Ensuring proper authentication and authorization
+- Respecting rate limits and usage restrictions
+
+### Limitation of Liability
+
+**To the maximum extent permitted by law:**
+- The authors, contributors, and maintainers of this software are not liable for any damages
+- This includes but is not limited to: financial losses, data loss, or legal consequences
+- Users assume all risks associated with using this software
+
+### Intellectual Property
+
+- This software uses various data sources and APIs
+- Users must respect intellectual property rights of third parties
+- Users are responsible for ensuring their use complies with all applicable IP laws
+
+### Ethical Considerations
+
+- Gambling can be addictive and harmful
+- This software is not intended to encourage gambling
+- If you or someone you know has a gambling problem, seek professional help
+- Resources: [National Council on Problem Gambling](https://www.ncpgambling.org/)
+
+### Acceptance of Terms
+
+By using this software, you acknowledge that you have read, understood, and agree to this disclaimer. If you do not agree with any part of this disclaimer, you must not use this software.
+
+---
+
+**Remember**: This is a research and educational tool. Use it responsibly and ethically. Past performance does not guarantee future results.
 
 ---
 
