@@ -489,7 +489,6 @@ This software may integrate with third-party services and APIs. Users are respon
 - Gambling can be addictive and harmful
 - This software is not intended to encourage gambling
 - If you or someone you know has a gambling problem, seek professional help
-- Resources: [National Council on Problem Gambling](https://www.ncpgambling.org/)
 
 ### Acceptance of Terms
 
