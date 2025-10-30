@@ -3598,6 +3598,21 @@ class TennisBettingAnalyzer:
             
             weight_breakdown['tiebreak'] = f"P1: {tiebreak_perf1:.1%}, P2: {tiebreak_perf2:.1%}"
         
+        # 🆕 CLOSE MATCH MENTAL AMPLIFICATION (Post-Blinkova loss analysis)
+        # For close matches, amplify mental/pressure factors by 1.5x
+        # Blinkova won 7-6, 7-5 despite being underdog in aggregate stats - mental toughness mattered more
+        # Detect close matches based on current score difference before mental/pressure factors
+        close_match_mental_amplification = prediction_config.ENHANCED_FEATURES.get('close_match_mental_amplification', False)
+        current_score_diff = abs(player1_score - player2_score)
+        is_close_match = False
+        
+        if close_match_mental_amplification and current_score_diff < 0.05:
+            is_close_match = True
+            print(f"\n🧠 CLOSE MATCH MENTAL AMPLIFICATION ACTIVATED:")
+            print(f"   📊 Score difference: {current_score_diff:.3f} < 0.05 threshold")
+            print(f"   📈 Mental toughness and pressure performance weights will be amplified by 1.5x")
+            print(f"   💡 In close matches, mental factors prove decisive (Blinkova case: 7-6, 7-5)")
+        
         # 6. OPTIONAL: Pressure Performance (only if enabled)
         if self.config.is_feature_enabled('pressure_performance'):
             print(f"\n🔥 PRESSURE PERFORMANCE ANALYSIS:")
@@ -3611,14 +3626,21 @@ class TennisBettingAnalyzer:
             
             pressure_diff = pressure_perf1 - pressure_perf2
             if abs(pressure_diff) > 0.1:  # 10% difference threshold
+                # Apply close match amplification if enabled
+                pressure_weight = self.WEIGHTS.get('pressure_performance', 0)
+                if is_close_match:
+                    original_weight = pressure_weight
+                    pressure_weight = pressure_weight * 1.5
+                    print(f"   🧠 CLOSE MATCH BOOST: Pressure weight amplified {original_weight:.1%} → {pressure_weight:.1%}")
+                
                 if pressure_diff > 0:
-                    player1_score += self.WEIGHTS.get('pressure_performance', 0) * pressure_diff
+                    player1_score += pressure_weight * pressure_diff
                     key_factors.append(f"{player1.name} better under pressure ({pressure_perf1:.1%} vs {pressure_perf2:.1%})")
-                    print(f"   ✅ {player1.name} advantage: +{self.WEIGHTS.get('pressure_performance', 0) * pressure_diff:.3f} points")
+                    print(f"   ✅ {player1.name} advantage: +{pressure_weight * pressure_diff:.3f} points")
                 else:
-                    player2_score += self.WEIGHTS.get('pressure_performance', 0) * abs(pressure_diff)
+                    player2_score += pressure_weight * abs(pressure_diff)
                     key_factors.append(f"{player2.name} better under pressure ({pressure_perf2:.1%} vs {pressure_perf1:.1%})")
-                    print(f"   ✅ {player2.name} advantage: +{self.WEIGHTS.get('pressure_performance', 0) * abs(pressure_diff):.3f} points")
+                    print(f"   ✅ {player2.name} advantage: +{pressure_weight * abs(pressure_diff):.3f} points")
             
             weight_breakdown['pressure'] = f"P1: {pressure_perf1:.1%}, P2: {pressure_perf2:.1%}"
         
@@ -3950,11 +3972,18 @@ class TennisBettingAnalyzer:
                 if abs(mental_diff) > 0.10:
                     mental_factor = min(abs(mental_diff), 0.5) * 2.0  # Scale to 0-1.0 range
                     
+                    # Apply close match amplification if enabled
+                    mental_weight = self.WEIGHTS['mental_toughness']
+                    if is_close_match:
+                        original_weight = mental_weight
+                        mental_weight = mental_weight * 1.5
+                        print(f"   🧠 CLOSE MATCH BOOST: Mental toughness weight amplified {original_weight:.1%} → {mental_weight:.1%}")
+                    
                     if mental_diff > 0:
-                        player1_score += self.WEIGHTS['mental_toughness'] * mental_factor
+                        player1_score += mental_weight * mental_factor
                         key_factors.append(f"{player1.name} mentally stronger ({p1_rate_str} vs {p2_rate_str} tiebreak rate)")
                     else:
-                        player2_score += self.WEIGHTS['mental_toughness'] * mental_factor
+                        player2_score += mental_weight * mental_factor
                         key_factors.append(f"{player2.name} mentally stronger ({p2_rate_str} vs {p1_rate_str} tiebreak rate)")
                 
                 weight_breakdown['mental_toughness'] = f"P1: {p1_rate_str}, P2: {p2_rate_str}"

@@ -254,9 +254,52 @@
         "roi": 0.0,
         "last_updated": "2025-10-30"
       }
+    },
+    "SERVE_STRENGTH_V3_OCT2025": {
+      "name": "Serve Strength V3 October 2025 - Mental/Pressure Boost",
+      "description": "Post-Blinkova loss analysis fix. Increases mental_toughness from 10% to 14% and pressure_performance from 6% to 10% (combined 24% vs 16%). Adds close_match_mental_amplification feature that amplifies mental/pressure factors by 1.5x when set probability gap < 5%. Addresses Blinkova loss where mental toughness (+4%) and pressure performance (+3.7%) proved decisive in 7-6, 7-5 tiebreak sets.",
+      "created": "2025-10-30",
+      "weights": {
+        "set_performance": 0.22,
+        "serve_dominance": 0.18,
+        "recent_form": 0.15,
+        "surface_performance": 0.11,
+        "mental_toughness": 0.14,
+        "clutch_factor": 0.06,
+        "sets_in_losses": 0.06,
+        "pressure_performance": 0.10,
+        "atp_ranking": 0.02,
+        "utr_rating": 0.0,
+        "momentum": 0.0,
+        "physical_factors": 0.0,
+        "return_of_serve": 0.0
+      },
+      "features": {
+        "tiebreak_performance": false,
+        "pressure_performance": true,
+        "serve_dominance": true,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": false,
+        "surface_specific_serve_boost": true,
+        "aggressive_sample_size_caps": true,
+        "data_quality_crowd_gating": true,
+        "close_match_mental_amplification": true
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-10-30"
+      }
     }
   },
-  "active_config": "SERVE_STRENGTH_V2_OCT2025",
+  "active_config": "SERVE_STRENGTH_V3_OCT2025",
   "metadata": {
     "version": "1.0",
     "last_updated": "2025-10-30",
