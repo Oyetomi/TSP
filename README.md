@@ -189,16 +189,24 @@ This conservative approach prioritizes accuracy over optimism, ensuring predicti
 
 ### The Kimberly Birrell vs Donna Vekić Case Study
 
+**The Match:**
+- **Date**: October 31, 2025
+- **Tournament**: Chennai WTA
+- **Surface**: Hardcourt outdoor
+- **Players**: Kimberly Birrell (#117) vs Donna Vekić (#78)
+
 **The Setup:**
-- **Prediction**: Kimberly Birrell (#117) +1.5 sets vs Donna Vekić (#78)
-- **The Crowd**: Public sentiment heavily favored Vekić (based on ranking)
+- **Prediction**: Kimberly Birrell +1.5 sets
 - **Our Model**: Favored Birrell at 73% set probability
-- **Key Factors**: UTR advantage (12.07 vs 11.96), despite ranking gap
+- **The Crowd**: Public sentiment heavily favored Vekić (based on ranking)
+- **Key Factors**: UTR advantage (12.07 vs 11.96), despite 39-position ranking gap
 
 **The Result:**
-- ✅ **Birrell won 2-0 sets** - Our prediction was correct
+- **Final Score**: Birrell def. Vekić **2-0 sets**
+- **Sets Won**: Birrell won 2 sets, Vekić won 0 sets
+- ✅ **Prediction correct** - Birrell won both sets (bet cashed)
 - ✅ **Crowd was wrong** - Ranking-based sentiment failed
-- ✅ **Model confidence validated** - Data-driven approach triumphed
+- ✅ **Model validated** - Data-driven approach triumphed over popular opinion
 
 **Why This Matters:**
 
