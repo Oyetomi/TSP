@@ -47,6 +47,12 @@ class PlayerAnalysisService:
         self.session = None
         self._headers = self._get_default_headers()
         self._cookies = MATCH_DATA_CONFIG.get('cookies', {})
+        # Initialize match_data_service for H2H data
+        try:
+            from .match_data_provider import MatchDataProvider
+            self.match_data_service = MatchDataProvider()
+        except ImportError:
+            self.match_data_service = None
     
     def _get_default_headers(self) -> Dict[str, str]:
         """Get default headers for API requests (loaded from api_secrets.py)."""
@@ -137,8 +143,12 @@ class PlayerAnalysisService:
         """
         try:
             # Get H2H data
+            if not self.match_data_service:
+                print(f"⚠️ match_data_service not initialized, skipping H2H analysis")
+                return self._create_empty_h2h_analysis()
+            
             h2h_data = await self.match_data_service.get_head_to_head(event_id)
-            if not h2h_data['events']:
+            if not h2h_data.get('events'):
                 return self._create_empty_h2h_analysis()
             
             # Filter and sort matches
