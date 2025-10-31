@@ -204,7 +204,7 @@ This conservative approach prioritizes accuracy over optimism, ensuring predicti
 **The Result:**
 - **Final Score**: Birrell def. Vekić **2-0 sets**
 - **Sets Won**: Birrell won 2 sets, Vekić won 0 sets
-- ✅ **Prediction correct** - Birrell won both sets (bet cashed)
+- ✅ **Prediction correct** - Birrell won both sets
 - ✅ **Crowd was wrong** - Ranking-based sentiment failed
 - ✅ **Model validated** - Data-driven approach triumphed over popular opinion
 
