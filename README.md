@@ -434,11 +434,6 @@ config_manager.add_config(
 )
 ```
 
-### Running Tests
-```bash
-pytest tests/
-```
-
 ---
 
 ## Disclaimer
