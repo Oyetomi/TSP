@@ -2308,20 +2308,20 @@ class TennisBettingAnalyzer:
             #
             # KEY INSIGHT: +1.5 sets is about RELATIVE performance, not absolute.
             # Even Kawa (33%) vs Bronzetti (39%) - Bronzetti is clearly better!
-            
-            # Also skip if one player is extremely poor (< 30% with 4+ matches)
-            EXTREME_POOR_THRESHOLD = 0.30
-            EXTREME_MATCHES_THRESHOLD = 4
-            
-            if p1_matches >= EXTREME_MATCHES_THRESHOLD and p1_win_rate < EXTREME_POOR_THRESHOLD:
-                reason = (f"{player1.name} has extremely poor {current_year} {surface} form: "
-                         f"{p1_win_rate:.1%} ({p1_wins}/{p1_matches} matches)")
-                return True, reason
-                
-            if p2_matches >= EXTREME_MATCHES_THRESHOLD and p2_win_rate < EXTREME_POOR_THRESHOLD:
-                reason = (f"{player2.name} has extremely poor {current_year} {surface} form: "
-                         f"{p2_win_rate:.1%} ({p2_wins}/{p2_matches} matches)")
-                return True, reason
+            #
+            # CRITICAL FIX: One player having poor form is NOT a reason to skip!
+            # If Player A has 0% win rate (0/4 matches), that's a STRONG signal to bet on Player B!
+            # Poor form is a VALID signal for +1.5 sets betting, not a data quality issue.
+            #
+            # REMOVED: Skip if one player has < 30% win rate
+            # OLD LOGIC (WRONG):
+            # if p1_win_rate < 0.30: skip ← This skips bets where opponent has advantage!
+            #
+            # EXAMPLE: Popyrin (0%) vs Korda (50%)
+            # - Popyrin's poor form is a STRONG signal Korda will win at least one set
+            # - We should BET on Korda, not skip!
+            #
+            # Only skip for data quality issues (TIER 0/1), not poor performance
             
             # TIER 3 CHECK DISABLED FOR +1.5 SETS BETTING
             # "Both mediocre" (<50%) doesn't matter - we predict based on RELATIVE performance!
@@ -2335,7 +2335,7 @@ class TennisBettingAnalyzer:
             # - But Player B is CLEARLY better (+3% edge)
             # - Player B should win at least one set!
             #
-            # Only skip for data quality issues (TIER 0/1) or extreme cases (< 30%)
+            # Only skip for data quality issues (TIER 0/1)
             
             return False, ""
             
