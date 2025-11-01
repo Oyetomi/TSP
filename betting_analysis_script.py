@@ -45,6 +45,10 @@ class BookmakerMatch:
     odds_player2_1_5: float  # Player 2 +1.5 sets odds
     odds_player1_2_5: Optional[float] = None  # Player 1 +2.5 sets odds (for best-of-5)
     odds_player2_2_5: Optional[float] = None  # Player 2 +2.5 sets odds (for best-of-5)
+    
+    # Total Games Over/Under markets
+    total_games_lines: Dict[str, Dict[str, float]] = None  # {'20.5': {'over': 1.85, 'under': 1.95}, '21.5': {...}}
+    
     available: bool = True
 
 @dataclass
@@ -89,6 +93,14 @@ class SetPrediction:
     reasoning: str
     player1_probability: float = 0.0  # Individual probability for player1
     player2_probability: float = 0.0  # Individual probability for player2
+    over_2_5_sets_probability: float = 0.0  # Probability match goes over 2.5 sets (to 3 sets)
+    
+    # Total Games prediction
+    expected_total_games: float = 0.0  # Expected total games in match
+    over_20_5_games_prob: float = 0.0  # Probability of Over 20.5 games
+    over_21_5_games_prob: float = 0.0  # Probability of Over 21.5 games
+    over_22_5_games_prob: float = 0.0  # Probability of Over 22.5 games (most common)
+    over_23_5_games_prob: float = 0.0  # Probability of Over 23.5 games
     
     # Enhanced betting recommendations
     betting_type: str = "SETS"  # "SETS" or "GAMES" 
@@ -239,37 +251,60 @@ class OddsProvider:
                         if '(Srl)' in home_team or '(Srl)' in away_team:
                             continue
                         
-                        # Look for both +1.5 and +2.5 sets markets
+                        # Look for both +1.5 and +2.5 sets markets, AND Total Games markets
                         markets = event.get('markets', [])
                         home_plus_1_5_odds = None
                         away_plus_1_5_odds = None
                         home_plus_2_5_odds = None
                         away_plus_2_5_odds = None
+                        total_games_lines = {}
                         
                         for market in markets:
                             market_desc = market.get('desc', '')
-                            # We only care about Set handicap lines (not Game handicap etc.)
-                            if not market_desc.startswith('Set handicap'):
-                                continue
-                            
                             outcomes = market.get('outcomes', [])
-                            for outcome in outcomes:
-                                outcome_desc = outcome.get('desc', '')
-                                odds = float(outcome.get('odds', 0))
-                                
-                                # Check for +1.5 sets markets
-                                if '(+1.5)' in outcome_desc:
-                                    if outcome_desc.startswith('Home'):
-                                        home_plus_1_5_odds = odds
-                                    elif outcome_desc.startswith('Away'):
-                                        away_plus_1_5_odds = odds
                             
-                                # Check for +2.5 sets markets (for best-of-5 matches)
-                                elif '(+2.5)' in outcome_desc:
-                                    if outcome_desc.startswith('Home'):
-                                        home_plus_2_5_odds = odds
-                                    elif outcome_desc.startswith('Away'):
-                                        away_plus_2_5_odds = odds
+                            # SET HANDICAP MARKETS (+1.5, +2.5 sets)
+                            if market_desc.startswith('Set handicap'):
+                                for outcome in outcomes:
+                                    outcome_desc = outcome.get('desc', '')
+                                    odds = float(outcome.get('odds', 0))
+                                    
+                                    # Check for +1.5 sets markets
+                                    if '(+1.5)' in outcome_desc:
+                                        if outcome_desc.startswith('Home'):
+                                            home_plus_1_5_odds = odds
+                                        elif outcome_desc.startswith('Away'):
+                                            away_plus_1_5_odds = odds
+                                
+                                    # Check for +2.5 sets markets (for best-of-5 matches)
+                                    elif '(+2.5)' in outcome_desc:
+                                        if outcome_desc.startswith('Home'):
+                                            home_plus_2_5_odds = odds
+                                        elif outcome_desc.startswith('Away'):
+                                            away_plus_2_5_odds = odds
+                            
+                            # TOTAL GAMES O/U MARKETS
+                            # Common formats: "Total Games Over/Under", "Games O/U", "Total - Games"
+                            elif any(keyword in market_desc.lower() for keyword in ['total games', 'games o/u', 'total - games']):
+                                # Parse line (e.g., "20.5", "21.5", "22.5")
+                                # Outcomes typically: "Over 20.5" @ 1.85, "Under 20.5" @ 1.95
+                                for outcome in outcomes:
+                                    outcome_desc = outcome.get('desc', '').lower()
+                                    odds = float(outcome.get('odds', 0))
+                                    
+                                    # Extract line number (e.g., "20.5" from "Over 20.5")
+                                    import re
+                                    line_match = re.search(r'(\d+\.5)', outcome_desc)
+                                    if line_match:
+                                        line = line_match.group(1)
+                                        
+                                        if line not in total_games_lines:
+                                            total_games_lines[line] = {}
+                                        
+                                        if 'over' in outcome_desc:
+                                            total_games_lines[line]['over'] = odds
+                                        elif 'under' in outcome_desc:
+                                            total_games_lines[line]['under'] = odds
                         
                         # ONLY include matches where we found BOTH +1.5 odds (minimum requirement)
                         if home_plus_1_5_odds is not None and away_plus_1_5_odds is not None:
@@ -279,6 +314,12 @@ class OddsProvider:
                             if home_plus_2_5_odds is not None and away_plus_2_5_odds is not None:
                                 match_info += f" | {home_team} (+2.5) @ {home_plus_2_5_odds} / {away_team} (+2.5) @ {away_plus_2_5_odds}"
                             
+                            # Include Total Games info if available
+                            if total_games_lines:
+                                lines_str = ', '.join([f"{line} O/U: {data.get('over', 'N/A')}/{data.get('under', 'N/A')}" 
+                                                       for line, data in sorted(total_games_lines.items())])
+                                match_info += f" | Total Games: {lines_str}"
+                            
                             matches.append(BookmakerMatch(
                                 event_id=event_id,
                                 player1=home_team,
@@ -287,6 +328,7 @@ class OddsProvider:
                                 odds_player2_1_5=away_plus_1_5_odds,
                                 odds_player1_2_5=home_plus_2_5_odds,
                                 odds_player2_2_5=away_plus_2_5_odds,
+                                total_games_lines=total_games_lines if total_games_lines else None,
                                 available=True
                             ))
                             print(match_info)
@@ -2972,6 +3014,739 @@ class TennisBettingAnalyzer:
             # Final bounds for best-of-3 - increased max from 85% to 95% for better granularity
             return max(0.35, min(0.95, set_prob))
     
+    def _get_historical_match_patterns(self, player_id: int, surface: str = None, max_matches: int = 50) -> Dict[str, Any]:
+        """
+        Analyze historical match patterns to get actual game counts per set and 3-set match rates.
+        
+        Returns:
+            Dict with:
+            - avg_games_per_set_2_0: Average games per set in 2-0 matches
+            - avg_games_per_set_2_1: Average games per set in 2-1 matches  
+            - avg_total_games_2_0: Average total games in 2-0 matches
+            - avg_total_games_2_1: Average total games in 2-1 matches
+            - three_set_rate: Percentage of matches that went 3 sets
+            - sample_size: Number of matches analyzed
+        """
+        try:
+            comprehensive_matches = self.player_service.get_comprehensive_singles_matches(
+                player_id, max_matches=max_matches, max_pages=5
+            )
+            
+            if not comprehensive_matches or not comprehensive_matches.get('events'):
+                return None
+            
+            games_2_0 = []  # Total games in 2-0 matches
+            games_2_1 = []  # Total games in 2-1 matches
+            games_3_plus = []  # Total games in 3+ set matches (best-of-5)
+            three_set_count = 0
+            total_finished_matches = 0
+            games_3_plus_samples = 0  # Count of 3+ set matches
+            
+            for match in comprehensive_matches.get('events', []):
+                try:
+                    if match.get('status', {}).get('type') != 'finished':
+                        continue
+                    
+                    # Surface filtering
+                    if surface and surface.lower() not in ['unknown', 'n/a', 'none']:
+                        match_surface = match.get('groundType', '').lower()
+                        if surface.lower() not in match_surface and match_surface not in surface.lower():
+                            continue
+                    
+                    home_score = match.get('homeScore', {})
+                    away_score = match.get('awayScore', {})
+                    
+                    if not home_score or not away_score:
+                        continue
+                    
+                    # Count sets and games
+                    sets_played = 0
+                    total_games = 0
+                    
+                    for period_key in ['period1', 'period2', 'period3', 'period4', 'period5']:
+                        p1_games = home_score.get(period_key)
+                        p2_games = away_score.get(period_key)
+                        
+                        if p1_games is None or p2_games is None:
+                            break
+                        
+                        if isinstance(p1_games, (int, float)) and isinstance(p2_games, (int, float)):
+                            sets_played += 1
+                            total_games += int(p1_games) + int(p2_games)
+                    
+                    if sets_played < 2:
+                        continue
+                    
+                    total_finished_matches += 1
+                    
+                    if sets_played == 2:
+                        games_2_0.append(total_games)
+                    elif sets_played == 3:
+                        games_2_1.append(total_games)
+                        three_set_count += 1
+                    elif sets_played >= 4:  # Best-of-5: 3+ sets
+                        games_3_plus.append(total_games)
+                        three_set_count += 1
+                        games_3_plus_samples += 1
+                        
+                except Exception:
+                    continue
+            
+            if total_finished_matches == 0:
+                return None
+            
+            # Calculate averages
+            result = {
+                'avg_total_games_2_0': sum(games_2_0) / len(games_2_0) if games_2_0 else None,
+                'avg_total_games_2_1': sum(games_2_1) / len(games_2_1) if games_2_1 else None,
+                'avg_total_games_3_plus': sum(games_3_plus) / len(games_3_plus) if games_3_plus else None,
+                'three_set_rate': three_set_count / total_finished_matches if total_finished_matches > 0 else 0.0,
+                'sample_size': total_finished_matches,
+                'games_2_0_samples': len(games_2_0),
+                'games_2_1_samples': len(games_2_1),
+                'games_3_plus_samples': games_3_plus_samples
+            }
+            
+            return result
+            
+        except Exception as e:
+            return None
+    
+    def _get_h2h_three_set_rate(self, player1_id: int, player2_id: int, event_id: str = None, surface: str = None) -> Optional[float]:
+        """
+        Get head-to-head 3-set match rate between two players.
+        
+        Returns:
+            Rate (0.0-1.0) of matches that went 3 sets, or None if not available
+        """
+        if not event_id:
+            return None
+        
+        try:
+            import asyncio
+            
+            # Use the async H2H analysis
+            loop = None
+            try:
+                loop = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            h2h_data = loop.run_until_complete(
+                self.player_service.analyze_head_to_head(event_id, player1_id, player2_id, surface)
+            )
+            
+            if not h2h_data or not h2h_data.get('total_matches') or h2h_data['total_matches'] < 2:
+                return None
+            
+            # Try to get match details from H2H data structure
+            # The H2H data might already have match details
+            matches = h2h_data.get('matches', [])
+            if not matches:
+                # Fallback: extract from comprehensive matches
+                comprehensive_matches = self.player_service.get_comprehensive_singles_matches(
+                    player1_id, max_matches=100
+                ).get('events', [])
+                
+                # Filter for H2H matches
+                matches = []
+                for match in comprehensive_matches:
+                    home_id = match.get('homeTeam', {}).get('id')
+                    away_id = match.get('awayTeam', {}).get('id')
+                    if (home_id == player1_id and away_id == player2_id) or (home_id == player2_id and away_id == player1_id):
+                        if match.get('status', {}).get('type') == 'finished':
+                            matches.append(match)
+            
+            if len(matches) < 2:
+                return None
+            
+            # Count 3-set matches
+            three_set_count = 0
+            for match in matches:
+                home_score = match.get('homeScore', {})
+                away_score = match.get('awayScore', {})
+                
+                if not home_score or not away_score:
+                    continue
+                
+                sets_played = 0
+                for period_key in ['period1', 'period2', 'period3']:
+                    if home_score.get(period_key) is not None and away_score.get(period_key) is not None:
+                        sets_played += 1
+                
+                if sets_played == 3:
+                    three_set_count += 1
+            
+            return three_set_count / len(matches) if matches else None
+            
+        except Exception as e:
+            # Silently fail - H2H data is optional
+            return None
+    
+    def _get_recent_three_set_rate(self, player_id: int, surface: str = None, max_matches: int = 10) -> Optional[float]:
+        """
+        Get recent 3-set match rate for a player.
+        
+        Returns:
+            Rate (0.0-1.0) of recent matches that went 3 sets, or None if not available
+        """
+        patterns = self._get_historical_match_patterns(player_id, surface, max_matches=max_matches)
+        if patterns and patterns.get('sample_size', 0) >= 5:
+            return patterns.get('three_set_rate')
+        return None
+    
+    def _calculate_over_2_5_sets_probability(
+        self, 
+        player1_set_prob: float, 
+        player2_set_prob: float,
+        player1: PlayerProfile,
+        player2: PlayerProfile,
+        surface: str = 'Unknown',
+        match_format: MatchFormat = None,
+        event_id: str = None
+    ) -> float:
+        """
+        Calculate probability that match goes over 2.5 sets using proper probability theory and historical data.
+        
+        For best-of-3: Over 2.5 sets = match goes 2-1 or 1-2 (both players win at least 1 set)
+        For best-of-5: Over 2.5 sets = match goes 3+ sets
+        
+        Uses historical match patterns when available, falls back to probability theory.
+        
+        Args:
+            player1_set_prob: Player 1's probability of winning ≥1 set
+            player2_set_prob: Player 2's probability of winning ≥1 set
+            player1: Player 1 profile
+            player2: Player 2 profile
+            surface: Match surface
+            match_format: Match format info
+            
+        Returns:
+            Probability (0.0 to 1.0) that match goes over 2.5 sets
+        """
+        is_best_of_five = match_format.is_best_of_five if match_format else False
+        
+        # BEST-OF-5 LOGIC
+        if is_best_of_five:
+            # For best-of-5, over 2.5 sets means 3+ sets
+            # Get historical 3-set rate for both players
+            p1_patterns = self._get_historical_match_patterns(player1.id, surface, max_matches=30)
+            p2_patterns = self._get_historical_match_patterns(player2.id, surface, max_matches=30)
+            
+            historical_3_set_rate = None
+            if p1_patterns and p2_patterns:
+                # Blend both players' historical rates
+                p1_rate = p1_patterns.get('three_set_rate', 0.0)
+                p2_rate = p2_patterns.get('three_set_rate', 0.0)
+                p1_weight = p1_patterns.get('sample_size', 0) / max(p1_patterns.get('sample_size', 0) + p2_patterns.get('sample_size', 0), 1)
+                historical_3_set_rate = (p1_rate * p1_weight) + (p2_rate * (1 - p1_weight))
+            
+            # Base probability: Both players need to win sets
+            # In best-of-5, if both have high set probabilities, match is more likely to go 3+ sets
+            base_prob = (player1_set_prob * player2_set_prob) * 1.1  # Adjust for correlation
+            
+            # Use historical rate if available and reliable
+            if historical_3_set_rate and historical_3_set_rate > 0.1:  # At least 10% to be meaningful
+                # Blend historical (60%) with calculated (40%)
+                final_prob = (historical_3_set_rate * 0.6) + (base_prob * 0.4)
+            else:
+                final_prob = base_prob
+            
+            return max(0.25, min(0.90, final_prob))
+        
+        # BEST-OF-3 LOGIC
+        # Get multiple data sources for 3-set likelihood
+        
+        # 1. Historical 3-set rates for both players (general pattern)
+        p1_patterns = self._get_historical_match_patterns(player1.id, surface, max_matches=30)
+        p2_patterns = self._get_historical_match_patterns(player2.id, surface, max_matches=30)
+        
+        historical_3_set_rate = None
+        if p1_patterns and p2_patterns and p1_patterns.get('sample_size', 0) >= 5 and p2_patterns.get('sample_size', 0) >= 5:
+            # Blend both players' historical rates
+            p1_rate = p1_patterns.get('three_set_rate', 0.0)
+            p2_rate = p2_patterns.get('three_set_rate', 0.0)
+            p1_weight = p1_patterns.get('sample_size', 0) / max(p1_patterns.get('sample_size', 0) + p2_patterns.get('sample_size', 0), 1)
+            historical_3_set_rate = (p1_rate * p1_weight) + (p2_rate * (1 - p1_weight))
+        
+        # 2. Recent form: Are players going 3 sets recently? (more predictive)
+        p1_recent_rate = self._get_recent_three_set_rate(player1.id, surface, max_matches=10)
+        p2_recent_rate = self._get_recent_three_set_rate(player2.id, surface, max_matches=10)
+        
+        recent_form_rate = None
+        if p1_recent_rate is not None and p2_recent_rate is not None:
+            # Average recent rates (both players going 3 sets recently = strong signal)
+            recent_form_rate = (p1_recent_rate + p2_recent_rate) / 2.0
+        
+        # 3. Head-to-head: Do these players usually go 3 sets? (most predictive)
+        h2h_rate = self._get_h2h_three_set_rate(player1.id, player2.id, event_id, surface) if event_id else None
+        
+        # Combine all signals with weights
+        # H2H is most predictive (50%), recent form next (30%), historical pattern last (20%)
+        combined_rate = None
+        if h2h_rate is not None and h2h_rate > 0:
+            # H2H available - use it heavily
+            if recent_form_rate is not None:
+                combined_rate = (h2h_rate * 0.5) + (recent_form_rate * 0.3) + (historical_3_set_rate * 0.2 if historical_3_set_rate else h2h_rate * 0.2)
+            elif historical_3_set_rate is not None:
+                combined_rate = (h2h_rate * 0.6) + (historical_3_set_rate * 0.4)
+            else:
+                combined_rate = h2h_rate
+        elif recent_form_rate is not None:
+            # Recent form available
+            if historical_3_set_rate is not None:
+                combined_rate = (recent_form_rate * 0.6) + (historical_3_set_rate * 0.4)
+            else:
+                combined_rate = recent_form_rate
+        else:
+            # Fall back to historical only
+            combined_rate = historical_3_set_rate
+        
+        # PROBABILITY THEORY CALCULATION
+        # Calculate competitiveness FIRST (needed for match win probability estimation)
+        match_competitiveness = 1.0 - abs(player1_set_prob - player2_set_prob)
+        
+        # Estimate match win probabilities from set probabilities
+        # If both players have decent set probabilities, the match is competitive
+        # Competitive matches: winning ≥1 set → higher chance to win match
+        # Formula: More competitive → higher conversion rate
+        
+        # Base conversion: P(win match) ≈ P(win ≥1 set) * conversion_factor
+        # For competitive matches (competitiveness > 0.7): use higher conversion (0.80-0.85)
+        # For one-sided matches (competitiveness < 0.5): use lower conversion (0.70-0.75)
+        if match_competitiveness > 0.70:
+            # Very competitive: both players likely to win sets → higher match win probability
+            conversion_factor = 0.70 + (match_competitiveness - 0.70) * 0.5  # 0.70 to 0.85
+        elif match_competitiveness > 0.50:
+            # Moderately competitive
+            conversion_factor = 0.65 + (match_competitiveness - 0.50) * 0.25  # 0.65 to 0.70
+        else:
+            # One-sided: use conservative estimate
+            conversion_factor = 0.60 + (match_competitiveness / 0.50) * 0.10  # 0.60 to 0.70
+        
+        p1_match_win_prob = player1_set_prob * conversion_factor
+        p2_match_win_prob = player2_set_prob * conversion_factor
+        
+        # Normalize to sum to 1
+        total_match_prob = p1_match_win_prob + p2_match_win_prob
+        if total_match_prob > 0:
+            p1_match_win_prob /= total_match_prob
+            p2_match_win_prob /= total_match_prob
+        
+        # Estimate probability of 2-1 vs 2-0 scorelines
+        # More competitive matches → more 2-1 finishes
+        # Typical rates: competitive (0.8-1.0) → 45-60% of wins are 2-1
+        #                one-sided (0.0-0.5) → 25-35% of wins are 2-1
+        p1_2_1_given_win = 0.25 + (match_competitiveness * 0.35)  # 0.25 to 0.60
+        p2_2_1_given_win = 0.25 + (match_competitiveness * 0.35)
+        
+        # Calculate probability of 2-1 finishes
+        p_2_1_p1_wins = p1_match_win_prob * p1_2_1_given_win
+        p_2_1_p2_wins = p2_match_win_prob * p2_2_1_given_win
+        
+        # P(Over 2.5) = P(2-1)
+        base_prob = p_2_1_p1_wins + p_2_1_p2_wins
+        
+        # ADDITIONAL BOOST: If both players have good set probabilities (>50%),
+        # the match is inherently competitive and more likely to go 3 sets
+        competitive_boost = 1.0
+        if player1_set_prob > 0.50 and player2_set_prob > 0.50:
+            # Both players likely to win sets → boost the probability
+            # The boost increases with how strong both players' set probabilities are
+            avg_set_prob = (player1_set_prob + player2_set_prob) / 2.0
+            competitive_boost = 1.0 + (avg_set_prob - 0.50) * 0.4  # Up to +20% boost (if avg = 1.0)
+            base_prob *= competitive_boost
+        
+        # Apply adjustments (multiplicative, not additive to prevent >100%)
+        # Resilience: Players who fight → more 2-1 finishes
+        resilience_multiplier = 1.0
+        try:
+            p1_resilience = self.calculate_sets_in_losses(player1.id, surface)[0] / 100.0
+            p2_resilience = self.calculate_sets_in_losses(player2.id, surface)[0] / 100.0
+            avg_resilience = (p1_resilience + p2_resilience) / 2.0
+            
+            # High resilience (>30%) → up to +20% boost
+            if avg_resilience > 0.30:
+                resilience_multiplier = 1.0 + (avg_resilience - 0.30) * 0.4
+            elif avg_resilience > 0.20:
+                resilience_multiplier = 1.0 + (avg_resilience - 0.20) * 0.2
+        except Exception:
+            pass
+        
+        # Mental toughness: Tiebreaks → tight sets → more 2-1 finishes
+        mental_multiplier = 1.0
+        try:
+            p1_mental = self.analyze_player_mental_toughness(player1.name, player1.id)
+            p2_mental = self.analyze_player_mental_toughness(player2.name, player2.id)
+            
+            p1_tiebreak_rate = float(p1_mental.get('tiebreak_rate', '50.0%').replace('%', '')) / 100.0
+            p2_tiebreak_rate = float(p2_mental.get('tiebreak_rate', '50.0%').replace('%', '')) / 100.0
+            avg_tiebreak = (p1_tiebreak_rate + p2_tiebreak_rate) / 2.0
+            
+            # High tiebreak rates (>55%) → up to +15% boost
+            if avg_tiebreak > 0.55:
+                mental_multiplier = 1.0 + (avg_tiebreak - 0.55) * 0.3
+        except Exception:
+            pass
+        
+        # Apply multipliers
+        calculated_prob = base_prob * resilience_multiplier * mental_multiplier
+        
+        # Blend with combined historical/H2H/recent data if available
+        if combined_rate and combined_rate > 0.05:  # At least 5% to be meaningful
+            # Blend data-driven (50%) with calculated (50%)
+            # Data-driven includes H2H, recent form, and historical patterns
+            final_prob = (combined_rate * 0.5) + (calculated_prob * 0.5)
+            
+            # Log which factors were used
+            factors_used = []
+            if h2h_rate is not None:
+                factors_used.append(f"H2H: {h2h_rate:.1%}")
+            if recent_form_rate is not None:
+                factors_used.append(f"Recent Form: {recent_form_rate:.1%}")
+            if historical_3_set_rate is not None:
+                factors_used.append(f"Historical: {historical_3_set_rate:.1%}")
+            
+            print(f"\n📊 OVER 2.5 SETS ANALYSIS:")
+            if factors_used:
+                print(f"   Data Sources: {', '.join(factors_used)}")
+            print(f"   Combined Data Rate: {combined_rate:.1%}")
+            print(f"   Calculated Probability: {calculated_prob:.1%}")
+            print(f"   Blended Final: {final_prob:.1%}")
+        elif historical_3_set_rate and historical_3_set_rate > 0.05:
+            # Fallback to historical only
+            final_prob = (historical_3_set_rate * 0.4) + (calculated_prob * 0.6)
+            print(f"\n📊 OVER 2.5 SETS ANALYSIS:")
+            print(f"   Historical Rate: {historical_3_set_rate:.1%}")
+            print(f"   Calculated Probability: {calculated_prob:.1%}")
+            print(f"   Blended Final: {final_prob:.1%}")
+        else:
+            final_prob = calculated_prob
+            print(f"\n📊 OVER 2.5 SETS ANALYSIS:")
+            print(f"   Using Calculated Probability Only: {calculated_prob:.1%}")
+            print(f"   (No historical data available)")
+        
+        # Tournament level adjustment
+        # Grand Slams and Masters: slightly more 3-set matches (mental/physical factors)
+        tournament_multiplier = 1.0
+        if match_format:
+            tournament_level = match_format.tournament_level.lower()
+            if 'grand slam' in tournament_level:
+                tournament_multiplier = 1.05  # +5% boost
+                print(f"   Tournament Boost: Grand Slam (+5%)")
+            elif 'masters' in tournament_level:
+                tournament_multiplier = 1.03  # +3% boost
+                print(f"   Tournament Boost: Masters 1000 (+3%)")
+        
+        final_prob *= tournament_multiplier
+        
+        # Cap at realistic bounds
+        # ATP/WTA average: ~35-40% of matches go 3 sets
+        # Competitive matches: up to 55-60%
+        # With H2H showing high rate: can go up to 70%
+        max_cap = 0.75 if (h2h_rate and h2h_rate > 0.6) else 0.70
+        if final_prob > max_cap:
+            print(f"   ⚠️ Capped at {max_cap:.1%} (realistic maximum)")
+        
+        return max(0.20, min(max_cap, final_prob))
+    
+    def _calculate_total_games_prediction(
+        self,
+        player1: PlayerProfile,
+        player2: PlayerProfile,
+        over_2_5_sets_prob: float,
+        player1_set_prob: float,
+        player2_set_prob: float,
+        surface: str = 'Unknown',
+        match_format: MatchFormat = None
+    ) -> Dict[str, Any]:
+        """
+        Predict total games in the match using actual historical game counts and dynamic adjustments.
+        
+        Uses:
+        - Historical game averages from actual match data
+        - Serve dominance (break point conversion, hold %)
+        - Tiebreak likelihood (historical tiebreak rates)
+        - Surface-specific adjustments
+        - Match format (best-of-3 vs best-of-5)
+        
+        Args:
+            player1: Player 1 profile
+            player2: Player 2 profile
+            over_2_5_sets_prob: Probability match goes to 3 sets
+            player1_set_prob: Player 1's set probability
+            player2_set_prob: Player 2's set probability
+            surface: Match surface
+            match_format: Match format info
+            
+        Returns:
+            Dictionary with expected total and probabilities for common lines
+        """
+        is_best_of_five = match_format.is_best_of_five if match_format else False
+        
+        # Get historical match patterns for both players
+        p1_patterns = self._get_historical_match_patterns(player1.id, surface, max_matches=40)
+        p2_patterns = self._get_historical_match_patterns(player2.id, surface, max_matches=40)
+        
+        # STEP 1: Base expectation from historical data
+        if is_best_of_five:
+            # Best-of-5: Use 3+ set averages
+            if p1_patterns and p2_patterns:
+                p1_games_3plus = p1_patterns.get('avg_total_games_3_plus')
+                p2_games_3plus = p2_patterns.get('avg_total_games_3_plus')
+                
+                if p1_games_3plus and p2_games_3plus:
+                    # Blend both players' historical averages
+                    p1_weight = p1_patterns.get('games_3_plus_samples', 0) / max(
+                        p1_patterns.get('games_3_plus_samples', 0) + p2_patterns.get('games_3_plus_samples', 0), 1
+                    )
+                    base_games_3_plus = (p1_games_3plus * p1_weight) + (p2_games_3plus * (1 - p1_weight))
+                else:
+                    base_games_3_plus = 35.0  # Fallback: typical best-of-5 match
+            else:
+                base_games_3_plus = 35.0
+            
+            # For best-of-5, over 2.5 sets means 3+ sets
+            base_expected_games = base_games_3_plus
+            
+        else:
+            # Best-of-3: Blend 2-0 and 2-1 averages based on probability
+            if p1_patterns and p2_patterns:
+                p1_games_2_0 = p1_patterns.get('avg_total_games_2_0')
+                p1_games_2_1 = p1_patterns.get('avg_total_games_2_1')
+                p2_games_2_0 = p2_patterns.get('avg_total_games_2_0')
+                p2_games_2_1 = p2_patterns.get('avg_total_games_2_1')
+                
+                # Blend both players' historical averages
+                if p1_games_2_0 and p2_games_2_0:
+                    p1_weight_2_0 = p1_patterns.get('games_2_0_samples', 0) / max(
+                        p1_patterns.get('games_2_0_samples', 0) + p2_patterns.get('games_2_0_samples', 0), 1
+                    )
+                    blended_games_2_0 = (p1_games_2_0 * p1_weight_2_0) + (p2_games_2_0 * (1 - p1_weight_2_0))
+                else:
+                    blended_games_2_0 = 18.5  # Fallback
+                
+                if p1_games_2_1 and p2_games_2_1:
+                    p1_weight_2_1 = p1_patterns.get('games_2_1_samples', 0) / max(
+                        p1_patterns.get('games_2_1_samples', 0) + p2_patterns.get('games_2_1_samples', 0), 1
+                    )
+                    blended_games_2_1 = (p1_games_2_1 * p1_weight_2_1) + (p2_games_2_1 * (1 - p1_weight_2_1))
+                else:
+                    blended_games_2_1 = 24.5  # Fallback
+                
+                # Use historical averages if available
+                base_games_2_0 = blended_games_2_0
+                base_games_2_1 = blended_games_2_1
+            else:
+                # Fallback to conservative defaults
+                base_games_2_0 = 18.5  # Reduced from 19.0
+                base_games_2_1 = 24.5  # Reduced from 27.0
+            
+            # Weighted average based on probability
+            base_expected_games = (
+                over_2_5_sets_prob * base_games_2_1 +
+                (1 - over_2_5_sets_prob) * base_games_2_0
+            )
+        
+        # STEP 2: Serve Dominance Adjustment (using actual stats)
+        serve_adjustment = 0.0
+        avg_serve_strength = 0.5
+        try:
+            p1_serve = self.calculate_enhanced_serve_dominance(player1.id, surface)
+            p2_serve = self.calculate_enhanced_serve_dominance(player2.id, surface)
+            avg_serve_strength = (p1_serve + p2_serve) / 2.0
+            
+            # Strong servers → fewer breaks → more games
+            # Weak servers → more breaks → fewer games
+            if avg_serve_strength > 0.65:  # Both strong servers
+                serve_adjustment = 2.0  # Reduced from 3.0
+            elif avg_serve_strength > 0.55:
+                serve_adjustment = 1.0  # Reduced from 1.5
+            elif avg_serve_strength < 0.45:  # Both weak servers
+                serve_adjustment = -1.5  # Reduced from -2.0
+        except Exception:
+            pass
+        
+        # STEP 3: Tiebreak Likelihood Adjustment (using actual tiebreak rates)
+        match_competitiveness = 1.0 - abs(player1_set_prob - player2_set_prob)
+        
+        tiebreak_adjustment = 0.0
+        avg_tiebreak_rate = 0.5
+        tiebreak_likelihood = 0.0
+        
+        try:
+            p1_mental = self.analyze_player_mental_toughness(player1.name, player1.id)
+            p2_mental = self.analyze_player_mental_toughness(player2.name, player2.id)
+            
+            p1_tiebreak_rate = float(p1_mental.get('tiebreak_rate', '50.0%').replace('%', '')) / 100.0
+            p2_tiebreak_rate = float(p2_mental.get('tiebreak_rate', '50.0%').replace('%', '')) / 100.0
+            avg_tiebreak_rate = (p1_tiebreak_rate + p2_tiebreak_rate) / 2.0
+            
+            # Estimate tiebreak likelihood
+            # Competitive match + high tiebreak players + strong servers → more tiebreaks
+            tiebreak_likelihood = match_competitiveness * avg_tiebreak_rate * avg_serve_strength
+            
+            # Each tiebreak adds ~1 game (7-6 instead of 6-4)
+            # Expected additional games = expected number of tiebreaks × 1
+            # In best-of-3: max 2 tiebreaks possible, in best-of-5: max 4
+            max_tiebreaks = 4 if is_best_of_five else 2
+            tiebreak_adjustment = tiebreak_likelihood * max_tiebreaks * 1.0  # Reduced from 4.0
+        except Exception:
+            pass
+        
+        # STEP 4: Surface Adjustment (dynamic based on serve dominance)
+        surface_adjustment = 0.0
+        surface_lower = surface.lower()
+        
+        # Surface effect is stronger when serve dominance is high
+        surface_multiplier = 0.5 + (avg_serve_strength * 0.5)  # 0.5 to 1.0
+        
+        if 'grass' in surface_lower or 'indoor' in surface_lower:
+            surface_adjustment = 0.5 * surface_multiplier  # Reduced from 1.0
+        elif 'clay' in surface_lower:
+            surface_adjustment = -0.5 * (1 - surface_multiplier)  # Less effect on clay
+        
+        # STEP 5: Calculate expected total
+        expected_total = (
+            base_expected_games +
+            serve_adjustment +
+            tiebreak_adjustment +
+            surface_adjustment
+        )
+        
+        # Cap at realistic bounds
+        if is_best_of_five:
+            expected_total = max(25.0, min(45.0, expected_total))
+        else:
+            expected_total = max(16.0, min(28.0, expected_total))
+        
+        # STEP 6: Calculate probabilities for common lines
+        # Use normal distribution with variance based on match uncertainty
+        # Higher uncertainty for competitive matches
+        std_dev = 2.5 + (match_competitiveness * 1.5)  # Reduced from 3.0 + 2.0
+        
+        def calculate_over_prob(line: float) -> float:
+            """Calculate probability of going over a specific line using normal distribution"""
+            from math import erf, sqrt
+            z_score = (line - expected_total) / std_dev
+            # Cumulative normal distribution
+            prob_under = 0.5 * (1 + erf(z_score / sqrt(2)))
+            return max(0.05, min(0.95, 1.0 - prob_under))
+        
+        # Calculate most common lines
+        result = {
+            'expected_total_games': round(expected_total, 1),
+            'over_19_5_prob': min(0.95, max(0.05, calculate_over_prob(19.5))),
+            'over_20_5_prob': min(0.95, max(0.05, calculate_over_prob(20.5))),
+            'over_21_5_prob': min(0.95, max(0.05, calculate_over_prob(21.5))),
+            'over_22_5_prob': min(0.95, max(0.05, calculate_over_prob(22.5))),
+            'over_23_5_prob': min(0.95, max(0.05, calculate_over_prob(23.5))),
+            'over_24_5_prob': min(0.95, max(0.05, calculate_over_prob(24.5))),
+            'over_25_5_prob': min(0.95, max(0.05, calculate_over_prob(25.5))),
+            'std_dev': round(std_dev, 2),
+            'serve_strength': round(avg_serve_strength, 3),
+            'tiebreak_likelihood': round(tiebreak_likelihood, 3),
+            'match_competitiveness': round(match_competitiveness, 3)
+        }
+        
+        # Add best-of-5 lines if applicable
+        if is_best_of_five:
+            result.update({
+                'over_30_5_prob': min(0.95, max(0.05, calculate_over_prob(30.5))),
+                'over_32_5_prob': min(0.95, max(0.05, calculate_over_prob(32.5))),
+                'over_35_5_prob': min(0.95, max(0.05, calculate_over_prob(35.5))),
+            })
+        
+        return result
+    
+    def _calculate_total_games_edge_and_recommendation(
+        self,
+        expected_total_games: float,
+        match_competitiveness: float,
+        bookmaker_lines: Dict[str, Dict[str, float]]
+    ) -> Dict[str, Any]:
+        """
+        Calculate edges for all bookmaker Total Games lines and recommend the best bet.
+        
+        Args:
+            expected_total_games: Our predicted expected total games
+            match_competitiveness: How close the match is expected to be (0-1)
+            bookmaker_lines: Dict of lines like {"20.5": {"over": 1.85, "under": 1.95}}
+            
+        Returns:
+            Dictionary with recommended line, bet type, odds, and edge
+        """
+        if not bookmaker_lines:
+            return {
+                'recommended_line': None,
+                'recommended_bet': None,
+                'recommended_odds': None,
+                'edge': None
+            }
+        
+        # Calculate standard deviation (same logic as in _calculate_total_games_prediction)
+        std_dev = 3.0 + (match_competitiveness * 2.0)
+        
+        def calculate_over_prob(line: float) -> float:
+            """Calculate probability of going over a specific line using normal distribution"""
+            from math import erf, sqrt
+            z_score = (line - expected_total_games) / std_dev
+            # Cumulative normal distribution
+            prob_under = 0.5 * (1 + erf(z_score / sqrt(2)))
+            return max(0.05, min(0.95, 1.0 - prob_under))
+        
+        def calculate_edge(our_prob: float, bookmaker_odds: float) -> float:
+            """Calculate edge percentage"""
+            if not bookmaker_odds or bookmaker_odds <= 1.0:
+                return 0.0
+            implied_prob = 1.0 / bookmaker_odds
+            edge = our_prob - implied_prob
+            return edge
+        
+        # Evaluate all available lines
+        best_edge = 0.0
+        best_line = None
+        best_bet_type = None
+        best_odds = None
+        
+        for line_str, odds_dict in bookmaker_lines.items():
+            try:
+                line = float(line_str)
+                our_over_prob = calculate_over_prob(line)
+                our_under_prob = 1.0 - our_over_prob
+                
+                # Check "Over" bet
+                if 'over' in odds_dict and odds_dict['over']:
+                    over_odds = odds_dict['over']
+                    over_edge = calculate_edge(our_over_prob, over_odds)
+                    
+                    if over_edge > best_edge and over_edge >= 0.05:  # Minimum 5% edge
+                        best_edge = over_edge
+                        best_line = line
+                        best_bet_type = 'Over'
+                        best_odds = over_odds
+                
+                # Check "Under" bet
+                if 'under' in odds_dict and odds_dict['under']:
+                    under_odds = odds_dict['under']
+                    under_edge = calculate_edge(our_under_prob, under_odds)
+                    
+                    if under_edge > best_edge and under_edge >= 0.05:  # Minimum 5% edge
+                        best_edge = under_edge
+                        best_line = line
+                        best_bet_type = 'Under'
+                        best_odds = under_odds
+            except (ValueError, KeyError) as e:
+                continue
+        
+        return {
+            'recommended_line': best_line,
+            'recommended_bet': best_bet_type,
+            'recommended_odds': best_odds,
+            'edge': best_edge if best_edge > 0 else None
+        }
+    
     def calculate_weighted_prediction(self, player1: PlayerProfile, player2: PlayerProfile, 
                                     surface: str = 'Unknown', event_id: int = None, 
                                     match_format: MatchFormat = None) -> SetPrediction:
@@ -3309,6 +4084,73 @@ class TennisBettingAnalyzer:
                 print(f"   ⚠️ {player1.name}: Insufficient quality opposition data ({quality_perf1['total_sets']} sets), using 0% bonus")
             if not quality_perf2['has_sufficient_data']:
                 print(f"   ⚠️ {player2.name}: Insufficient quality opposition data ({quality_perf2['total_sets']} sets), using 0% bonus")
+            
+            # CRITICAL: HARD SKIP FOR POOR QUALITY OPPOSITION DATA
+            # Skip matches where both players have unreliable data or predicted winner has inflated win rate
+            quality_sets_won_p1 = quality_perf1.get('sets_won', 0)
+            quality_sets_won_p2 = quality_perf2.get('sets_won', 0)
+            quality_matches_faced_p1 = quality_perf1.get('matches_played', 0)
+            quality_matches_faced_p2 = quality_perf2.get('matches_played', 0)
+            
+            # Rule 1: Skip if BOTH players have 0 quality sets won (both unreliable)
+            if quality_sets_won_p1 == 0 and quality_sets_won_p2 == 0:
+                skip_reason = (
+                    f"Both players have 0 quality opposition sets won - data unreliable. "
+                    f"{player1.name}: {quality_sets_won_p1} sets won ({quality_matches_faced_p1} matches faced), "
+                    f"{player2.name}: {quality_sets_won_p2} sets won ({quality_matches_faced_p2} matches faced). "
+                    f"Match outcome unpredictable when both players' win rates are based on weak competition."
+                )
+                print(f"\n🚫 HARD SKIP: POOR QUALITY OPPOSITION DATA")
+                print(f"   Reason: {skip_reason}")
+                self.skip_logger.log_skip(
+                    reason_type="INSUFFICIENT_QUALITY_DATA",
+                    player1_name=player1.name,
+                    player2_name=player2.name,
+                    tournament=tournament_name,
+                    surface=surface,
+                    reason=skip_reason
+                )
+                return None  # Skip this match
+            
+            # Rule 2: Skip if predicted winner has 0 quality sets won + high win rate + faced quality opponents
+            # Determine predicted winner based on set win rates
+            predicted_winner_is_p1 = set_win_rate1 > set_win_rate2
+            
+            if predicted_winner_is_p1:
+                pred_quality_sets_won = quality_sets_won_p1
+                pred_quality_matches_faced = quality_matches_faced_p1
+                pred_win_rate = set_win_rate1
+                pred_name = player1.name
+            else:
+                pred_quality_sets_won = quality_sets_won_p2
+                pred_quality_matches_faced = quality_matches_faced_p2
+                pred_win_rate = set_win_rate2
+                pred_name = player2.name
+            
+            # Check if predicted winner has problematic quality data
+            if (pred_quality_sets_won == 0 and 
+                pred_win_rate > 0.75 and 
+                pred_quality_matches_faced >= 1):
+                skip_reason = (
+                    f"Predicted winner ({pred_name}) has 0 quality opposition sets won but high win rate ({pred_win_rate:.1%}) "
+                    f"indicating inflation from weak competition. Faced {pred_quality_matches_faced} quality opponents but lost all. "
+                    f"Win rate unreliable for prediction."
+                )
+                print(f"\n🚫 HARD SKIP: INFLATED WIN RATE DETECTED")
+                print(f"   Predicted Winner: {pred_name}")
+                print(f"   Win Rate: {pred_win_rate:.1%} (inflated)")
+                print(f"   Quality Sets Won: {pred_quality_sets_won}")
+                print(f"   Quality Matches Faced: {pred_quality_matches_faced} (lost all)")
+                print(f"   Reason: {skip_reason}")
+                self.skip_logger.log_skip(
+                    reason_type="INFLATED_WIN_RATE",
+                    player1_name=player1.name,
+                    player2_name=player2.name,
+                    tournament=tournament_name,
+                    surface=surface,
+                    reason=skip_reason
+                )
+                return None  # Skip this match
             
             # RANKING GAP PENALTY: Discount set_performance advantage when lower-ranked player looks better
             # This addresses "hot streak illusion" where #116 player looks better than #44 player
@@ -4746,6 +5588,31 @@ class TennisBettingAnalyzer:
         print(f"   {player2.name}: {player2_set_prob:.1%} chance to win ≥1 set")
         print(f"   Total probability: {total_set_prob:.1%} (both can win sets in same match)")
         
+        # Calculate Over 2.5 Sets probability (with H2H and event context)
+        over_2_5_sets_prob = self._calculate_over_2_5_sets_probability(
+            player1_set_prob, player2_set_prob, player1, player2, surface, match_format, event_id
+        )
+        print(f"\n📊 OVER 2.5 SETS PROBABILITY:")
+        print(f"   Match likely to go to 3 sets: {over_2_5_sets_prob:.1%}")
+        if over_2_5_sets_prob > 0.60:
+            print(f"   ✅ HIGH PROBABILITY: Competitive match with both players likely to win sets")
+        elif over_2_5_sets_prob > 0.45:
+            print(f"   ⚖️ MODERATE PROBABILITY: Match could go either way")
+        else:
+            print(f"   📉 LOW PROBABILITY: Likely to finish in 2 sets")
+        
+        # Calculate Total Games prediction
+        total_games_data = self._calculate_total_games_prediction(
+            player1, player2, over_2_5_sets_prob, player1_set_prob, player2_set_prob, surface, match_format
+        )
+        print(f"\n🎯 TOTAL GAMES PREDICTION:")
+        print(f"   Expected Total: {total_games_data['expected_total_games']} games")
+        print(f"   Over 20.5: {total_games_data['over_20_5_prob']:.1%}")
+        print(f"   Over 21.5: {total_games_data['over_21_5_prob']:.1%}")
+        print(f"   Over 22.5: {total_games_data['over_22_5_prob']:.1%}")
+        print(f"   Over 23.5: {total_games_data['over_23_5_prob']:.1%}")
+        print(f"   💡 Serve Strength: {total_games_data['serve_strength']:.1%}, Tiebreak Likelihood: {total_games_data['tiebreak_likelihood']:.1%}")
+        
         if player1_set_prob > 0.70 or player2_set_prob > 0.70:
             print(f"⚠️  HIGH SET PROBABILITY WARNING:")
             print(f"   Approaching 73% confidence cap - prediction based on strong supporting factors")
@@ -4877,6 +5744,12 @@ class TennisBettingAnalyzer:
             reasoning=reasoning,
             player1_probability=player1_set_prob,  # Actual set probabilities
             player2_probability=player2_set_prob,
+            over_2_5_sets_probability=over_2_5_sets_prob,  # Probability match goes over 2.5 sets
+            expected_total_games=total_games_data['expected_total_games'],
+            over_20_5_games_prob=total_games_data['over_20_5_prob'],
+            over_21_5_games_prob=total_games_data['over_21_5_prob'],
+            over_22_5_games_prob=total_games_data['over_22_5_prob'],
+            over_23_5_games_prob=total_games_data['over_23_5_prob'],
             betting_type="SETS",  # Default to sets betting
             game_handicap_recommendation=None,
             alternative_markets=[],
@@ -5477,7 +6350,10 @@ class TennisBettingAnalyzer:
                         'player1_id', 'player1_name', 'player1_age', 'player1_gender', 'player1_country', 'player1_ranking', 'player1_utr_rating', 'player1_form_score',
                         'player2_id', 'player2_name', 'player2_age', 'player2_gender', 'player2_country', 'player2_ranking', 'player2_utr_rating', 'player2_form_score',
                         'predicted_winner', 'predicted_score', 'confidence', 'win_probability',
-                        'player1_set_probability', 'player2_set_probability',  # Add individual probabilities
+                        'player1_set_probability', 'player2_set_probability', 'over_2_5_sets_probability',  # Set probabilities
+                        'expected_total_games',  # Our total games prediction
+                        'bookmaker_total_games_lines',  # JSON string of all bookmaker Total Games lines (dynamic)
+                        'recommended_total_games_line', 'recommended_total_games_bet', 'recommended_total_games_odds', 'total_games_edge',  # Best Total Games bet
                         'recommended_bet', 'key_factors', 'reasoning', 'weight_breakdown',
                         'odds_provider_event_id', 'player1_odds_1_5', 'player2_odds_1_5', 'player1_odds_2_5', 'player2_odds_2_5', 'matched_player1', 'matched_player2'
                     ]
@@ -6018,6 +6894,41 @@ class TennisBettingAnalyzer:
                         'win_probability': prediction.win_probability,
                         'player1_set_probability': prediction.player1_probability,
                         'player2_set_probability': prediction.player2_probability,
+                        'over_2_5_sets_probability': prediction.over_2_5_sets_probability,
+                        'expected_total_games': prediction.expected_total_games,
+                    }
+                    
+                    # Calculate Total Games edge and recommendation
+                    import json
+                    bookmaker_lines_json = None
+                    total_games_recommendation = {
+                        'recommended_line': None,
+                        'recommended_bet': None,
+                        'recommended_odds': None,
+                        'edge': None
+                    }
+                    
+                    if odds_provider_match.total_games_lines:
+                        # Store bookmaker lines as JSON
+                        bookmaker_lines_json = json.dumps(odds_provider_match.total_games_lines)
+                        
+                        # Calculate edge and recommendation
+                        # Get match_competitiveness from prediction (stored during calculation)
+                        match_competitiveness = 1.0 - abs(prediction.player1_probability - prediction.player2_probability)
+                        
+                        total_games_recommendation = self._calculate_total_games_edge_and_recommendation(
+                            expected_total_games=prediction.expected_total_games,
+                            match_competitiveness=match_competitiveness,
+                            bookmaker_lines=odds_provider_match.total_games_lines
+                        )
+                    
+                    # Add Total Games fields to result
+                    result.update({
+                        'bookmaker_total_games_lines': bookmaker_lines_json,
+                        'recommended_total_games_line': total_games_recommendation['recommended_line'],
+                        'recommended_total_games_bet': f"{total_games_recommendation['recommended_bet']} {total_games_recommendation['recommended_line']}" if total_games_recommendation['recommended_bet'] else None,
+                        'recommended_total_games_odds': total_games_recommendation['recommended_odds'],
+                        'total_games_edge': f"{total_games_recommendation['edge']:.1%}" if total_games_recommendation['edge'] else None,
                         'recommended_bet': self._generate_recommended_bet_text(prediction, player1_name, player2_name),
                         'key_factors': '; '.join(prediction.key_factors[:3]),
                         'reasoning': prediction.reasoning,
@@ -6029,7 +6940,7 @@ class TennisBettingAnalyzer:
                         'player2_odds_2_5': odds_provider_match.odds_player2_2_5,
                         'matched_player1': odds_provider_match.player1,
                         'matched_player2': odds_provider_match.player2
-                    }
+                    })
                     
                     # Log prediction results using thread-safe logging
                     if self.prediction_logger:
