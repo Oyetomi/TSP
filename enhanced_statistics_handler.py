@@ -88,8 +88,6 @@ class EnhancedStatisticsHandler:
         
         # Combine statistics based on strategy
         if use_three_years:
-            # Add years_available to strategy for reliability scoring
-            strategy['years_available'] = len(available_years)
             combined_stats = self._combine_three_year_statistics(
                 current_stats, 
                 previous_stats,
@@ -98,21 +96,12 @@ class EnhancedStatisticsHandler:
                 surface
             )
         else:
-            # Add years_available to strategy for reliability scoring
-            strategy['years_available'] = len(available_years)
             combined_stats = self._combine_year_statistics(
                 current_stats, 
                 previous_stats, 
                 strategy,
                 surface
             )
-        
-        # Use adjusted wins if single-year data penalty was applied
-        if combined_stats.get('_single_year_penalty') and '_adjusted_wins' in combined_stats:
-            adjusted_wins = combined_stats.get('_adjusted_wins')
-            raw_wins = combined_stats.get('wins', 0)
-            logging.info(f"Using adjusted wins for single-year data: {adjusted_wins:.1f} (raw: {raw_wins:.1f})")
-            combined_stats['wins'] = adjusted_wins
         
         # Check for critical 404 errors
         has_404_error = False
@@ -348,52 +337,10 @@ class EnhancedStatisticsHandler:
         if self.config and hasattr(self.config, 'MULTI_YEAR_STATS'):
             min_years = self.config.MULTI_YEAR_STATS.get('min_years_required', 2)
         
-        # CRITICAL FIX: Allow new players (2025 only) - use current-year data if available
-        # BUT apply more conservative weighting/penalties for single-year data
-        # Only require minimum years if we DON'T have current-year data
+        # Check if we have enough years
         if len(available_years) < min_years:
             logging.warning(f"Only {len(available_years)} years available (required: {min_years})")
-            
-            # If we have current-year data, use it even if we don't meet minimum years requirement
-            # This supports new players who started in 2025
-            # BUT apply conservative penalties for single-year data
-            if 'current' in available_years:
-                current_matches = current_surface.get('matches', 0)
-                
-                # CRITICAL: Apply sample size penalties for single-year data
-                # Single-year data is less reliable - apply Bayesian shrinkage
-                # Even with 20+ matches, single-year data lacks historical context
-                # Apply penalty: <10 matches = heavy penalty, 10-20 = moderate, 20+ = light
-                if current_matches < 10:
-                    # Heavy penalty for very small samples
-                    shrinkage_factor = min(current_matches / 10.0, 0.5)  # Max 50% weight
-                elif current_matches < 20:
-                    # Moderate penalty for small samples: linear from 50% to 70%
-                    shrinkage_factor = 0.5 + ((current_matches - 10) / 10.0) * 0.2  # 50-70% weight
-                else:
-                    # Light penalty even for larger samples (still single-year data)
-                    shrinkage_factor = 0.75  # 75% weight for 20+ matches
-                
-                logging.info(f"Single-year data penalty: {current_matches} matches → {shrinkage_factor:.1%} weight")
-                
-                # Apply shrinkage to win rate (regress toward 50%)
-                # Store original for reference, but adjust for reliability
-                if 'wins' in current_surface and 'matches' in current_surface and current_surface['matches'] > 0:
-                    raw_win_rate = current_surface['wins'] / current_surface['matches']
-                    # Regress toward 50% (neutral) based on sample size
-                    adjusted_win_rate = (raw_win_rate * shrinkage_factor) + (0.5 * (1 - shrinkage_factor))
-                    # Store adjusted wins (but keep original matches count)
-                    current_surface['_adjusted_wins'] = adjusted_win_rate * current_surface['matches']
-                    current_surface['_raw_win_rate'] = raw_win_rate
-                    current_surface['_single_year_penalty'] = True
-                
-                # Mark this as single-year data for reliability scoring
-                current_surface['_single_year_data'] = True
-                
-                logging.info(f"Using current-year data only (new player): {current_matches} matches")
-                return current_surface
-            
-            # If no current-year data AND not enough years, return neutral fallback
+            # Return neutral fallback if not enough years
             if min_years > len(available_years):
                 return self._get_neutral_fallback()
         
@@ -713,15 +660,6 @@ class EnhancedStatisticsHandler:
         }
         
         strategy_adjustment = strategy_confidence.get(strategy['name'], 0.8)
-        
-        # CRITICAL: Penalize single-year data more heavily
-        # Check if this is single-year data (no previous/old year blending)
-        # Single-year data is less reliable - apply 30% penalty
-        years_available = strategy.get('years_available', 3)  # Default assume 3 years
-        if years_available == 1:
-            # Single-year data penalty: reduce reliability by 30%
-            single_year_penalty = 0.7
-            strategy_adjustment *= single_year_penalty
         
         return min(1.0, base_reliability * strategy_adjustment)
 

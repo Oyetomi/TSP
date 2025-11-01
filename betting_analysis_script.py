@@ -1969,23 +1969,14 @@ class TennisBettingAnalyzer:
             print(f"      Weighted score: {form_score:.1f} (regressed toward 50 by {(1-form_confidence)*100:.1f}%)")
             
             # Check for 404 errors in enhanced statistics (critical data)
-            # CRITICAL FIX: Only mark 404 as issue if player has NO current-year data
-            # New players (2025 only) will have 404s for 2023/2024 - that's expected!
             try:
                 enhanced_stats = self.stats_handler.get_enhanced_player_statistics(player_id, surface)
-                
-                # Check if player has current-year data before marking 404 as critical
-                current_year_only = enhanced_stats.get('current_year_only', {})
-                has_current_year_data = current_year_only.get('matches', 0) > 0
                 
                 # Log comprehensive player analysis data quality
                 analysis_issues = []
                 if enhanced_stats.get('has_404_error'):
-                    # Only mark 404 as critical if player has NO current-year data
-                    if not has_current_year_data:
-                        data_quality_issues.append("Player statistics not found (404)")
-                        analysis_issues.append("404 Error")
-                    # If player has current-year data, 404s for old years are expected (new player)
+                    data_quality_issues.append("Player statistics not found (404)")
+                    analysis_issues.append("404 Error")
                 
                 # Check sample sizes for analysis
                 sample_sizes = enhanced_stats.get('sample_sizes', {})
@@ -2001,16 +1992,7 @@ class TennisBettingAnalyzer:
                 
             except Exception as e:
                 if "404" in str(e) or "HTTP Error 404" in str(e):
-                    # Only mark as critical if we can't verify current-year data exists
-                    # Try to check if player has any current-year data
-                    try:
-                        current_check = self.stats_handler.get_enhanced_player_statistics(player_id, None)
-                        current_year_only = current_check.get('current_year_only', {})
-                        if current_year_only.get('matches', 0) == 0:
-                            data_quality_issues.append("Player statistics not found (404)")
-                    except Exception:
-                        # If we can't check, assume it's critical
-                        data_quality_issues.append("Player statistics not found (404)")
+                    data_quality_issues.append("Player statistics not found (404)")
             
             # Get enhanced surface-specific performance with year transition handling
             try:
@@ -2072,76 +2054,35 @@ class TennisBettingAnalyzer:
         """
         Check if match should be skipped due to insufficient player data (404 errors)
         
-        CRITICAL FIX: Allow new players (2025 only) - 404 errors for 2023/2024 are expected!
-        Only skip if player has NO data at all (404 errors AND no current-year data)
-        
         Returns:
             Tuple[bool, str]: (should_skip, reason)
         """
         critical_issues = []
         
-        # Check if players have current-year data (new players might only have 2025 data)
-        current_year = datetime.now().year
-        p1_has_current_data = False
-        p2_has_current_data = False
-        
-        try:
-            p1_stats = self.stats_handler.get_enhanced_player_statistics(player1.id, None)
-            p1_current = p1_stats.get('current_year_only', {})
-            p1_has_current_data = p1_current.get('matches', 0) > 0
-        except Exception:
-            pass
-        
-        try:
-            p2_stats = self.stats_handler.get_enhanced_player_statistics(player2.id, None)
-            p2_current = p2_stats.get('current_year_only', {})
-            p2_has_current_data = p2_current.get('matches', 0) > 0
-        except Exception:
-            pass
-        
         # Check player 1 data quality
         if player1.data_quality_issues:
             for issue in player1.data_quality_issues:
-                # Only treat 404 errors as critical if player has NO current-year data
-                if "404" in issue or "not found" in issue:
-                    if not p1_has_current_data:
-                        critical_issues.append(f"{player1.name}: {issue}")
-                    # If player has current-year data, 404 errors for old years are expected (new player)
-                elif "unavailable" in issue:
+                if "404" in issue or "not found" in issue or "unavailable" in issue:
                     critical_issues.append(f"{player1.name}: {issue}")
         
         # Check player 2 data quality  
         if player2.data_quality_issues:
             for issue in player2.data_quality_issues:
-                # Only treat 404 errors as critical if player has NO current-year data
-                if "404" in issue or "not found" in issue:
-                    if not p2_has_current_data:
-                        critical_issues.append(f"{player2.name}: {issue}")
-                    # If player has current-year data, 404 errors for old years are expected (new player)
-                elif "unavailable" in issue:
+                if "404" in issue or "not found" in issue or "unavailable" in issue:
                     critical_issues.append(f"{player2.name}: {issue}")
         
         # Additional check: Analyze mental toughness to see if tiebreak data is missing
-        # But allow if player has current-year data (new players might not have tiebreak data yet)
         try:
             player1_mental = self.analyze_player_mental_toughness(player1.name, player1.id)
             if player1_mental.get('data_quality_issue'):
-                # Only skip if tiebreak data missing AND no current-year data
-                # If player has current-year data, missing tiebreak data is OK (new player)
-                if not p1_has_current_data and "Tiebreak statistics not available" in player1_mental['data_quality_issue']:
-                    critical_issues.append(f"{player1.name}: {player1_mental['data_quality_issue']}")
+                critical_issues.append(f"{player1.name}: {player1_mental['data_quality_issue']}")
                 
             player2_mental = self.analyze_player_mental_toughness(player2.name, player2.id)
             if player2_mental.get('data_quality_issue'):
-                # Only skip if tiebreak data missing AND no current-year data
-                # If player has current-year data, missing tiebreak data is OK (new player)
-                if not p2_has_current_data and "Tiebreak statistics not available" in player2_mental['data_quality_issue']:
-                    critical_issues.append(f"{player2.name}: {player2_mental['data_quality_issue']}")
+                critical_issues.append(f"{player2.name}: {player2_mental['data_quality_issue']}")
         except Exception:
             # If mental toughness analysis fails, that's also a data quality issue
-            # But only if BOTH players have no current-year data
-            if not p1_has_current_data and not p2_has_current_data:
-                critical_issues.append("Mental toughness analysis failed")
+            critical_issues.append("Mental toughness analysis failed")
         
         if critical_issues:
             reason = f"Insufficient player data: {'; '.join(critical_issues)}"

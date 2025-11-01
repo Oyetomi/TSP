@@ -418,6 +418,61 @@ class TennisPredictionValidator:
             result["bet_player_sets"] = bet_player_sets
             result["bet_player_games"] = bet_player_games
             
+            # Validate Over 2.5 Sets prediction if available
+            over_2_5_prob_str = prediction.get('over_2_5_sets_probability', '')
+            if over_2_5_prob_str:
+                try:
+                    over_2_5_prob = float(over_2_5_prob_str)
+                    # Convert to percentage if needed
+                    if over_2_5_prob <= 1.0:
+                        over_2_5_prob *= 100
+                    
+                    # Determine if match went Over 2.5 sets (3+ sets)
+                    total_sets_played = home_sets + away_sets
+                    went_over_2_5 = total_sets_played >= 3
+                    
+                    # Determine recommended bet (≥60% = Over, ≤40% = Under)
+                    recommended_bet = None
+                    if over_2_5_prob >= 60:
+                        recommended_bet = "Over"
+                    elif over_2_5_prob <= 40:
+                        recommended_bet = "Under"
+                    
+                    # Check if prediction was correct
+                    over_2_5_correct = None
+                    if recommended_bet:
+                        if recommended_bet == "Over":
+                            over_2_5_correct = went_over_2_5
+                        else:  # Under
+                            over_2_5_correct = not went_over_2_5
+                        
+                        if over_2_5_correct:
+                            print(f"   ✅ Over 2.5 Sets BET CORRECT! Predicted {recommended_bet} ({over_2_5_prob:.1f}%), Match went {'3 sets' if went_over_2_5 else '2 sets'}")
+                        else:
+                            print(f"   ❌ Over 2.5 Sets BET INCORRECT! Predicted {recommended_bet} ({over_2_5_prob:.1f}%), Match went {'3 sets' if went_over_2_5 else '2 sets'}")
+                    else:
+                        print(f"   ⚠️  Over 2.5 Sets probability inconclusive ({over_2_5_prob:.1f}%) - no bet recommended")
+                    
+                    result["over_2_5_prob"] = over_2_5_prob
+                    result["over_2_5_recommended"] = recommended_bet
+                    result["over_2_5_actual"] = "Over" if went_over_2_5 else "Under"
+                    result["over_2_5_correct"] = over_2_5_correct
+                    result["total_sets_played"] = total_sets_played
+                    
+                except (ValueError, TypeError) as e:
+                    print(f"   ⚠️  Could not parse Over 2.5 Sets probability: {over_2_5_prob_str}")
+                    result["over_2_5_prob"] = None
+                    result["over_2_5_recommended"] = None
+                    result["over_2_5_actual"] = None
+                    result["over_2_5_correct"] = None
+                    result["total_sets_played"] = total_sets
+            else:
+                result["over_2_5_prob"] = None
+                result["over_2_5_recommended"] = None
+                result["over_2_5_actual"] = None
+                result["over_2_5_correct"] = None
+                result["total_sets_played"] = total_sets
+            
         except Exception as e:
             result["error"] = str(e)
             print(f"   ❌ Error: {e}")
@@ -486,7 +541,9 @@ class TennisPredictionValidator:
                 writer.writerow([
                     'Validation_Timestamp', 'Match_Date', 'Match', 
                     'Predicted_Winner', 'Predicted_Prob', 'Actual_Sets',
-                    'Bet_Player_Sets', 'Match_Finished', 'Prediction_Correct', 
+                    'Bet_Player_Sets', 'Match_Finished', 'Prediction_Correct',
+                    'Over_2_5_Prob', 'Over_2_5_Recommended', 'Over_2_5_Actual',
+                    'Total_Sets_Played', 'Over_2_5_Correct',
                     'Error_Message'
                 ])
                 
@@ -503,6 +560,11 @@ class TennisPredictionValidator:
                         result.get('bet_player_sets', ''),
                         'True' if result.get('finished') else 'False',
                         'True' if result.get('set_bet_correct') else 'False',
+                        f"{result.get('over_2_5_prob', 0):.1f}%" if result.get('over_2_5_prob') is not None else '',
+                        result.get('over_2_5_recommended', ''),
+                        result.get('over_2_5_actual', ''),
+                        result.get('total_sets_played', ''),
+                        'True' if result.get('over_2_5_correct') else ('False' if result.get('over_2_5_correct') is False else ''),
                         result.get('error', '')
                     ])
             
@@ -596,13 +658,53 @@ class TennisPredictionValidator:
             for result in voided:
                 print(f"🚫 {result['match']} - Bet on {result['bet_on']} ≥1 set ({result['bet_prob']:.1f}%) - RETIRED ({result['actual_sets']})")
         
+        # Analyze Over 2.5 Sets predictions
+        over_2_5_bets = [r for r in finished if r.get("over_2_5_recommended") and r.get("over_2_5_correct") is not None]
+        over_2_5_wins = [r for r in over_2_5_bets if r.get("over_2_5_correct")]
+        over_2_5_losses = [r for r in over_2_5_bets if not r.get("over_2_5_correct")]
+        
+        if over_2_5_bets:
+            print(f"\n{'='*60}")
+            print(f"📊 OVER 2.5 SETS PREDICTION VALIDATION")
+            print(f"{'='*60}")
+            print(f"🎯 Total Over 2.5 Sets Bets: {len(over_2_5_bets)}")
+            print(f"✅ Correct Predictions: {len(over_2_5_wins)}")
+            print(f"❌ Incorrect Predictions: {len(over_2_5_losses)}")
+            
+            if over_2_5_bets:
+                over_2_5_win_rate = len(over_2_5_wins) / len(over_2_5_bets) * 100
+                print(f"📈 Win Rate: {over_2_5_win_rate:.1f}%")
+                
+                # Analyze by bet type
+                over_bets = [r for r in over_2_5_bets if r.get("over_2_5_recommended") == "Over"]
+                under_bets = [r for r in over_2_5_bets if r.get("over_2_5_recommended") == "Under"]
+                
+                if over_bets:
+                    over_wins = [r for r in over_bets if r.get("over_2_5_correct")]
+                    print(f"\n   📊 'Over 2.5 Sets' Bets: {len(over_wins)}/{len(over_bets)} = {len(over_wins)/len(over_bets)*100:.1f}%")
+                    avg_over_prob = sum(r.get('over_2_5_prob', 0) for r in over_bets) / len(over_bets) if over_bets else 0
+                    print(f"   📊 Avg Probability: {avg_over_prob:.1f}%")
+                
+                if under_bets:
+                    under_wins = [r for r in under_bets if r.get("over_2_5_correct")]
+                    print(f"\n   📊 'Under 2.5 Sets' Bets: {len(under_wins)}/{len(under_bets)} = {len(under_wins)/len(under_bets)*100:.1f}%")
+                    avg_under_prob = sum(r.get('over_2_5_prob', 0) for r in under_bets) / len(under_bets) if under_bets else 0
+                    print(f"   📊 Avg Probability: {avg_under_prob:.1f}%")
+                
+                # Show breakdown by actual outcome
+                matches_went_3_sets = [r for r in over_2_5_bets if r.get("total_sets_played", 0) >= 3]
+                matches_went_2_sets = [r for r in over_2_5_bets if r.get("total_sets_played", 0) == 2]
+                print(f"\n   📊 Actual Outcomes:")
+                print(f"      - 3 Sets: {len(matches_went_3_sets)} matches ({len(matches_went_3_sets)/len(over_2_5_bets)*100:.1f}%)")
+                print(f"      - 2 Sets: {len(matches_went_2_sets)} matches ({len(matches_went_2_sets)/len(over_2_5_bets)*100:.1f}%)")
+        
         # Calculate some stats
         if set_bets:
             win_rate = len(wins) / len(set_bets) * 100
             avg_win_prob = sum(r['bet_prob'] for r in wins) / len(wins) if wins else 0
             avg_loss_prob = sum(r['bet_prob'] for r in losses) / len(losses) if losses else 0
             
-            print(f"\n📈 PERFORMANCE METRICS:")
+            print(f"\n📈 PERFORMANCE METRICS (+1.5 Sets):")
             print(f"   🎯 Win Rate: {win_rate:.1f}% ({len(wins)} wins / {len(set_bets)} completed bets)")
             if voided:
                 print(f"   🚫 Voided bets excluded from win rate: {len(voided)}")
