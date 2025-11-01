@@ -144,6 +144,10 @@ class OddsProvider:
         
         if self.access_token:
             self.cookies['accessToken'] = self.access_token
+        
+        # Cache for fetched markets to avoid duplicate API calls
+        self._markets_cache = {}  # {cache_key: List[BookmakerMatch]}
+        self._cache_timestamp = {}  # {cache_key: timestamp} for cache expiry
     
     def get_tennis_markets(self, page_num: int = 1, page_size: int = 20) -> Dict[str, Any]:
         """
@@ -194,9 +198,25 @@ class OddsProvider:
         Fetch ALL available matches from odds provider and filter client-side by target_date.
         API returns all matches regardless of date - we paginate through everything then filter.
         
+        CACHED: Markets are cached per target_date to avoid duplicate API calls.
+        Cache expires after 5 minutes to ensure fresh odds.
+        
         Args:
             target_date: Date string in YYYY-MM-DD format. If None, returns all matches.
         """
+        # Check cache first (cache expires after 5 minutes to ensure fresh odds)
+        cache_key = target_date or "all"
+        from time import time
+        current_time = time()
+        
+        if cache_key in self._markets_cache:
+            cache_age = current_time - self._cache_timestamp.get(cache_key, 0)
+            if cache_age < 300:  # 5 minutes cache expiry
+                print(f"📦 Using cached OddsProvider markets for {cache_key} (cache age: {cache_age:.1f}s)")
+                return self._markets_cache[cache_key]
+            else:
+                print(f"🔄 Cache expired for {cache_key} (age: {cache_age:.1f}s), fetching fresh markets...")
+        
         matches = []
         page_num = 1
         page_size = 20
@@ -359,6 +379,11 @@ class OddsProvider:
             print(f"📊 Fetched all pages, filtered to {len(matches)} matches for {target_date}")
         else:
             print(f"📊 Fetched {len(matches)} total matches across {page_num-1} pages")
+        
+        # Cache the results
+        self._markets_cache[cache_key] = matches
+        self._cache_timestamp[cache_key] = current_time
+        print(f"💾 Cached {len(matches)} matches for {cache_key}")
         
         return matches
     
@@ -1969,14 +1994,23 @@ class TennisBettingAnalyzer:
             print(f"      Weighted score: {form_score:.1f} (regressed toward 50 by {(1-form_confidence)*100:.1f}%)")
             
             # Check for 404 errors in enhanced statistics (critical data)
+            # CRITICAL FIX: Only mark 404 as issue if player has NO current-year data
+            # New players (2025 only) will have 404s for 2023/2024 - that's expected!
             try:
                 enhanced_stats = self.stats_handler.get_enhanced_player_statistics(player_id, surface)
+                
+                # Check if player has current-year data before marking 404 as critical
+                current_year_only = enhanced_stats.get('current_year_only', {})
+                has_current_year_data = current_year_only.get('matches', 0) > 0
                 
                 # Log comprehensive player analysis data quality
                 analysis_issues = []
                 if enhanced_stats.get('has_404_error'):
-                    data_quality_issues.append("Player statistics not found (404)")
-                    analysis_issues.append("404 Error")
+                    # Only mark 404 as critical if player has NO current-year data
+                    if not has_current_year_data:
+                        data_quality_issues.append("Player statistics not found (404)")
+                        analysis_issues.append("404 Error")
+                    # If player has current-year data, 404s for old years are expected (new player)
                 
                 # Check sample sizes for analysis
                 sample_sizes = enhanced_stats.get('sample_sizes', {})
@@ -1992,7 +2026,16 @@ class TennisBettingAnalyzer:
                 
             except Exception as e:
                 if "404" in str(e) or "HTTP Error 404" in str(e):
-                    data_quality_issues.append("Player statistics not found (404)")
+                    # Only mark as critical if we can't verify current-year data exists
+                    # Try to check if player has any current-year data
+                    try:
+                        current_check = self.stats_handler.get_enhanced_player_statistics(player_id, None)
+                        current_year_only = current_check.get('current_year_only', {})
+                        if current_year_only.get('matches', 0) == 0:
+                            data_quality_issues.append("Player statistics not found (404)")
+                    except Exception:
+                        # If we can't check, assume it's critical
+                        data_quality_issues.append("Player statistics not found (404)")
             
             # Get enhanced surface-specific performance with year transition handling
             try:
@@ -2259,6 +2302,41 @@ class TennisBettingAnalyzer:
                 
                 print(f"   🔄 3-YEAR MODE: Blended matches: P1={p1_blended_matches:.1f}, P2={p2_blended_matches:.1f}")
                 
+                # CRITICAL: Check if we actually have required years of data
+                # In 3-year mode: We're fetching 3 years, but min_years_required tells us how many we need
+                # If min_years_required is 2: Need at least 2 years (can have 1 404)
+                # If min_years_required is 3: Need all 3 years (no 404s allowed)
+                # If has_404_error is True, we're missing at least 1 year
+                # If min_years_required is 2 and has_404_error is True, we might only have 1 year (should skip)
+                # But we can't easily tell if we have 1 or 2 years from has_404_error alone
+                # Solution: If we're in 3-year mode and min_years_required is 2, and has_404_error is True,
+                # we might only have 1 year. To be safe, skip if has_404_error in 3-year mode
+                # (unless we can verify we have at least 2 years)
+                min_years_required = 2  # Default from config
+                if self.config and hasattr(self.config, 'MULTI_YEAR_STATS'):
+                    min_years_required = self.config.MULTI_YEAR_STATS.get('min_years_required', 2)
+                
+                p1_has_404 = p1_stats.get('has_404_error', False)
+                p2_has_404 = p2_stats.get('has_404_error', False)
+                
+                # In 3-year mode: If has_404_error is True, we're missing at least 1 year
+                # If min_years_required is 2, we might only have 1 year (should skip)
+                # If min_years_required is 3, we definitely don't have 3 years (should skip)
+                # For safety: In 3-year mode, skip if has_404_error (might only have 1 year)
+                insufficient_years_players = []
+                if p1_has_404:
+                    insufficient_years_players.append(f"{player1.name} (missing year data)")
+                if p2_has_404:
+                    insufficient_years_players.append(f"{player2.name} (missing year data)")
+                
+                if insufficient_years_players:
+                    reason = (f"⚠️  INSUFFICIENT YEARS OF DATA on {surface} for: {', '.join(insufficient_years_players)}. "
+                             f"Required: {min_years_required} years (3-year mode), but missing required years. "
+                             f"Multi-year analysis requires multiple years of data for reliability.")
+                    print(f"\n{reason}")
+                    return True, reason
+                
+                # Also check blended matches threshold
                 if p1_blended_matches < MIN_DATA_THRESHOLD_3_YEAR or p2_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
                     low_data_players = []
                     if p1_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
