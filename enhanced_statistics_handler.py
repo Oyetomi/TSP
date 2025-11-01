@@ -337,10 +337,18 @@ class EnhancedStatisticsHandler:
         if self.config and hasattr(self.config, 'MULTI_YEAR_STATS'):
             min_years = self.config.MULTI_YEAR_STATS.get('min_years_required', 2)
         
-        # Check if we have enough years
+        # CRITICAL FIX: Allow new players (2025 only) - use current-year data if available
+        # Only require minimum years if we DON'T have current-year data
         if len(available_years) < min_years:
             logging.warning(f"Only {len(available_years)} years available (required: {min_years})")
-            # Return neutral fallback if not enough years
+            
+            # If we have current-year data, use it even if we don't meet minimum years requirement
+            # This supports new players who started in 2025
+            if 'current' in available_years:
+                logging.info(f"Using current-year data only (new player): {current_surface.get('matches', 0)} matches")
+                return current_surface
+            
+            # If no current-year data AND not enough years, return neutral fallback
             if min_years > len(available_years):
                 return self._get_neutral_fallback()
         
