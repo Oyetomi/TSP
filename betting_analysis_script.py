@@ -1730,10 +1730,6 @@ class TennisBettingAnalyzer:
                                  issues=mental_issues,
                                  context="Mental Toughness Analysis")
             
-            # CRITICAL: Check for 404 errors first - no processing with missing data
-            if enhanced_stats.get('has_404_error'):
-                raise ValueError(f"Player {player_id} has missing yearly statistics (404 errors)")
-            
             stats = enhanced_stats['statistics']
             reliability = enhanced_stats['reliability_score']
             
@@ -1741,9 +1737,18 @@ class TennisBettingAnalyzer:
             if not stats or reliability == 0.0:
                 raise ValueError(f"Player {player_id} has no reliable statistics available")
             
+            # Check for tiebreak data FIRST - even if some years had 404s, we may have data from other years
             tb_won = stats.get('tiebreaksWon', 0)
             tb_lost = stats.get('tiebreakLosses', 0)
             tb_total = tb_won + tb_lost
+            
+            # CRITICAL: Only fail if we have NO tiebreak data AND a 404 error
+            # If we have tiebreak data from at least one year, use it even if some years had 404s
+            if tb_total == 0 and enhanced_stats.get('has_404_error'):
+                raise ValueError(f"Player {player_id} has missing yearly statistics (404 errors) and no tiebreak data available")
+            
+            # If we have tiebreak data but some years had 404s, proceed anyway
+            # (The enhanced_stats handler already combines data from available years)
             
             # Enhanced confidence-based tiebreak calculation
             if tb_total >= 3:  # Sufficient sample for base calculation
