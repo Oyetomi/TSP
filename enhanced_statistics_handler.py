@@ -15,6 +15,10 @@ class EnhancedStatisticsHandler:
         self.player_service = player_service
         self.config = config  # PredictionConfig instance
         
+        # Cache to prevent repeated API calls within the same run
+        # Key: (player_id, year) -> Value: stats dict or error marker
+        self._stats_cache = {}
+        
         # Minimum sample sizes for reliable statistics
         self.MIN_SAMPLE_SIZES = {
             'matches': 5,           # At least 5 matches for basic stats
@@ -244,17 +248,34 @@ class EnhancedStatisticsHandler:
         }
     
     def _fetch_year_stats(self, player_id: int, year: int) -> Optional[Dict[str, Any]]:
-        """Safely fetch year statistics and track 404 errors"""
+        """Safely fetch year statistics and track 404 errors (with caching)"""
+        
+        # Check cache first to avoid repeated API calls
+        cache_key = (player_id, year)
+        if cache_key in self._stats_cache:
+            return self._stats_cache[cache_key]
+        
+        # Not in cache - fetch from API
         try:
             stats = self.player_service.get_player_year_statistics(player_id, year)
-            return stats if stats and stats.get('statistics') else None
+            result = stats if stats and stats.get('statistics') else None
+            
+            # Cache the successful result
+            self._stats_cache[cache_key] = result
+            return result
+            
         except Exception as e:
             if "404" in str(e) or "HTTP Error 404" in str(e):
                 # This is a critical data quality issue - player has no stats for this year
                 logging.warning(f"404 ERROR: No {year} stats found for player {player_id} - {e}")
-                return {'_404_error': True, 'year': year}
+                error_result = {'_404_error': True, 'year': year}
+                
+                # Cache the 404 error to avoid repeated failed requests
+                self._stats_cache[cache_key] = error_result
+                return error_result
             else:
                 logging.warning(f"Failed to fetch {year} stats for player {player_id}: {e}")
+                # Don't cache transient errors (timeouts, network issues)
                 return None
     
     def _combine_year_statistics(
