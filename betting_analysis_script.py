@@ -508,6 +508,9 @@ class TennisBettingAnalyzer:
         # Initialize skip logger (clears log file on startup)
         self.skip_logger = SkipLogger()
         
+        # Track written event_ids to prevent duplicates across multiple dates
+        self._written_event_ids = set()
+        
         # Store config reference for feature checking (MUST be before stats_handler init)
         self.config = prediction_config
         
@@ -7263,6 +7266,15 @@ class TennisBettingAnalyzer:
                 for future in concurrent.futures.as_completed(future_to_match):
                     result = future.result()
                     if result:
+                        # Check for duplicate event_id before writing
+                        event_id = result.get('event_id')
+                        if event_id in self._written_event_ids:
+                            print(f"⚠️ Skipping duplicate match (event_id: {event_id}, already written for different date)")
+                            continue
+                        
+                        # Mark this event_id as written
+                        self._written_event_ids.add(event_id)
+                        
                         analysis_results.append(result)
                         analyzed_count += 1
                         
