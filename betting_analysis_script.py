@@ -6365,49 +6365,6 @@ class TennisBettingAnalyzer:
             print(f"⚠️ Error applying calibrated confidence penalties: {e}")
             return {'applied': False, 'adjusted_confidence': current_confidence, 'reasons': []}
     
-    def _load_existing_event_ids(self, csv_file_path: str = None) -> set:
-        """Load event_ids from existing CSV files to avoid re-analyzing matches"""
-        existing_event_ids = set()
-        
-        # Check both tennis_predictions.csv and config-specific CSV
-        csv_files_to_check = []
-        
-        if csv_file_path:
-            csv_files_to_check.append(csv_file_path)
-        
-        # Also check config-specific CSV
-        try:
-            from weight_config_manager import config_manager
-            from prediction_config import PredictionConfig
-            
-            active_config_name = config_manager.get_active_code_name()
-            pred_config = PredictionConfig()
-            year_suffix = "_3YEAR" if pred_config.MULTI_YEAR_STATS.get('enable_three_year_stats', False) else ""
-            config_csv_path = f"all_{active_config_name}{year_suffix}.csv"
-            csv_files_to_check.append(config_csv_path)
-        except Exception:
-            pass
-        
-        # Read event_ids from all CSV files
-        import os
-        for csv_path in csv_files_to_check:
-            if not csv_path or not os.path.exists(csv_path):
-                continue
-                
-            try:
-                import csv
-                with open(csv_path, 'r', encoding='utf-8') as f:
-                    reader = csv.DictReader(f)
-                    for row in reader:
-                        event_id = row.get('event_id')
-                        if event_id:
-                            existing_event_ids.add(int(event_id))
-                print(f"📖 Loaded {len(existing_event_ids)} existing event_ids from {csv_path}")
-            except Exception as e:
-                print(f"⚠️ Warning: Could not read existing CSV {csv_path}: {e}")
-        
-        return existing_event_ids
-    
     def analyze_scheduled_matches(self, target_date: str = None, csv_file_path: str = None, append_mode: bool = False) -> List[Dict[str, Any]]:
         """Analyze all scheduled matches for betting with incremental CSV writing"""
         
@@ -6415,11 +6372,6 @@ class TennisBettingAnalyzer:
             target_date = datetime.now().strftime('%Y-%m-%d')
         
         print(f"🎾 Analyzing tennis matches for {target_date}")
-        
-        # Load existing event_ids to avoid re-analyzing matches
-        existing_event_ids = self._load_existing_event_ids(csv_file_path) if append_mode else set()
-        if existing_event_ids:
-            print(f"🔍 Filtering out {len(existing_event_ids)} already-analyzed matches")
         
         # Initialize CSV file variables to prevent "referenced before assignment" errors
         csv_file = None
@@ -6553,11 +6505,6 @@ class TennisBettingAnalyzer:
                 # Skip if this MatchDataProvider match is already used
                 if match['event_id'] in used_match_data_matches:
                     print(f"⚠️ MatchDataProvider match already processed: {match['event_id']} - skipping")
-                    continue
-                
-                # Skip if this match is already in the CSV (avoid re-analyzing)
-                if match['event_id'] in existing_event_ids:
-                    print(f"   ⏭️  Already analyzed: {match['player1_name']} vs {match['player2_name']} (event_id: {match['event_id']})")
                     continue
                 
                 # Check if this MatchDataProvider match is available on OddsProvider
