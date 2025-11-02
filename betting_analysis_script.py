@@ -1767,13 +1767,19 @@ class TennisBettingAnalyzer:
             tb_lost = stats.get('tiebreakLosses', 0)
             tb_total = tb_won + tb_lost
             
-            # CRITICAL: Only fail if we have NO tiebreak data AND a 404 error
+            # CHANGED: More lenient tiebreak handling
+            # Only fail if we have NO tiebreak data AND a 404 error (missing years)
             # If we have tiebreak data from at least one year, use it even if some years had 404s
-            if tb_total == 0 and enhanced_stats.get('has_404_error'):
-                raise ValueError(f"Player {player_id} has missing yearly statistics (404 errors) and no tiebreak data available")
-            
-            # If we have tiebreak data but some years had 404s, proceed anyway
-            # (The enhanced_stats handler already combines data from available years)
+            # If tb_total == 0 but NO 404 error, it means all years were fetched successfully but player hasn't played tiebreaks
+            # In this case, use neutral fallback (0.5) instead of raising error
+            if tb_total == 0:
+                if enhanced_stats.get('has_404_error'):
+                    # Missing years AND no tiebreak data = unreliable
+                    raise ValueError(f"Player {player_id} has missing yearly statistics (404 errors) and no tiebreak data available")
+                else:
+                    # All years fetched successfully but no tiebreaks played = use neutral fallback
+                    print(f"⚠️ Player {player_id}: No tiebreak data available (all years fetched, but player hasn't played tiebreaks) - using neutral fallback (0.5)")
+                    return 0.5  # Neutral fallback instead of error
             
             # Enhanced confidence-based tiebreak calculation
             if tb_total >= 3:  # Sufficient sample for base calculation
@@ -1805,9 +1811,6 @@ class TennisBettingAnalyzer:
                 # Flag extreme uncertainty for logging
                 if tb_total == 1:
                     print(f"⚠️ Player {player_id}: Single tiebreak sample ({tb_won}/{tb_total}) - high uncertainty")
-                    
-            else:  # No tiebreak data at all
-                raise ValueError(f"Player {player_id} has no tiebreak data in statistics")
             
             # Adjust confidence based on overall data reliability
             confidence_adjustment = 0.5 + (reliability * 0.5)  # 0.5 to 1.0 range
@@ -2319,35 +2322,84 @@ class TennisBettingAnalyzer:
                 p1_has_404 = p1_stats.get('has_404_error', False)
                 p2_has_404 = p2_stats.get('has_404_error', False)
                 
-                # In 3-year mode: If has_404_error is True, we're missing at least 1 year
-                # If min_years_required is 2, we might only have 1 year (should skip)
-                # If min_years_required is 3, we definitely don't have 3 years (should skip)
-                # For safety: In 3-year mode, skip if has_404_error (might only have 1 year)
+                # CHANGED: Instead of skipping, apply penalty for players with only 1 year of data
+                # IMPORTANT: has_404_error alone doesn't mean only 1 year - player could have 2024+2025 but missing 2023
+                # Check blended matches to determine if player truly has only 1 year of data
+                # If blended matches are very low (< 5), likely only 1 year. If substantial (> 10), has multiple years.
                 insufficient_years_players = []
-                if p1_has_404:
-                    insufficient_years_players.append(f"{player1.name} (missing year data)")
-                if p2_has_404:
-                    insufficient_years_players.append(f"{player2.name} (missing year data)")
+                p1_years_penalty = 1.0
+                p2_years_penalty = 1.0
                 
+                # Threshold: if has_404_error AND low blended matches (< 5), likely only 1 year of data
+                # If blended matches are high (> 10), player has multiple years despite 404
+                LOW_BLENDED_THRESHOLD = 5  # If blended matches < 5, likely only 1 year
+                
+                if p1_has_404 and p1_blended_matches < LOW_BLENDED_THRESHOLD:
+                    insufficient_years_players.append(f"{player1.name} (likely only 1 year of data, {p1_blended_matches:.1f} blended matches)")
+                    p1_years_penalty = 0.7  # 30% penalty for single-year data
+                    print(f"⚠️  {player1.name}: Only 1 year of data available ({p1_blended_matches:.1f} blended matches) - applying 30% penalty to predictions")
+                elif p1_has_404:
+                    # Has 404 but substantial blended matches - has multiple years, no penalty
+                    print(f"ℹ️  {player1.name}: Has 404 error but {p1_blended_matches:.1f} blended matches indicates multiple years of data - no penalty")
+                
+                if p2_has_404 and p2_blended_matches < LOW_BLENDED_THRESHOLD:
+                    insufficient_years_players.append(f"{player2.name} (likely only 1 year of data, {p2_blended_matches:.1f} blended matches)")
+                    p2_years_penalty = 0.7  # 30% penalty for single-year data
+                    print(f"⚠️  {player2.name}: Only 1 year of data available ({p2_blended_matches:.1f} blended matches) - applying 30% penalty to predictions")
+                elif p2_has_404:
+                    # Has 404 but substantial blended matches - has multiple years, no penalty
+                    print(f"ℹ️  {player2.name}: Has 404 error but {p2_blended_matches:.1f} blended matches indicates multiple years of data - no penalty")
+                
+                # Store penalty factors for use in prediction calculation
+                # We'll apply these penalties later in the prediction calculation
                 if insufficient_years_players:
-                    reason = (f"⚠️  INSUFFICIENT YEARS OF DATA on {surface} for: {', '.join(insufficient_years_players)}. "
-                             f"Required: {min_years_required} years (3-year mode), but missing required years. "
-                             f"Multi-year analysis requires multiple years of data for reliability.")
-                    print(f"\n{reason}")
-                    return True, reason
+                    print(f"⚠️  MULTI-YEAR PENALTY APPLIED on {surface} for: {', '.join(insufficient_years_players)}. "
+                          f"Players with only 1 year of data receive 30% penalty (instead of skipping). "
+                          f"This allows analysis of young players (e.g., 18-year-olds) with limited historical data.")
+                    # Store penalties in player profiles for later use (we'll need to pass these through)
+                    # For now, we'll handle this in the prediction calculation by checking has_404_error
                 
-                # Also check blended matches threshold
-                if p1_blended_matches < MIN_DATA_THRESHOLD_3_YEAR or p2_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
-                    low_data_players = []
-                    if p1_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
-                        low_data_players.append(f"{player1.name} ({p1_blended_matches:.1f} blended matches)")
-                    if p2_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
-                        low_data_players.append(f"{player2.name} ({p2_blended_matches:.1f} blended matches)")
-                    
-                    reason = (f"⚠️  INSUFFICIENT DATA on {surface} for: {', '.join(low_data_players)}. "
-                             f"Need minimum {MIN_DATA_THRESHOLD_3_YEAR} blended matches (3-year weighted) - predictions unreliable on small samples")
-                    print(f"\n{reason}")
-                    return True, reason
+                # DON'T skip - continue with penalty applied
+                
+                # CHANGED: Instead of skipping for low blended matches, apply penalty
+                # This allows players with current-year data but missing historical years to be analyzed
+                low_blended_players = []
+                p1_blended_penalty = 1.0
+                p2_blended_penalty = 1.0
+                
+                if p1_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
+                    # If player has current year data, use penalty instead of skip
+                    if p1_matches > 0:
+                        penalty_factor = max(0.5, p1_blended_matches / MIN_DATA_THRESHOLD_3_YEAR)  # At least 50% penalty
+                        p1_blended_penalty = penalty_factor
+                        low_blended_players.append(f"{player1.name} ({p1_blended_matches:.1f} blended, {p1_matches} current-year matches)")
+                        print(f"⚠️  {player1.name}: Low blended matches ({p1_blended_matches:.1f} < {MIN_DATA_THRESHOLD_3_YEAR}) - applying {penalty_factor:.1%} penalty (has {p1_matches} current-year matches)")
+                    else:
+                        # No current year data either - still skip
+                        reason = (f"⚠️  INSUFFICIENT DATA on {surface} for: {player1.name} ({p1_blended_matches:.1f} blended matches, 0 current-year matches). "
+                                 f"Need minimum {MIN_DATA_THRESHOLD_3_YEAR} blended matches - predictions unreliable on small samples")
+                        print(f"\n{reason}")
+                        return True, reason
+                
+                if p2_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
+                    # If player has current year data, use penalty instead of skip
+                    if p2_matches > 0:
+                        penalty_factor = max(0.5, p2_blended_matches / MIN_DATA_THRESHOLD_3_YEAR)  # At least 50% penalty
+                        p2_blended_penalty = penalty_factor
+                        low_blended_players.append(f"{player2.name} ({p2_blended_matches:.1f} blended, {p2_matches} current-year matches)")
+                        print(f"⚠️  {player2.name}: Low blended matches ({p2_blended_matches:.1f} < {MIN_DATA_THRESHOLD_3_YEAR}) - applying {penalty_factor:.1%} penalty (has {p2_matches} current-year matches)")
+                    else:
+                        # No current year data either - still skip
+                        reason = (f"⚠️  INSUFFICIENT DATA on {surface} for: {player2.name} ({p2_blended_matches:.1f} blended matches, 0 current-year matches). "
+                                 f"Need minimum {MIN_DATA_THRESHOLD_3_YEAR} blended matches - predictions unreliable on small samples")
+                        print(f"\n{reason}")
+                        return True, reason
+                
+                if low_blended_players:
+                    print(f"⚠️  LOW BLENDED MATCHES PENALTY APPLIED on {surface} for: {', '.join(low_blended_players)}. "
+                          f"Players with low blended matches receive penalty (instead of skipping) if they have current-year data.")
+                    # Store penalties for later use - we'll need to pass these through to prediction calculation
+                    # For now, we'll handle this by checking blended matches in the prediction calculation
             else:
                 # Use current year match count only (standard 2-year mode)
                 if p1_matches < MIN_DATA_THRESHOLD_2_YEAR or p2_matches < MIN_DATA_THRESHOLD_2_YEAR:
@@ -4154,10 +4206,100 @@ class TennisBettingAnalyzer:
                         print(f"   📊 Only {quality_match_pct2:.1%} of matches vs quality opponents (threshold: {quality_threshold:.1%})")
                         print(f"   📉 Applying {penalty_amount:.1%} penalty to set performance (likely inflated by weak competition)")
             
+            # MULTI-YEAR PENALTY: Apply 30% penalty for players with only 1 year of data
+            # IMPORTANT: has_404_error alone doesn't mean only 1 year - player could have 2024+2025 but missing 2023
+            # Check blended matches to determine if player truly has only 1 year of data
+            multi_year_penalty1 = 1.0
+            multi_year_penalty2 = 1.0
+            
+            # Check if players have 404 errors (indicating missing years)
+            p1_stats = self.stats_handler.get_enhanced_player_statistics(player1.id, surface)
+            p2_stats = self.stats_handler.get_enhanced_player_statistics(player2.id, surface)
+            
+            p1_blended_matches_check = p1_stats.get('statistics', {}).get('matches', 0)
+            p2_blended_matches_check = p2_stats.get('statistics', {}).get('matches', 0)
+            
+            # Check current-year data to avoid penalizing new players with only 2025 data
+            p1_current_year = p1_stats.get('current_year_only', {}).get('matches', 0)
+            p2_current_year = p2_stats.get('current_year_only', {}).get('matches', 0)
+            
+            LOW_BLENDED_THRESHOLD = 5  # If blended matches < 5, likely only 1 year
+            
+            # Only apply multi-year penalty if:
+            # 1. Has 404 error (missing years)
+            # 2. Low blended matches (< 5)
+            # 3. AND low current-year data (< 5 matches) - if they have substantial current-year data, they're just new players
+            if p1_stats.get('has_404_error', False) and p1_blended_matches_check < LOW_BLENDED_THRESHOLD and p1_current_year < 5:
+                multi_year_penalty1 = 0.7  # 30% penalty for single-year data
+                print(f"\n⚠️ MULTI-YEAR PENALTY - {player1.name}:")
+                print(f"   📊 Only 1 year of data available ({p1_blended_matches_check:.1f} blended, {p1_current_year} current-year matches)")
+                print(f"   📉 Applying 30% penalty to set performance (reduced from skip)")
+            elif p1_stats.get('has_404_error', False):
+                # Has 404 but substantial blended matches OR substantial current-year data - has multiple years or is new player with data, no penalty
+                if p1_blended_matches_check >= LOW_BLENDED_THRESHOLD:
+                    print(f"\nℹ️  MULTI-YEAR CHECK - {player1.name}:")
+                    print(f"   📊 Has 404 error but {p1_blended_matches_check:.1f} blended matches indicates multiple years - no penalty")
+                elif p1_current_year >= 5:
+                    print(f"\nℹ️  MULTI-YEAR CHECK - {player1.name}:")
+                    print(f"   📊 Has 404 error but {p1_current_year} current-year matches indicates new player with data - no penalty")
+            
+            if p2_stats.get('has_404_error', False) and p2_blended_matches_check < LOW_BLENDED_THRESHOLD and p2_current_year < 5:
+                multi_year_penalty2 = 0.7  # 30% penalty for single-year data
+                print(f"\n⚠️ MULTI-YEAR PENALTY - {player2.name}:")
+                print(f"   📊 Only 1 year of data available ({p2_blended_matches_check:.1f} blended, {p2_current_year} current-year matches)")
+                print(f"   📉 Applying 30% penalty to set performance (reduced from skip)")
+            elif p2_stats.get('has_404_error', False):
+                # Has 404 but substantial blended matches OR substantial current-year data - has multiple years or is new player with data, no penalty
+                if p2_blended_matches_check >= LOW_BLENDED_THRESHOLD:
+                    print(f"\nℹ️  MULTI-YEAR CHECK - {player2.name}:")
+                    print(f"   📊 Has 404 error but {p2_blended_matches_check:.1f} blended matches indicates multiple years - no penalty")
+                elif p2_current_year >= 5:
+                    print(f"\nℹ️  MULTI-YEAR CHECK - {player2.name}:")
+                    print(f"   📊 Has 404 error but {p2_current_year} current-year matches indicates new player with data - no penalty")
+            
+            # BLENDED MATCHES PENALTY: Apply penalty for players with low blended matches
+            # This allows players with current-year data but missing historical years to be analyzed
+            blended_matches_penalty1 = 1.0
+            blended_matches_penalty2 = 1.0
+            MIN_DATA_THRESHOLD_3_YEAR = 3  # Same threshold as skip check
+            
+            p1_blended_matches = p1_stats.get('statistics', {}).get('matches', 0)
+            p2_blended_matches = p2_stats.get('statistics', {}).get('matches', 0)
+            
+            # Check if 3-year mode is enabled
+            use_three_year = False
+            if self.config and hasattr(self.config, 'MULTI_YEAR_STATS'):
+                use_three_year = self.config.MULTI_YEAR_STATS.get('enable_three_year_stats', False)
+            
+            if use_three_year:
+                # Apply penalty if blended matches < threshold
+                # If blended is 0, apply maximum penalty (50%) - player has current-year data but no historical blend
+                if p1_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
+                    if p1_blended_matches == 0:
+                        penalty_factor = 0.5  # Maximum penalty for 0 blended matches (player has current-year data)
+                    else:
+                        # Calculate penalty based on how far below threshold
+                        penalty_factor = max(0.5, p1_blended_matches / MIN_DATA_THRESHOLD_3_YEAR)  # At least 50% penalty
+                    blended_matches_penalty1 = penalty_factor
+                    print(f"\n⚠️ BLENDED MATCHES PENALTY - {player1.name}:")
+                    print(f"   📊 Low blended matches ({p1_blended_matches:.1f} < {MIN_DATA_THRESHOLD_3_YEAR})")
+                    print(f"   📉 Applying {penalty_factor:.1%} penalty to set performance (reduced from skip)")
+                
+                if p2_blended_matches < MIN_DATA_THRESHOLD_3_YEAR:
+                    if p2_blended_matches == 0:
+                        penalty_factor = 0.5  # Maximum penalty for 0 blended matches (player has current-year data)
+                    else:
+                        # Calculate penalty based on how far below threshold
+                        penalty_factor = max(0.5, p2_blended_matches / MIN_DATA_THRESHOLD_3_YEAR)  # At least 50% penalty
+                    blended_matches_penalty2 = penalty_factor
+                    print(f"\n⚠️ BLENDED MATCHES PENALTY - {player2.name}:")
+                    print(f"   📊 Low blended matches ({p2_blended_matches:.1f} < {MIN_DATA_THRESHOLD_3_YEAR})")
+                    print(f"   📉 Applying {penalty_factor:.1%} penalty to set performance (reduced from skip)")
+            
             # Combined set performance score (IMPROVED: 75% raw set rate, 25% quality opposition WIN RATE)
-            # Apply data quality discount AND opponent quality penalty if triggered
-            set_performance1 = ((set_win_rate1 * 0.75) + (quality_bonus1 * 0.25)) * set_performance_discount * opponent_quality_penalty1
-            set_performance2 = ((set_win_rate2 * 0.75) + (quality_bonus2 * 0.25)) * set_performance_discount * opponent_quality_penalty2
+            # Apply data quality discount AND opponent quality penalty AND multi-year penalty AND blended matches penalty if triggered
+            set_performance1 = ((set_win_rate1 * 0.75) + (quality_bonus1 * 0.25)) * set_performance_discount * opponent_quality_penalty1 * multi_year_penalty1 * blended_matches_penalty1
+            set_performance2 = ((set_win_rate2 * 0.75) + (quality_bonus2 * 0.25)) * set_performance_discount * opponent_quality_penalty2 * multi_year_penalty2 * blended_matches_penalty2
             
             print(f"\n🧮 COMBINED SET PERFORMANCE CALCULATION:")
             print(f"   Formula: (Overall Set Win Rate × 75%) + (Quality Opposition Win Rate × 25%)")
@@ -4195,27 +4337,37 @@ class TennisBettingAnalyzer:
                 )
                 return None  # Skip this match
             
-            # Rule 2: Skip if predicted winner has 0 quality sets won + high win rate + faced quality opponents
+            # Rule 2: Skip if predicted winner has 0 quality sets won + decent win rate + faced quality opponents
+            # UPDATED: Lowered threshold from 75% to 60% to catch more inflated win rates (Martin Damm Jr case)
             # Determine predicted winner based on set win rates
             predicted_winner_is_p1 = set_win_rate1 > set_win_rate2
             
             if predicted_winner_is_p1:
                 pred_quality_sets_won = quality_sets_won_p1
                 pred_quality_matches_faced = quality_matches_faced_p1
+                pred_quality_set_win_rate = quality_perf1.get('set_win_rate', 0)
                 pred_win_rate = set_win_rate1
                 pred_name = player1.name
+                opp_quality_sets_won = quality_sets_won_p2
+                opp_quality_set_win_rate = quality_perf2.get('set_win_rate', 0)
+                opp_name = player2.name
             else:
                 pred_quality_sets_won = quality_sets_won_p2
                 pred_quality_matches_faced = quality_matches_faced_p2
+                pred_quality_set_win_rate = quality_perf2.get('set_win_rate', 0)
                 pred_win_rate = set_win_rate2
                 pred_name = player2.name
+                opp_quality_sets_won = quality_sets_won_p1
+                opp_quality_set_win_rate = quality_perf1.get('set_win_rate', 0)
+                opp_name = player1.name
             
             # Check if predicted winner has problematic quality data
+            # UPDATED: Changed threshold from 0.75 to 0.60 to catch more cases like Martin Damm Jr (61.8% win rate)
             if (pred_quality_sets_won == 0 and 
-                pred_win_rate > 0.75 and 
+                pred_win_rate > 0.60 and 
                 pred_quality_matches_faced >= 1):
                 skip_reason = (
-                    f"Predicted winner ({pred_name}) has 0 quality opposition sets won but high win rate ({pred_win_rate:.1%}) "
+                    f"Predicted winner ({pred_name}) has 0 quality opposition sets won but decent win rate ({pred_win_rate:.1%}) "
                     f"indicating inflation from weak competition. Faced {pred_quality_matches_faced} quality opponents but lost all. "
                     f"Win rate unreliable for prediction."
                 )
@@ -4227,6 +4379,33 @@ class TennisBettingAnalyzer:
                 print(f"   Reason: {skip_reason}")
                 self.skip_logger.log_skip(
                     reason_type="INFLATED_WIN_RATE",
+                    player1_name=player1.name,
+                    player2_name=player2.name,
+                    tournament=tournament_name,
+                    surface=surface,
+                    reason=skip_reason
+                )
+                return None  # Skip this match
+            
+            # Rule 3: Skip if predicted winner has 0 quality sets won AND opponent has GOOD quality performance
+            # NEW: Catches cases like Martin Damm Jr (0 quality sets) vs Rafael Jodar (66.7% quality win rate)
+            # Don't bet on unproven player against opponent with proven quality performance
+            if (pred_quality_sets_won == 0 and 
+                opp_quality_set_win_rate > 0.50 and 
+                opp_quality_sets_won >= 3):
+                skip_reason = (
+                    f"Predicted winner ({pred_name}) has 0 quality opposition sets won ({pred_quality_set_win_rate:.1%}) "
+                    f"while opponent ({opp_name}) has proven quality performance ({opp_quality_set_win_rate:.1%}, {opp_quality_sets_won} sets won). "
+                    f"Insufficient evidence to bet against opponent with strong quality opposition record."
+                )
+                print(f"\n🚫 HARD SKIP: QUALITY OPPOSITION MISMATCH")
+                print(f"   Predicted Winner: {pred_name}")
+                print(f"   Quality Sets Won: {pred_quality_sets_won} (no proven quality wins)")
+                print(f"   Opponent: {opp_name}")
+                print(f"   Opponent Quality: {opp_quality_set_win_rate:.1%} ({opp_quality_sets_won} sets won)")
+                print(f"   Reason: {skip_reason}")
+                self.skip_logger.log_skip(
+                    reason_type="QUALITY_OPPOSITION_MISMATCH",
                     player1_name=player1.name,
                     player2_name=player2.name,
                     tournament=tournament_name,
@@ -6915,6 +7094,13 @@ class TennisBettingAnalyzer:
                     print(f"[Thread-{thread_id}] {'-'*50}")
                     
                     prediction = self.calculate_weighted_prediction(player1_profile, player2_profile, surface, match_data_match['event_id'], match_format)
+                    
+                    # Check if prediction was skipped (returns None)
+                    if prediction is None:
+                        print(f"[Thread-{thread_id}] ❌ Match was skipped during prediction calculation")
+                        print(f"[Thread-{thread_id}]    (Check skip logs for details)")
+                        print()
+                        return None  # Skip this match
                     
                     # Display prediction results
                     print(f"[Thread-{thread_id}] 🎯 FINAL PREDICTION RESULTS:")
