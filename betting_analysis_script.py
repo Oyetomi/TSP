@@ -144,10 +144,6 @@ class OddsProvider:
         
         if self.access_token:
             self.cookies['accessToken'] = self.access_token
-        
-        # Cache for fetched markets to avoid duplicate API calls
-        self._markets_cache = {}  # {cache_key: List[BookmakerMatch]}
-        self._cache_timestamp = {}  # {cache_key: timestamp} for cache expiry
     
     def get_tennis_markets(self, page_num: int = 1, page_size: int = 20) -> Dict[str, Any]:
         """
@@ -198,25 +194,9 @@ class OddsProvider:
         Fetch ALL available matches from odds provider and filter client-side by target_date.
         API returns all matches regardless of date - we paginate through everything then filter.
         
-        CACHED: Markets are cached per target_date to avoid duplicate API calls.
-        Cache expires after 5 minutes to ensure fresh odds.
-        
         Args:
             target_date: Date string in YYYY-MM-DD format. If None, returns all matches.
         """
-        # Check cache first (cache expires after 5 minutes to ensure fresh odds)
-        cache_key = target_date or "all"
-        from time import time
-        current_time = time()
-        
-        if cache_key in self._markets_cache:
-            cache_age = current_time - self._cache_timestamp.get(cache_key, 0)
-            if cache_age < 300:  # 5 minutes cache expiry
-                print(f"📦 Using cached OddsProvider markets for {cache_key} (cache age: {cache_age:.1f}s)")
-                return self._markets_cache[cache_key]
-            else:
-                print(f"🔄 Cache expired for {cache_key} (age: {cache_age:.1f}s), fetching fresh markets...")
-        
         matches = []
         page_num = 1
         page_size = 20
@@ -379,11 +359,6 @@ class OddsProvider:
             print(f"📊 Fetched all pages, filtered to {len(matches)} matches for {target_date}")
         else:
             print(f"📊 Fetched {len(matches)} total matches across {page_num-1} pages")
-        
-        # Cache the results
-        self._markets_cache[cache_key] = matches
-        self._cache_timestamp[cache_key] = current_time
-        print(f"💾 Cached {len(matches)} matches for {cache_key}")
         
         return matches
     
