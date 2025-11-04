@@ -35,6 +35,10 @@ from weight_config_manager import config_manager, get_current_weights
 from skip_logger import SkipLogger
 from utils.injury_checker import InjuryChecker
 
+# Forebet integration
+from forebet_provider import ForebetProvider
+from logging_config import setup_logging, log_section_header, log_match_info, log_forebet_status
+
 @dataclass
 class BookmakerMatch:
     """Bookmaker match information with both +1.5 and +2.5 sets markets"""
@@ -466,6 +470,9 @@ class TennisBettingAnalyzer:
     """Main betting analysis engine focused on +1.5 set betting"""
     
     def __init__(self, user_id: str = None, access_token: str = None, prediction_logger=None):
+        # Initialize system logger
+        self.logger = logging.getLogger('TennisPrediction')
+        
         self.match_data_service = MatchDataProviderService()
         self.player_service = PlayerAnalysisService()
         self.mental_toughness_service = MentalToughnessService()
@@ -501,6 +508,118 @@ class TennisBettingAnalyzer:
         
         # Crowd sentiment thresholds from config
         self.CROWD_CONFIDENCE_THRESHOLDS = prediction_config.CROWD_CONFIDENCE_THRESHOLDS
+        
+        # Initialize Forebet provider (fetched later during match analysis for better logging)
+        self.forebet_provider = ForebetProvider(logger=self.logger)
+        self.forebet_fetched = False  # Track if Forebet has been fetched
+    
+    def _check_fundamental_disadvantage(self, predicted_player: Dict, opponent: Dict) -> Dict:
+        """
+        Skip if predicted player has significantly worse fundamentals than opponent.
+        
+        Prevents betting on players who are clearly worse on core metrics.
+        Only applies when form data is reliable (both players >= 25).
+        
+        Args:
+            predicted_player: Dict with 'utr', 'form', 'name'
+            opponent: Dict with 'utr', 'form', 'name'
+        
+        Returns:
+            dict: {'should_skip': bool, 'reason': str, 'details': str}
+        """
+        # Calculate disadvantages
+        utr_gap = opponent['utr'] - predicted_player['utr']
+        form_gap = opponent['form'] - predicted_player['form']
+        
+        # Thresholds
+        UTR_THRESHOLD = 0.25
+        FORM_THRESHOLD = 9.0
+        MIN_RELIABLE_FORM = 25.0
+        
+        # Check if opponent is significantly better
+        utr_disadvantage = utr_gap >= UTR_THRESHOLD
+        form_disadvantage = form_gap >= FORM_THRESHOLD
+        
+        # Only trust form comparison if both players have reliable data
+        form_is_reliable = (
+            predicted_player['form'] >= MIN_RELIABLE_FORM and 
+            opponent['form'] >= MIN_RELIABLE_FORM
+        )
+        
+        if utr_disadvantage and form_disadvantage and form_is_reliable:
+            reason = "FUNDAMENTAL_DISADVANTAGE"
+            details = (
+                f"Opponent {opponent['name']} fundamentally stronger: "
+                f"UTR +{utr_gap:.2f} (threshold {UTR_THRESHOLD}), "
+                f"Form +{form_gap:.1f} (threshold {FORM_THRESHOLD}). "
+                f"Predicted {predicted_player['name']} has worse metrics on both."
+            )
+            
+            print(f"\n🚫 SKIP: {reason}")
+            print(f"   {details}")
+            
+            return {
+                'should_skip': True,
+                'reason': reason,
+                'details': details,
+                'utr_gap': utr_gap,
+                'form_gap': form_gap
+            }
+        
+        return {'should_skip': False}
+    
+    def _check_coin_flip_match(self, player_a: Dict, player_b: Dict) -> Dict:
+        """
+        Skip matches where all edges are negligible (coin-flip scenarios).
+        
+        Prevents betting on matches with no predictable edge where outcome
+        is essentially random.
+        
+        Args:
+            player_a: Dict with 'utr', 'form', 'name'
+            player_b: Dict with 'utr', 'form', 'name'
+        
+        Returns:
+            dict: {'should_skip': bool, 'reason': str, 'details': str}
+        """
+        # Calculate gaps
+        utr_gap = abs(player_a['utr'] - player_b['utr'])
+        form_gap = abs(player_a['form'] - player_b['form'])
+        max_form = max(player_a['form'], player_b['form'])
+        
+        # Thresholds
+        MAX_UTR_GAP = 0.10
+        MAX_FORM_GAP = 5.0
+        MAX_FORM_THRESHOLD = 30.0
+        
+        # Check if all edges are negligible
+        utr_negligible = utr_gap < MAX_UTR_GAP
+        form_negligible = form_gap < MAX_FORM_GAP
+        both_struggling = max_form < MAX_FORM_THRESHOLD
+        
+        if utr_negligible and form_negligible and both_struggling:
+            reason = "COIN_FLIP"
+            details = (
+                f"No meaningful edge detected: "
+                f"UTR gap {utr_gap:.2f} < {MAX_UTR_GAP}, "
+                f"Form gap {form_gap:.1f} < {MAX_FORM_GAP}, "
+                f"Both players struggling (max form {max_form:.1f} < {MAX_FORM_THRESHOLD}). "
+                f"Match outcome unpredictable."
+            )
+            
+            print(f"\n🚫 SKIP: {reason}")
+            print(f"   {details}")
+            
+            return {
+                'should_skip': True,
+                'reason': reason,
+                'details': details,
+                'utr_gap': utr_gap,
+                'form_gap': form_gap,
+                'max_form': max_form
+            }
+        
+        return {'should_skip': False}
     
     def _convert_gender(self, gender_code: Optional[str]) -> str:
         """Convert gender code from API (M/F) to readable format (Male/Female)"""
@@ -5591,6 +5710,79 @@ class TennisBettingAnalyzer:
                 print(f"   Predicted Winner: {predicted_set_winner} (#{predicted_set_winner_ranking})")
                 print(f"   Opponent: #{opponent_ranking}")
             
+            # ============================================================
+            # ENHANCED SKIP RULES: Fundamental Disadvantage & Coin-Flip
+            # ============================================================
+            
+            # Prepare player data for skip checks
+            if predicted_set_winner == player1.name:
+                predicted_player = {
+                    'name': player1.name,
+                    'utr': p1_utr if p1_utr else 0,
+                    'form': player1.recent_form_score
+                }
+                opponent = {
+                    'name': player2.name,
+                    'utr': p2_utr if p2_utr else 0,
+                    'form': player2.recent_form_score
+                }
+            else:
+                predicted_player = {
+                    'name': player2.name,
+                    'utr': p2_utr if p2_utr else 0,
+                    'form': player2.recent_form_score
+                }
+                opponent = {
+                    'name': player1.name,
+                    'utr': p1_utr if p1_utr else 0,
+                    'form': player1.recent_form_score
+                }
+            
+            # Check 1: Fundamental Disadvantage (opponent better on both UTR and Form)
+            if predicted_player['utr'] > 0 and opponent['utr'] > 0:
+                fundamental_check = self._check_fundamental_disadvantage(predicted_player, opponent)
+                if fundamental_check['should_skip']:
+                    self.skip_logger.log_skip(
+                        event_id=event_id,
+                        player1=player1.name,
+                        player2=player2.name,
+                        reason=fundamental_check['reason'],
+                        details=fundamental_check['details']
+                    )
+                    return None  # Skip this match
+            
+            # Check 2: Coin-Flip Match (no meaningful edges)
+            player_a = {
+                'name': player1.name,
+                'utr': p1_utr if p1_utr else 0,
+                'form': player1.recent_form_score
+            }
+            player_b = {
+                'name': player2.name,
+                'utr': p2_utr if p2_utr else 0,
+                'form': player2.recent_form_score
+            }
+            
+            if player_a['utr'] > 0 and player_b['utr'] > 0:
+                coin_flip_check = self._check_coin_flip_match(player_a, player_b)
+                if coin_flip_check['should_skip']:
+                    self.skip_logger.log_skip(
+                        event_id=event_id,
+                        player1=player1.name,
+                        player2=player2.name,
+                        reason=coin_flip_check['reason'],
+                        details=coin_flip_check['details']
+                    )
+                    return None  # Skip this match
+            
+            print(f"\n✅ ENHANCED SKIP RULES: PASSED")
+            print(f"   ✓ Not a fundamental disadvantage")
+            print(f"   ✓ Not a coin-flip match")
+            
+            # ============================================================
+            # END ENHANCED SKIP RULES
+            # ============================================================
+            
             # Convert final confidence to numeric for protection check
             confidence_numeric = 0.8 if final_confidence == "High" else 0.5 if final_confidence == "Medium" else 0.2
             
@@ -6575,6 +6767,115 @@ class TennisBettingAnalyzer:
                 print("⚠️ No matching pairs found between MatchDataProvider and OddsProvider")
                 return []
             
+            # ====================================================================================
+            # STEP 4: FETCH FOREBET AND MATCH WITH OUR DATA
+            # ====================================================================================
+            print("\n" + "="*80)
+            print("🔍 FOREBET INTEGRATION")
+            print("="*80)
+            
+            # Fetch Forebet predictions if not already fetched
+            if not self.forebet_fetched:
+                print("🌐 Fetching Forebet predictions for next 3 days...")
+                self.forebet_provider.fetch_predictions(days=3)
+                self.forebet_fetched = True
+            else:
+                print("📦 Using cached Forebet predictions from initialization")
+            
+            # Show Forebet scrape summary
+            forebet_predictions = self.forebet_provider.predictions_cache or []
+            print(f"\n📊 FOREBET SCRAPE SUMMARY:")
+            print(f"   Total predictions fetched: {len(forebet_predictions)}")
+            
+            # Group by day
+            forebet_by_day = {}
+            for pred in forebet_predictions:
+                day = pred.get('day', 'UNKNOWN')
+                forebet_by_day[day] = forebet_by_day.get(day, 0) + 1
+            
+            for day, count in sorted(forebet_by_day.items()):
+                print(f"   └─ {day}: {count} matches")
+            
+            # Match Forebet with our available matches
+            print(f"\n🔗 MATCHING FOREBET WITH OUR MATCHES:")
+            print(f"   Our matches (SofaScore ↔ SportyBet): {len(available_matches)}")
+            
+            forebet_match_count = 0
+            forebet_agree_count = 0
+            forebet_disagree_count = 0
+            
+            # Track best near-misses for debugging
+            near_misses = []
+            
+            for i, match_pair in enumerate(available_matches):
+                match = match_pair['match_data_match']
+                player1 = match['player1_name']
+                player2 = match['player2_name']
+                
+                # Try to find Forebet match with debug info
+                forebet_match = self.forebet_provider.find_match(player1, player2)
+                
+                if forebet_match:
+                    forebet_match_count += 1
+                    match_pair['forebet_match'] = forebet_match  # Store for later use
+                    
+                    # Show match result
+                    print(f"   {i+1:2d}. ✅ {player1} vs {player2}")
+                    print(f"       └─ Forebet predicts: {forebet_match['predicted_player']} ({forebet_match['predicted_probability']}%)")
+                else:
+                    # Check if there was a near-miss (score 60-69)
+                    best_score = 0
+                    best_attempt = None
+                    
+                    for fb_pred in forebet_predictions:
+                        from fuzzywuzzy import fuzz
+                        score1 = fuzz.token_sort_ratio(player1.lower(), fb_pred['player1'].lower())
+                        score2 = fuzz.token_sort_ratio(player2.lower(), fb_pred['player2'].lower())
+                        direct_score = min(score1, score2)
+                        
+                        score1_rev = fuzz.token_sort_ratio(player1.lower(), fb_pred['player2'].lower())
+                        score2_rev = fuzz.token_sort_ratio(player2.lower(), fb_pred['player1'].lower())
+                        reversed_score = min(score1_rev, score2_rev)
+                        
+                        match_score = max(direct_score, reversed_score)
+                        if match_score > best_score:
+                            best_score = match_score
+                            best_attempt = fb_pred
+                    
+                    if best_score >= 60:  # Near miss
+                        near_misses.append({
+                            'our_match': f"{player1} vs {player2}",
+                            'forebet_match': f"{best_attempt['player1']} vs {best_attempt['player2']}",
+                            'score': best_score
+                        })
+                        print(f"   {i+1:2d}. ⚠️ {player1} vs {player2} - Near miss!")
+                        print(f"       └─ Closest: {best_attempt['player1']} vs {best_attempt['player2']} (score: {best_score}/100)")
+                    else:
+                        print(f"   {i+1:2d}. ❌ {player1} vs {player2} - No Forebet data")
+                    
+                    match_pair['forebet_match'] = None
+            
+            # Final 3-way summary
+            print(f"\n📊 3-WAY DATA SUMMARY:")
+            print(f"   ├─ SofaScore matches: {total_singles}")
+            print(f"   ├─ SportyBet matches: {len(odds_provider_matches)}")
+            print(f"   ├─ Forebet predictions: {len(forebet_predictions)}")
+            print(f"   │")
+            print(f"   ├─ SofaScore ↔ SportyBet matched: {len(available_matches)}")
+            print(f"   └─ With Forebet data: {forebet_match_count}/{len(available_matches)} ({forebet_match_count/len(available_matches)*100:.1f}%)")
+            
+            # Show near-misses if any
+            if near_misses:
+                print(f"\n⚠️  FOREBET NAME MATCHING ISSUES:")
+                print(f"   The following matches were close but below the 75% threshold:")
+                for nm in near_misses:
+                    print(f"   • Our: {nm['our_match']}")
+                    print(f"     Forebet: {nm['forebet_match']} (score: {nm['score']}/100)")
+                print(f"\n   💡 These might match if you lower the threshold or adjust name formats")
+            
+            print(f"\n✅ Proceeding to analyze {len(available_matches)} matches")
+            print("="*80 + "\n")
+            
             # STEP 4: Initialize CSV for incremental writing
             csv_writer = None
             csv_fieldnames = None
@@ -6592,6 +6893,7 @@ class TennisBettingAnalyzer:
                         'bookmaker_total_games_lines',  # JSON string of all bookmaker Total Games lines (dynamic)
                         'recommended_total_games_line', 'recommended_total_games_bet', 'recommended_total_games_odds', 'total_games_edge',  # Best Total Games bet
                         'recommended_bet', 'key_factors', 'reasoning', 'weight_breakdown',
+                        'forebet_available', 'forebet_predicted_winner', 'forebet_probability', 'forebet_agrees',  # Forebet integration
                         'odds_provider_event_id', 'player1_odds_1_5', 'player2_odds_1_5', 'player1_odds_2_5', 'player2_odds_2_5', 'matched_player1', 'matched_player2'
                     ]
                     
@@ -7186,6 +7488,51 @@ class TennisBettingAnalyzer:
                         'matched_player2': odds_provider_match.player2
                     })
                     
+                    # ====================
+                    # FOREBET INTEGRATION (Use pre-matched data)
+                    # ====================
+                    log_match_info(self.logger, player1_name, player2_name, tournament.name if tournament else 'Unknown')
+                    
+                    # Use pre-matched Forebet data from match_pair (already matched during initial phase)
+                    forebet_match = match_pair.get('forebet_match')
+                    
+                    if forebet_match:
+                        # Check if Forebet agrees with our prediction
+                        forebet_agrees = self.forebet_provider.check_agreement(
+                            prediction.predicted_winner,
+                            forebet_match
+                        )
+                        
+                        forebet_info = {
+                            'forebet_available': True,
+                            'forebet_predicted_winner': forebet_match['predicted_player'],
+                            'forebet_probability': forebet_match['predicted_probability'],
+                            'forebet_agrees': forebet_agrees
+                        }
+                    else:
+                        forebet_info = {
+                            'forebet_available': False,
+                            'forebet_predicted_winner': None,
+                            'forebet_probability': None,
+                            'forebet_agrees': False
+                        }
+                    
+                    log_forebet_status(
+                        self.logger,
+                        forebet_info['forebet_available'],
+                        forebet_info['forebet_predicted_winner'],
+                        forebet_info['forebet_probability'],
+                        forebet_info['forebet_agrees']
+                    )
+                    
+                    # Add Forebet fields to result
+                    result.update({
+                        'forebet_available': forebet_info['forebet_available'],
+                        'forebet_predicted_winner': forebet_info['forebet_predicted_winner'] or '',
+                        'forebet_probability': forebet_info['forebet_probability'] or '',
+                        'forebet_agrees': forebet_info['forebet_agrees']
+                    })
+                    
                     # Log prediction results using thread-safe logging
                     if self.prediction_logger:
                         self.prediction_logger.log_match_message("⚖️ WEIGHT CALCULATIONS:")
@@ -7318,6 +7665,13 @@ class TennisBettingAnalyzer:
 
 def main():
     """Main execution function"""
+    
+    # Setup logging system (clears log file on each run)
+    logger = setup_logging(
+        log_file="logs/betting_analysis.log",
+        level=logging.INFO,
+        clear_on_start=True
+    )
     
     print("🎾 TENNIS +1.5 SETS BETTING ANALYSIS (ODDS_PROVIDER)")
     print("=" * 55)

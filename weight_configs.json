@@ -146,7 +146,7 @@
         "return_of_serve": 0.18,
         "recent_form": 0.15,
         "surface_performance": 0.12,
-        "mental_toughness": 0.10,
+        "mental_toughness": 0.1,
         "sets_in_losses": 0.08,
         "atp_ranking": 0.05,
         "utr_rating": 0.02,
@@ -180,10 +180,10 @@
       "created": "2025-10-28",
       "weights": {
         "set_performance": 0.24,
-        "serve_dominance": 0.20,
+        "serve_dominance": 0.2,
         "recent_form": 0.16,
         "surface_performance": 0.12,
-        "mental_toughness": 0.10,
+        "mental_toughness": 0.1,
         "sets_in_losses": 0.06,
         "pressure_performance": 0.06,
         "atp_ranking": 0.04,
@@ -222,7 +222,7 @@
         "serve_dominance": 0.19,
         "recent_form": 0.16,
         "surface_performance": 0.12,
-        "mental_toughness": 0.10,
+        "mental_toughness": 0.1,
         "clutch_factor": 0.06,
         "sets_in_losses": 0.06,
         "pressure_performance": 0.06,
@@ -267,7 +267,7 @@
         "mental_toughness": 0.14,
         "clutch_factor": 0.06,
         "sets_in_losses": 0.06,
-        "pressure_performance": 0.10,
+        "pressure_performance": 0.1,
         "atp_ranking": 0.02,
         "utr_rating": 0.0,
         "momentum": 0.0,
@@ -297,12 +297,55 @@
         "roi": 0.0,
         "last_updated": "2025-10-30"
       }
+    },
+    "HYBRID_V1_NOV2025": {
+      "name": "Hybrid V1 November 2025 - Best of Both Worlds",
+      "description": "Combines SERVE_V3 performance metrics (serve 16%, mental 12%, pressure 8%) with HOT_STREAK skill metrics (UTR 10%, ranking 10%, resilience 8%). Balances class (skill) with current form (performance). Designed to capture both long-term ability and short-term execution.",
+      "created": "2025-11-03",
+      "weights": {
+        "set_performance": 0.2,
+        "serve_dominance": 0.16,
+        "mental_toughness": 0.12,
+        "utr_rating": 0.1,
+        "atp_ranking": 0.1,
+        "recent_form": 0.12,
+        "pressure_performance": 0.08,
+        "sets_in_losses": 0.08,
+        "surface_performance": 0.04,
+        "momentum": 0.0,
+        "clutch_factor": 0.0,
+        "physical_factors": 0.0,
+        "return_of_serve": 0.0
+      },
+      "features": {
+        "tiebreak_performance": false,
+        "pressure_performance": true,
+        "serve_dominance": true,
+        "enhanced_year_blending": true,
+        "crowd_sentiment": true,
+        "dual_weighted_form": true,
+        "hannah_fry_amplification": true,
+        "return_of_serve_focus": false,
+        "surface_specific_serve_boost": true,
+        "aggressive_sample_size_caps": true,
+        "data_quality_crowd_gating": true,
+        "close_match_mental_amplification": true
+      },
+      "performance": {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "profit_loss": 0.0,
+        "roi": 0.0,
+        "last_updated": "2025-11-03"
+      }
     }
   },
   "active_config": "SERVE_STRENGTH_V3_OCT2025",
   "metadata": {
     "version": "1.0",
-    "last_updated": "2025-10-30",
-    "total_configs": 7
+    "last_updated": "2025-11-03",
+    "total_configs": 9
   }
 }

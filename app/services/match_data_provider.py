@@ -15,6 +15,7 @@ Handles:
 import json
 import asyncio
 import time
+from functools import partial
 from datetime import datetime, date
 from typing import List, Optional, Dict, Any
 from curl_cffi import requests as curl_requests
@@ -123,6 +124,28 @@ class MatchDataProvider:
                     # Final attempt failed
                     print(f"❌ Request failed after {max_retries} attempts")
                     raise MatchDataProviderError(f"Failed to fetch data after {max_retries} attempts: {e}")
+    
+    async def _make_request_async(self, url: str, max_retries: int = 3, **kwargs) -> Dict[str, Any]:
+        """
+        Async wrapper for _make_request.
+        
+        Args:
+            url: The API endpoint URL
+            max_retries: Maximum number of retry attempts (default: 3)
+            **kwargs: Additional parameters for the request
+            
+        Returns:
+            Dict containing the JSON response
+        """
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        
+        # Use partial to bind kwargs to the function
+        func = partial(self._make_request, url, max_retries, **kwargs)
+        return await loop.run_in_executor(None, func)
     
     async def get_head_to_head(self, event_id: str) -> Dict[str, Any]:
         """
