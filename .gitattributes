@@ -1,0 +1,12 @@
+# Exclude debug/test HTML files from language statistics
+*.html linguist-detectable=false
+forebet*.html linguist-vendored
+
+# Exclude test data files
+*_test_results_*.json linguist-generated
+
+# Frontend build outputs
+frontend/.next/** linguist-generated
+frontend/out/** linguist-generated
+frontend/node_modules/** linguist-vendored
+
