@@ -39,6 +39,10 @@ from utils.injury_checker import InjuryChecker
 from forebet_provider import ForebetProvider
 from logging_config import setup_logging, log_section_header, log_match_info, log_forebet_status
 
+# Medium-confidence indoor hardcourt filter
+from medium_confidence_indoor_filter import MediumConfidenceIndoorFilter
+from indoor_filter_logger import IndoorFilterLogger
+
 @dataclass
 class BookmakerMatch:
     """Bookmaker match information with both +1.5 and +2.5 sets markets"""
@@ -489,6 +493,12 @@ class TennisBettingAnalyzer:
         
         # Initialize skip logger (clears log file on startup)
         self.skip_logger = SkipLogger()
+        
+        # Initialize medium-confidence indoor hardcourt filter
+        self.medium_confidence_indoor_filter = MediumConfidenceIndoorFilter()
+        
+        # Initialize indoor filter logger (clears log file on startup)
+        self.indoor_filter_logger = IndoorFilterLogger()
         
         # Store config reference for feature checking (MUST be before stats_handler init)
         self.config = prediction_config
@@ -5346,7 +5356,7 @@ class TennisBettingAnalyzer:
         coin_flip_threshold = self.config.LOSS_ANALYSIS_IMPROVEMENTS.get('coin_flip_score_threshold', 0.05)
         should_skip_coin_flips = self.config.LOSS_ANALYSIS_IMPROVEMENTS.get('skip_coin_flip_matches', False)
         
-        if score_diff < coin_flip_threshold:  # Less than 5% total score difference
+        if score_diff < coin_flip_threshold:  # Less than 2% total score difference (lowered from 5% based on validation data)
             # CRITICAL FIX: Use set probabilities for predicted winner, not UTR/ranking
             # This prevents contradictions between predicted_winner and recommended_bet fields
             if player1_set_prob > player2_set_prob:
@@ -5365,8 +5375,8 @@ class TennisBettingAnalyzer:
             if should_skip_coin_flips:
                 print(f"\n🚫 COIN FLIP SKIP ACTIVATED:")
                 print(f"   📊 Score difference {score_diff:.3f} < {coin_flip_threshold} threshold")
-                print(f"   ⚠️ Low confidence 'coin flip' matches have poor risk/reward")
-                print(f"   💡 Both losses in analysis were coin flip predictions (55% confidence)")
+                print(f"   ⚠️ Truly unpredictable matches (score diff <2%) have poor risk/reward")
+                print(f"   💡 Threshold lowered from 5% to 2% based on 92.3% win rate on 2-5% matches)")
                 skip_match = True
                 skip_reason = f"Coin flip match (score diff {score_diff:.1%} < {coin_flip_threshold:.1%}) - poor risk/reward ratio"
             else:
@@ -5634,6 +5644,8 @@ class TennisBettingAnalyzer:
             # Add crowd data to weight breakdown
             weight_breakdown['crowd_sentiment'] = crowd_sentiment_data['crowd_analysis']
         else:
+            # No event ID - use base confidence score without crowd adjustment
+            adjusted_confidence_score = base_confidence_score
             weight_breakdown['crowd_sentiment'] = "No event ID provided"
         
         # CLOSE MATCH PENALTY - Apply confidence reduction for small UTR gaps
@@ -5783,8 +5795,99 @@ class TennisBettingAnalyzer:
             # END ENHANCED SKIP RULES
             # ============================================================
             
-            # Convert final confidence to numeric for protection check
-            confidence_numeric = 0.8 if final_confidence == "High" else 0.5 if final_confidence == "Medium" else 0.2
+            # ============================================================
+            # MEDIUM-CONFIDENCE INDOOR HARDCOURT FILTER
+            # ============================================================
+            # Check for medium-confidence indoor hardcourt risk factors
+            
+            # CRITICAL FIX: Ensure adjusted_confidence_score is always defined before filter check
+            # If not set (due to edge case code paths), use base_confidence_score as fallback
+            # Check for: undefined, None, 0.0, or negative values (all invalid)
+            try:
+                if adjusted_confidence_score is None or adjusted_confidence_score <= 0:
+                    print(f"\n⚠️ WARNING: adjusted_confidence_score invalid ({adjusted_confidence_score}), using base_confidence_score")
+                    adjusted_confidence_score = base_confidence_score if 'base_confidence_score' in locals() else 0.05
+            except (NameError, UnboundLocalError):
+                print(f"\n⚠️ WARNING: adjusted_confidence_score not defined, using base_confidence_score")
+                adjusted_confidence_score = base_confidence_score if 'base_confidence_score' in locals() else 0.05
+            
+            print(f"\n🔍 INDOOR FILTER CHECK:")
+            print(f"   Match: {player1.name} vs {player2.name}")
+            print(f"   Surface: {surface}")
+            print(f"   Confidence being passed: {adjusted_confidence_score:.1%}")
+            print(f"   UTR Gap: {utr_gap:.2f}")
+            
+            medium_conf_indoor_check = self.medium_confidence_indoor_filter.check_medium_confidence_indoor(
+                surface=surface,
+                confidence=adjusted_confidence_score,
+                utr_gap=utr_gap,
+                weight_breakdown=weight_breakdown,
+                predicted_winner=predicted_set_winner,
+                player1_name=player1.name,
+                player2_name=player2.name,
+                tournament_name=tournament_name
+            )
+            
+            # Log filter check result
+            self.indoor_filter_logger.log_filter_check(
+                match=f"{player1.name} vs {player2.name}",
+                tournament=tournament_name,
+                surface=surface,
+                confidence=adjusted_confidence_score,
+                utr_gap=utr_gap,
+                result=medium_conf_indoor_check
+            )
+            
+            if medium_conf_indoor_check['should_downgrade']:
+                print(f"\n🎯 MEDIUM-CONFIDENCE INDOOR FILTER TRIGGERED:")
+                print(f"   Reason: {medium_conf_indoor_check['reason']}")
+                print(f"   Severity: {medium_conf_indoor_check['severity'].upper()}")
+                print(f"   Original confidence: {medium_conf_indoor_check['original_confidence']:.1%}")
+                print(f"   Adjusted confidence: {medium_conf_indoor_check['adjusted_confidence']:.1%}")
+                print(f"   Details: {medium_conf_indoor_check['details']}")
+                
+                # Apply confidence downgrade
+                adjusted_conf = medium_conf_indoor_check['adjusted_confidence']
+                
+                # Convert adjusted confidence back to categorical
+                if adjusted_conf > 0.15:
+                    final_confidence = "High"
+                elif adjusted_conf > 0.08:
+                    final_confidence = "Medium"
+                else:
+                    final_confidence = "Low"
+                
+                print(f"   📉 Final confidence after downgrade: {final_confidence}")
+                
+                # Update numeric confidence for downstream checks
+                confidence_numeric = adjusted_conf
+                
+                # If confidence dropped below 50%, consider skipping
+                # (This matches your current system - bets below ~50% confidence are typically skipped)
+                if adjusted_conf < 0.50:
+                    print(f"\n🚫 CONFIDENCE TOO LOW AFTER INDOOR FILTER:")
+                    print(f"   Adjusted confidence {adjusted_conf:.1%} < 50% threshold")
+                    print(f"   Skipping bet due to high risk on indoor hardcourt")
+                    
+                    self.skip_logger.log_skip(
+                        event_id=event_id,
+                        player1=player1.name,
+                        player2=player2.name,
+                        reason=medium_conf_indoor_check['reason'],
+                        details=medium_conf_indoor_check['details']
+                    )
+                    return None  # Skip this match
+            else:
+                print(f"\n✅ MEDIUM-CONFIDENCE INDOOR FILTER: PASSED")
+                if medium_conf_indoor_check['reason'] != 'Not indoor hardcourt':
+                    print(f"   {medium_conf_indoor_check['details']}")
+            
+            # ============================================================
+            # END MEDIUM-CONFIDENCE INDOOR HARDCOURT FILTER
+            # ============================================================
+            
+            # Use actual numeric confidence for downstream checks
+            confidence_numeric = adjusted_confidence_score
             
             upset_protection = self.config.check_upset_prediction_protection(
                 predicted_set_winner_ranking, opponent_ranking, confidence_numeric
@@ -6828,7 +6931,7 @@ class TennisBettingAnalyzer:
                     best_attempt = None
                     
                     for fb_pred in forebet_predictions:
-                        from fuzzywuzzy import fuzz
+                        from rapidfuzz import fuzz
                         score1 = fuzz.token_sort_ratio(player1.lower(), fb_pred['player1'].lower())
                         score2 = fuzz.token_sort_ratio(player2.lower(), fb_pred['player2'].lower())
                         direct_score = min(score1, score2)
@@ -7714,6 +7817,10 @@ def main():
         # Write to CSV
         analyzer.write_to_csv(results)
         
+        # Log indoor filter session summary
+        filter_stats = analyzer.medium_confidence_indoor_filter.get_stats()
+        analyzer.indoor_filter_logger.log_summary(filter_stats)
+        
         # Print summary
         print(f"\n📈 ANALYSIS SUMMARY:")
         print(f"   Total matches analyzed: {len(results)}")
@@ -7725,6 +7832,13 @@ def main():
         print(f"   High confidence predictions: {len(high_confidence)}")
         print(f"   Medium confidence predictions: {len(medium_confidence)}")
         print(f"   Low confidence predictions: {len(low_confidence)}")
+        
+        # Print indoor filter stats if any checks were performed
+        if filter_stats['total_checked'] > 0:
+            print(f"\n🎯 INDOOR FILTER STATS:")
+            print(f"   Medium-conf indoor bets checked: {filter_stats['total_checked']}")
+            print(f"   Downgrades/skips applied: {filter_stats['total_downgraded']}")
+            print(f"   📄 Details: logs/indoor_filter.log")
         
         if high_confidence:
             print(f"\n🔥 HIGH CONFIDENCE +1.5 SETS RECOMMENDATIONS:")

@@ -8,7 +8,7 @@ for enhanced confidence scoring.
 
 from curl_cffi import requests
 from bs4 import BeautifulSoup
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional

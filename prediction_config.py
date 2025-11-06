@@ -118,16 +118,16 @@ class PredictionConfig:
             'enhanced_form_multiplier': 1.5,           # 50% increase to form weight
             
             'skip_coin_flip_matches': True,            # Skip matches with "Coin flip" edge classification
-            'coin_flip_score_threshold': 0.05,         # Score diff <5% = coin flip
+            'coin_flip_score_threshold': 0.02,         # Score diff <2% = coin flip (loosened from 5% based on 92.3% win rate data)
             
-            'enable_conflicting_signals_skip': True,   # Skip when UTR+Form+Ranking oppose set performance
+            'enable_conflicting_signals_skip': False,  # DISABLED - 100% win rate on skipped matches (2-3 wins, 0 losses). Skills-favored players tend to win even with mixed set performance.
             'conflicting_signals_threshold': 2,        # Require 2+ skill metrics to align
             
             'description': 'Improvements based on analysis of failed predictions',
             'rationale': {
                 'opponent_quality': 'Players with inflated set win rates from weak opponents mislead model',
                 'form_weight': 'Recent form proved more predictive than historical set performance',
-                'coin_flip_skip': 'Low confidence "coin flip" matches have poor risk/reward',
+                'coin_flip_skip': 'Truly unpredictable matches (score diff <2%) have poor risk/reward - threshold lowered from 5% after validation showed 92.3% win rate on 2-5% matches',
                 'conflicting_signals': 'When skill metrics align against set perf, trust the skill metrics'
             }
         }

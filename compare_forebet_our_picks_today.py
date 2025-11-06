@@ -7,7 +7,7 @@ to estimate agreement rate
 import csv
 from curl_cffi import requests
 from bs4 import BeautifulSoup
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 
 def scrape_forebet():
     """Scrape Forebet predictions"""
