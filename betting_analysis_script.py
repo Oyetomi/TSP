@@ -5796,96 +5796,103 @@ class TennisBettingAnalyzer:
             # ============================================================
             
             # ============================================================
-            # OPTIMIZED MULTI-RISK FILTER (Final V1 - Aggressive)
+            # MEDIUM-CONFIDENCE INDOOR HARDCOURT FILTER - DISABLED
             # ============================================================
-            # Performance on historical data (130 validated matches):
-            #   - Saves: 11/19 losses (58%)
-            #   - Keeps: 86/111 wins (77%)
-            #   - Net: +$100 profit improvement
-            #   - Win rate: 85.4% → 91.5% (+6.1pp)
-            #   - New record projection: 86-8 (91.5%)
+            # DISABLED: Filter was too aggressive, filtering 33% of predictions
+            # Analysis showed:
+            #   - 66 matches would be filtered (UTR < 0.5)
+            #   - 37 wins skipped (80.4% win rate on filtered matches)
+            #   - 9 losses prevented
+            #   - Net impact: -$580 in profit
+            #   - Better to keep these bets (they're profitable at 80%)
             #
-            # This filter uses multiple risk factors to identify high-risk bets:
-            #   1. Very low confidence (<50%)
-            #   2. Elite tournament risk (Finals + indoor + close UTR)
-            #   3. Indoor close match risk (multiple thresholds)
-            #   4. Large ranking gap + medium confidence
+            # FILTER CODE COMMENTED OUT BELOW:
             # ============================================================
             
-            # Ensure confidence score is valid
-            try:
-                if adjusted_confidence_score is None or adjusted_confidence_score <= 0:
-                    adjusted_confidence_score = base_confidence_score if 'base_confidence_score' in locals() else 0.05
-            except (NameError, UnboundLocalError):
-                adjusted_confidence_score = base_confidence_score if 'base_confidence_score' in locals() else 0.05
-            
-            # Get match parameters
-            surface_lower = surface.lower() if surface else ''
-            tournament_lower = tournament_name.lower() if tournament_name else ''
-            utr_gap = abs(p1_utr - p2_utr) if (p1_utr and p2_utr) else 999
-            p1_ranking = player1.ranking if hasattr(player1, 'ranking') and player1.ranking else 9999
-            p2_ranking = player2.ranking if hasattr(player2, 'ranking') and player2.ranking else 9999
-            ranking_gap = abs(p1_ranking - p2_ranking)
-            
-            # Multi-Risk Filter Logic
-            should_skip = False
-            skip_reason = ""
-            
-            # Rule 1: Very low confidence
-            if adjusted_confidence_score < 0.50:
-                should_skip = True
-                skip_reason = f"Very low confidence ({adjusted_confidence_score:.1%} < 50%)"
-            
-            # Rule 2: Elite tournament + indoor + close UTR
-            elif 'finals' in tournament_lower and 'indoor' in surface_lower and utr_gap < 0.5:
-                should_skip = True
-                skip_reason = f"Elite Finals + indoor + close UTR (gap: {utr_gap:.2f})"
-            
-            # Rule 3: Indoor + very close UTR + not super high confidence
-            elif 'indoor' in surface_lower and utr_gap < 0.27 and adjusted_confidence_score < 0.73:
-                should_skip = True
-                skip_reason = f"Indoor + very close UTR ({utr_gap:.2f}) + medium confidence ({adjusted_confidence_score:.1%})"
-            
-            # Rule 4: Indoor + close UTR + lower confidence
-            elif 'indoor' in surface_lower and utr_gap < 0.40 and adjusted_confidence_score < 0.68:
-                should_skip = True
-                skip_reason = f"Indoor + close UTR ({utr_gap:.2f}) + lower confidence ({adjusted_confidence_score:.1%})"
-            
-            # Rule 5: Large ranking gap + medium confidence (Challenger risk)
-            elif ranking_gap > 200 and adjusted_confidence_score < 0.63:
-                should_skip = True
-                skip_reason = f"Large ranking gap ({ranking_gap}) + medium confidence ({adjusted_confidence_score:.1%})"
-            
-            # Rule 6: Indoor + low confidence
-            elif 'indoor' in surface_lower and adjusted_confidence_score < 0.59:
-                should_skip = True
-                skip_reason = f"Indoor + low confidence ({adjusted_confidence_score:.1%})"
-            
-            if should_skip:
-                print(f"\n🚫 MULTI-RISK FILTER TRIGGERED:")
-                print(f"   Match: {player1.name} vs {player2.name}")
-                print(f"   Tournament: {tournament_name}")
-                print(f"   Surface: {surface}")
-                print(f"   Confidence: {adjusted_confidence_score:.1%}")
-                print(f"   UTR Gap: {utr_gap:.2f}")
-                print(f"   Ranking Gap: {ranking_gap}")
-                print(f"   ❌ REASON: {skip_reason}")
-                print(f"   → Skipping bet due to multiple risk factors")
-                
-                self.skip_logger.log_skip(
-                    event_id=event_id,
-                    player1=player1.name,
-                    player2=player2.name,
-                    reason="Multi-Risk Filter",
-                    details=skip_reason
-                )
-                return None  # Skip this match
-            else:
-                print(f"\n✅ MULTI-RISK FILTER: PASSED")
-                print(f"   Confidence: {adjusted_confidence_score:.1%}, UTR Gap: {utr_gap:.2f}, Ranking Gap: {ranking_gap}")
+            # # CRITICAL FIX: Ensure adjusted_confidence_score is always defined before filter check
+            # # If not set (due to edge case code paths), use base_confidence_score as fallback
+            # # Check for: undefined, None, 0.0, or negative values (all invalid)
+            # try:
+            #     if adjusted_confidence_score is None or adjusted_confidence_score <= 0:
+            #         print(f"\n⚠️ WARNING: adjusted_confidence_score invalid ({adjusted_confidence_score}), using base_confidence_score")
+            #         adjusted_confidence_score = base_confidence_score if 'base_confidence_score' in locals() else 0.05
+            # except (NameError, UnboundLocalError):
+            #     print(f"\n⚠️ WARNING: adjusted_confidence_score not defined, using base_confidence_score")
+            #     adjusted_confidence_score = base_confidence_score if 'base_confidence_score' in locals() else 0.05
+            # 
+            # print(f"\n🔍 INDOOR FILTER CHECK:")
+            # print(f"   Match: {player1.name} vs {player2.name}")
+            # print(f"   Surface: {surface}")
+            # print(f"   Confidence being passed: {adjusted_confidence_score:.1%}")
+            # print(f"   UTR Gap: {utr_gap:.2f}")
+            # 
+            # medium_conf_indoor_check = self.medium_confidence_indoor_filter.check_medium_confidence_indoor(
+            #     surface=surface,
+            #     confidence=adjusted_confidence_score,
+            #     utr_gap=utr_gap,
+            #     weight_breakdown=weight_breakdown,
+            #     predicted_winner=predicted_set_winner,
+            #     player1_name=player1.name,
+            #     player2_name=player2.name,
+            #     tournament_name=tournament_name
+            # )
+            # 
+            # # Log filter check result
+            # self.indoor_filter_logger.log_filter_check(
+            #     match=f"{player1.name} vs {player2.name}",
+            #     tournament=tournament_name,
+            #     surface=surface,
+            #     confidence=adjusted_confidence_score,
+            #     utr_gap=utr_gap,
+            #     result=medium_conf_indoor_check
+            # )
+            # 
+            # if medium_conf_indoor_check['should_downgrade']:
+            #     print(f"\n🎯 MEDIUM-CONFIDENCE INDOOR FILTER TRIGGERED:")
+            #     print(f"   Reason: {medium_conf_indoor_check['reason']}")
+            #     print(f"   Severity: {medium_conf_indoor_check['severity'].upper()}")
+            #     print(f"   Original confidence: {medium_conf_indoor_check['original_confidence']:.1%}")
+            #     print(f"   Adjusted confidence: {medium_conf_indoor_check['adjusted_confidence']:.1%}")
+            #     print(f"   Details: {medium_conf_indoor_check['details']}")
+            #     
+            #     # Apply confidence downgrade
+            #     adjusted_conf = medium_conf_indoor_check['adjusted_confidence']
+            #     
+            #     # Convert adjusted confidence back to categorical
+            #     if adjusted_conf > 0.15:
+            #         final_confidence = "High"
+            #     elif adjusted_conf > 0.08:
+            #         final_confidence = "Medium"
+            #     else:
+            #         final_confidence = "Low"
+            #     
+            #     print(f"   📉 Final confidence after downgrade: {final_confidence}")
+            #     
+            #     # Update numeric confidence for downstream checks
+            #     confidence_numeric = adjusted_conf
+            #     
+            #     # If confidence dropped below 50%, consider skipping
+            #     # (This matches your current system - bets below ~50% confidence are typically skipped)
+            #     if adjusted_conf < 0.50:
+            #         print(f"\n🚫 CONFIDENCE TOO LOW AFTER INDOOR FILTER:")
+            #         print(f"   Adjusted confidence {adjusted_conf:.1%} < 50% threshold")
+            #         print(f"   Skipping bet due to high risk on indoor hardcourt")
+            #         
+            #         self.skip_logger.log_skip(
+            #             event_id=event_id,
+            #             player1=player1.name,
+            #             player2=player2.name,
+            #             reason=medium_conf_indoor_check['reason'],
+            #             details=medium_conf_indoor_check['details']
+            #         )
+            #         return None  # Skip this match
+            # else:
+            #     print(f"\n✅ MEDIUM-CONFIDENCE INDOOR FILTER: PASSED")
+            #     if medium_conf_indoor_check['reason'] != 'Not indoor hardcourt':
+            #         print(f"   {medium_conf_indoor_check['details']}")
             
             # ============================================================
-            # END OPTIMIZED MULTI-RISK FILTER
+            # END MEDIUM-CONFIDENCE INDOOR HARDCOURT FILTER (DISABLED)
             # ============================================================
             
             # Use actual numeric confidence for downstream checks
