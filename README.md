@@ -29,6 +29,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 ## Core Features
 
 ### Statistical Analysis
+
 - **Multi-year performance blending** - Weighted analysis across 2-3 years of data
 - **Surface-specific modeling** - Separate analysis for Hard, Clay, and Grass courts
 - **Opponent quality adjustment** - Performance normalized against opponent strength
@@ -36,6 +37,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **UTR integration** - Universal Tennis Rating for true skill assessment
 
 ### Risk Management
+
 - **73% Confidence Cap** - Universal maximum to prevent overconfidence (validation-driven)
 - **Universal Surface Data Quality Filter** - Rejects predictions when either player has:
   - <50% confidence on the match surface
@@ -49,6 +51,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **Confidence scoring** - Match-by-match reliability assessment
 
 ### Advanced Features
+
 - **Hannah Fry Mathematical Insights** - Amplification of small performance edges
 - **Tennis Abstract Elo Integration** - Real Elo ratings with fuzzy name matching (rapidfuzz) and surface-specific ratings
 - **Mental toughness metrics** - Clutch performance and competitive resilience
@@ -63,6 +66,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 ## Technical Architecture
 
 ### Backend
+
 - **Language**: Python 3.9
 - **API Framework**: FastAPI
 - **Data Processing**: Pandas, NumPy
@@ -70,6 +74,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **Prediction Model**: Statistical weighted analysis (not ML)
 
 ### Frontend
+
 - **Framework**: Next.js 14 with TypeScript
 - **UI Library**: shadcn/ui components
 - **Styling**: Tailwind CSS
@@ -77,6 +82,7 @@ A data-driven tennis prediction system that analyzes player performance across m
 - **Features**: Real-time filtering, match selection, odds integration
 
 ### Data Sources
+
 - **Match Data**: Professional tennis data providers
 - **Odds**: Leading bookmaker APIs
 - **Player Ratings**: UTR (Universal Tennis Rating)
@@ -87,12 +93,14 @@ A data-driven tennis prediction system that analyzes player performance across m
 ## Installation
 
 ### Prerequisites
+
 ```bash
 Python 3.9+
 Node.js 18+ (for frontend)
 ```
 
 ### Backend Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/tennis-set-prediction.git
@@ -107,6 +115,7 @@ cp api_secrets.example.py api_secrets.py
 ```
 
 ### Frontend Setup
+
 ```bash
 cd frontend
 pnpm install
@@ -124,6 +133,7 @@ pnpm dev
 ## Usage
 
 ### Running Predictions
+
 ```bash
 # Generate predictions for today's matches
 python3.9 main.py
@@ -136,6 +146,7 @@ python3.9 run_server.py
 ```
 
 ### Accessing the Dashboard
+
 ```bash
 cd frontend
 pnpm dev
@@ -163,6 +174,7 @@ pnpm dev
 | ATP/WTA Ranking | 2% | Official ranking (minimal weight - execution over reputation) |
 
 **Key Features:**
+
 - ✅ 3-year historical data (2023-2025) with 60/30/10 weighted blending
 - ✅ Universal surface data quality filter (min 50% confidence, 10+ matches)
 - ✅ Close match mental amplification (1.5x boost when set probability gap <5%)
@@ -174,6 +186,7 @@ pnpm dev
 ### Skip Logic
 
 Matches are automatically excluded when:
+
 - **Surface Data Quality Filter** (NEW):
   - Either player has <50% confidence on the match surface
   - Either player has <10 total matches on the surface
@@ -194,17 +207,20 @@ Validation analysis revealed systematic overconfidence in the 75%-85% range. All
 
 **Solution:**
 Universal 73% maximum confidence cap applied to all predictions:
+
 - **Match probability**: Capped at 73%
 - **Set probability**: Capped at 73%
 - **Rationale**: Based on historical validation data showing consistent pattern of overconfidence above this threshold
 
 **Impact:**
+
 - Prevents overconfident predictions that would lead to poor risk assessment
 - Maintains realistic expectations even for seemingly dominant matchups
 - Improves betting discipline by acknowledging inherent match uncertainty
 - Aligns prediction confidence with actual historical win rates
 
 **Example:**
+
 ```
 Before cap: Player A 85% confidence → straight-set loss (0 sets)
 After cap:  Player A 73% confidence → appropriate risk assessment
@@ -219,18 +235,21 @@ This conservative approach prioritizes accuracy over optimism, ensuring predicti
 ### The Kimberly Birrell vs Donna Vekić Case Study
 
 **The Match:**
+
 - **Date**: October 31, 2025
 - **Tournament**: Chennai WTA
 - **Surface**: Hardcourt outdoor
 - **Players**: Kimberly Birrell (#117) vs Donna Vekić (#78)
 
 **The Setup:**
+
 - **Prediction**: Kimberly Birrell +1.5 sets
 - **Our Model**: Favored Birrell at 73% set probability
 - **The Crowd**: Public sentiment heavily favored Vekić (based on ranking)
 - **Key Factors**: UTR advantage (12.07 vs 11.96), despite 39-position ranking gap
 
 **The Result:**
+
 - **Final Score**: Birrell def. Vekić **2-0 sets**
 - **Sets Won**: Birrell won 2 sets, Vekić won 0 sets
 - ✅ **Prediction correct** - Birrell won both sets
@@ -271,6 +290,7 @@ This philosophy is validated by results: **11/11 completed predictions correct (
 **HOT_STREAK_74PCT Configuration** (Sept 22 - Oct 1, 2025)
 
 ### Prediction Volume
+
 - **1,191** total rows in dataset
 - **733** duplicates removed (same match predicted multiple times)
 - **458** unique predictions generated
@@ -315,26 +335,31 @@ The system successfully predicts when the favored player will win at least one s
 The system implements mathematician [Hannah Fry's analysis of tennis scoring mathematics](https://www.youtube.com/shorts/DQuaVtqTC8o), which reveals how small performance edges amplify through tennis's hierarchical scoring system.
 
 ### The 3% Rule
+
 **"If you're 3% better, you'll wipe the floor with them"**
 
 When a player has a 3% advantage in point-winning percentage, the hierarchical structure of tennis scoring (point → game → set → match) amplifies this small edge into dominant match-level performance.
 
 **Implementation:**
+
 - Advantages ≥3% trigger full amplification
 - System applies 30% amplification factor (based on Federer analysis)
 - Confidence levels boost significantly for 3%+ edges
 
 ### Return of Serve Amplification
+
 **"1% better at returning = amplified advantage"**
 
 Return of serve is disproportionately important because it directly counters the server's natural advantage. Even tiny return improvements break the serve advantage asymmetry.
 
 **Implementation:**
+
 - Return performance gets 1.6x importance weight
 - 2% return difference threshold (lower than other metrics)
 - Amplified even more than serve performance itself
 
 ### Hierarchical Amplification
+
 Small point-level advantages multiply through tennis's nested scoring:
 
 1. **Point → Game**: 1.2x amplification
@@ -342,14 +367,17 @@ Small point-level advantages multiply through tennis's nested scoring:
 3. **Set → Match**: 2.0x amplification
 
 **Example**: Federer wins 52% of points → 80% of matches
+
 - 2% point advantage → 30% match advantage
 
 ### Psychological Resilience
+
 **"Mindset towards failure and resilience to losing"**
 
 Hannah Fry emphasizes the psychological component - players who maintain performance despite losses have significant mental edges.
 
 **Implementation:**
+
 - 15% weight for resilience factor
 - Tracks performance patterns in losses
 - Identifies players who compete hard even when behind
@@ -359,11 +387,13 @@ Hannah Fry emphasizes the psychological component - players who maintain perform
 The Hannah Fry amplification system transforms prediction accuracy:
 
 **Without Hannah Fry:**
+
 - Raw statistical differences
 - Linear confidence scaling
 - ~74% accuracy baseline
 
 **With Hannah Fry:**
+
 - Amplified small edges (1-3% differences)
 - Non-linear confidence through dominance thresholds
 - **~79% accuracy** (+5 percentage points)
@@ -375,6 +405,7 @@ The system identifies when small statistical edges represent genuine dominance r
 ## Dashboard Features
 
 ### Match Filtering
+
 - Surface type (Hard, Clay, Grass)
 - Gender (Men's, Women's)
 - Confidence level (Low, Medium, High)
@@ -383,6 +414,7 @@ The system identifies when small statistical edges represent genuine dominance r
 - Risk levels
 
 ### Selection Tools
+
 - Bulk match selection
 - Player-specific betting (dual mode)
 - Random selection for testing
@@ -390,6 +422,7 @@ The system identifies when small statistical edges represent genuine dominance r
 - Ranking-based filters
 
 ### Risk Indicators
+
 - Bagel risk warnings (0-6 set potential)
 - Data quality assessments
 - Sample size indicators
@@ -400,14 +433,18 @@ The system identifies when small statistical edges represent genuine dominance r
 ## Data Acquisition
 
 ### Odds Data
+
 Real-time odds sourced from leading bookmakers:
+
 - +1.5 and +2.5 set markets
 - Multiple bookmaker comparison
 - Automated bet slip generation
 - Live odds updates
 
 ### Match Data
+
 Comprehensive match data includes:
+
 - Historical match records
 - Player performance statistics
 - Head-to-head records
@@ -418,12 +455,15 @@ Comprehensive match data includes:
 ## Configuration Management
 
 ### Weight Profiles
+
 Multiple pre-configured weight profiles available:
+
 - `FORM_OPTIMIZED_OCT2025` - Current active (79% accuracy)
 - `HOT_STREAK_74PCT` - Original baseline
 - `CLUTCH_V2_20251026` - Class over form emphasis
 
 ### Multi-Year Modes
+
 - 2-year mode: 70% current, 30% previous year
 - 3-year mode: Blended weighted analysis
 
@@ -452,6 +492,7 @@ tennis-set-prediction/
 ## Development
 
 ### Adding New Weight Configurations
+
 ```python
 from weight_config_manager import config_manager
 
@@ -473,6 +514,7 @@ config_manager.add_config(
 ### Purpose and Intended Use
 
 This software is provided **solely for research and educational purposes**. It demonstrates statistical modeling, data analysis, and machine learning concepts applied to sports predictions. The system is intended for:
+
 - Academic research and study
 - Learning about statistical modeling techniques
 - Understanding data analysis methodologies
@@ -481,6 +523,7 @@ This software is provided **solely for research and educational purposes**. It d
 ### NOT Financial or Betting Advice
 
 **This software does NOT constitute:**
+
 - Financial advice
 - Betting recommendations
 - Guaranteed predictions
@@ -499,12 +542,14 @@ This software is provided **solely for research and educational purposes**. It d
 ### Legal Compliance
 
 **Users are solely responsible for:**
+
 - Complying with all applicable local, state, and federal laws regarding gambling and betting
 - Understanding gambling regulations in their jurisdiction
 - Verifying the legality of any betting activities before engaging in them
 - Obtaining necessary licenses or permissions if required
 
 **The authors and contributors of this software:**
+
 - Do not endorse or promote gambling
 - Are not responsible for illegal use of this software
 - Are not liable for any legal consequences of using this software
@@ -512,6 +557,7 @@ This software is provided **solely for research and educational purposes**. It d
 ### Financial Risk Warning
 
 **Betting involves significant financial risk:**
+
 - You may lose money
 - Past performance does not indicate future results
 - No prediction system is infallible
@@ -528,6 +574,7 @@ This software is provided **solely for research and educational purposes**. It d
 ### Third-Party Services
 
 This software may integrate with third-party services and APIs. Users are responsible for:
+
 - Complying with third-party terms of service
 - Understanding data usage policies
 - Ensuring proper authentication and authorization
@@ -536,6 +583,7 @@ This software may integrate with third-party services and APIs. Users are respon
 ### Limitation of Liability
 
 **To the maximum extent permitted by law:**
+
 - The authors, contributors, and maintainers of this software are not liable for any damages
 - This includes but is not limited to: financial losses, data loss, or legal consequences
 - Users assume all risks associated with using this software
