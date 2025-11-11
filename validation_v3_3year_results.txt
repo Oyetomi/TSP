@@ -1,0 +1,2562 @@
+🎾 Tennis Prediction Validator
+========================================
+📁 Input: all_SERVE_STRENGTH_V3_OCT2025_3YEAR.csv
+📁 Output: logs/validation_all_SERVE_STRENGTH_V3_OCT2025_3YEAR_20251111_134700.csv
+📊 Loaded 219 unique predictions
+🗑️  Removed 560 duplicate matches
+🔍 Validating 219 predictions in batches of 5...
+
+🚀 Processing batch 1 (5 predictions)
+⏳ [1/219] Queuing: Felix Auger-Aliassime vs Daniel Altmaier
+⏳ [2/219] Queuing: Lorenzo Sonego vs Daniil Medvedev
+⏳ [3/219] Queuing: Francisco Cerundolo vs Jannik Sinner
+⏳ [4/219] Queuing: Sorana Cirstea vs Leylah Fernandez
+⏳ [5/219] Queuing: Himeno Sakatsume vs Eudice Chong
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14935053
+   🏠 Player mapping: Himeno Sakatsume = home, Eudice Chong = away
+   📊 Fetching results for event 14935053...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14970052
+   🏠 Player mapping: Lorenzo Sonego = home, Daniil Medvedev = away
+   📊 Fetching results for event 14970052...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14935046
+   🏠 Player mapping: Sorana Cirstea = home, Leylah Fernandez = away
+   📊 Fetching results for event 14935046...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14968726
+   🏠 Player mapping: Felix Auger-Aliassime = home, Daniel Altmaier = away
+   📊 Fetching results for event 14968726...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14969925
+   🏠 Player mapping: Francisco Cerundolo = home, Jannik Sinner = away
+   📊 Fetching results for event 14969925...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Himeno Sakatsume ≥1 set (73.0% vs Eudice Chong 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Himeno Sakatsume (home) won 2 sets
+   ✅ BET WINS! Himeno Sakatsume won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Daniil Medvedev ≥1 set (73.0% vs Lorenzo Sonego 53.4%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Daniil Medvedev (away) won 2 sets
+   ✅ BET WINS! Daniil Medvedev won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Leylah Fernandez ≥1 set (73.0% vs Sorana Cirstea 51.5%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Leylah Fernandez (away) won 2 sets
+   ✅ BET WINS! Leylah Fernandez won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Felix Auger-Aliassime ≥1 set (73.0% vs Daniel Altmaier 53.4%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Felix Auger-Aliassime (home) won 2 sets
+   ✅ BET WINS! Felix Auger-Aliassime won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Jannik Sinner ≥1 set (73.0% vs Francisco Cerundolo 50.7%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Jannik Sinner (away) won 2 sets
+   ✅ BET WINS! Jannik Sinner won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 2 (5 predictions)
+⏳ [6/219] Queuing: Yulia Putintseva vs Viktorija Golubic
+⏳ [7/219] Queuing: Titouan Droguet vs Laslo Djere
+⏳ [8/219] Queuing: Raphael Collignon vs Stan Wawrinka
+⏳ [9/219] Queuing: Alexander Blockx vs Otto Virtanen
+⏳ [10/219] Queuing: Yi Zhou vs Frederico Ferreira Silva
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14931872
+   🏠 Player mapping: Yi Zhou = home, Frederico Ferreira Silva = away
+   📊 Fetching results for event 14931872...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14935106
+   🏠 Player mapping: Yulia Putintseva = home, Viktorija Golubic = away
+   📊 Fetching results for event 14935106...
+Found 1093 matches for 2025-10-30
+   ❌ No matching event found
+   ✅ FINAL Result: 0-1 sets
+   💰 We bet on Viktorija Golubic ≥1 set (73.0% vs Yulia Putintseva 53.4%)
+   📊 MatchDataProvider result: home 0 - 1 away
+   🏆 Match winner: away
+   🚫 BET VOIDED - Match retired/walkover (0-1)
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Yi Zhou ≥1 set (73.0% vs Frederico Ferreira Silva 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Yi Zhou (home) won 2 sets
+   ✅ BET WINS! Yi Zhou won 2 sets
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14932269
+   🏠 Player mapping: Raphael Collignon = home, Stan Wawrinka = away
+   📊 Fetching results for event 14932269...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14932273
+   🏠 Player mapping: Titouan Droguet = home, Laslo Djere = away
+   📊 Fetching results for event 14932273...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Raphael Collignon ≥1 set (73.0% vs Stan Wawrinka 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Raphael Collignon (home) won 2 sets
+   ✅ BET WINS! Raphael Collignon won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Titouan Droguet ≥1 set (73.0% vs Laslo Djere 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Titouan Droguet (home) won 2 sets
+   ✅ BET WINS! Titouan Droguet won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 3 (5 predictions)
+⏳ [11/219] Queuing: Sinja Kraus vs Selena Janicijevic
+⏳ [12/219] Queuing: Belinda Bencic vs Cristina Bucsa
+⏳ [13/219] Queuing: Tristan Boyer vs Zdenek Kolar
+⏳ [14/219] Queuing: Ben Shelton vs Jannik Sinner
+⏳ [15/219] Queuing: Alexander Bublik vs Alex de Minaur
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 774 matches for 2025-10-31
+   ✅ Found event ID: 14975700
+   🏠 Player mapping: Alexander Bublik = home, Alex de Minaur = away
+   📊 Fetching results for event 14975700...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14935054
+   🏠 Player mapping: Belinda Bencic = home, Cristina Bucsa = away
+   📊 Fetching results for event 14935054...
+Found 774 matches for 2025-10-31
+   ✅ Found event ID: 14976345
+   🏠 Player mapping: Ben Shelton = home, Jannik Sinner = away
+   📊 Fetching results for event 14976345...
+Found 774 matches for 2025-10-31
+   ✅ Found event ID: 14933341
+   🏠 Player mapping: Tristan Boyer = home, Zdenek Kolar = away
+   📊 Fetching results for event 14933341...
+Found 1093 matches for 2025-10-30
+   ✅ Found event ID: 14935081
+   🏠 Player mapping: Sinja Kraus = home, Selena Janicijevic = away
+   📊 Fetching results for event 14935081...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Alexander Bublik ≥1 set (73.0% vs Alex de Minaur 51.3%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Alexander Bublik (home) won 2 sets
+   ✅ BET WINS! Alexander Bublik won 2 sets
+   ⏳ No sets played yet
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Jannik Sinner ≥1 set (73.0% vs Ben Shelton 50.7%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Jannik Sinner (away) won 2 sets
+   ✅ BET WINS! Jannik Sinner won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Zdenek Kolar ≥1 set (73.0% vs Tristan Boyer 51.5%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Zdenek Kolar (away) won 1 sets
+   ✅ BET WINS! Zdenek Kolar won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Sinja Kraus ≥1 set (73.0% vs Selena Janicijevic 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Sinja Kraus (home) won 2 sets
+   ✅ BET WINS! Sinja Kraus won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 4 (5 predictions)
+⏳ [16/219] Queuing: Kimberly Birrell vs Donna Vekić
+⏳ [17/219] Queuing: Johannus Monday vs Mitchell Krueger
+⏳ [18/219] Queuing: Sho Shimabukuro vs Elias Ymer
+⏳ [19/219] Queuing: Sara Bejlek vs Panna Udvardy
+⏳ [20/219] Queuing: Raphael Collignon vs Alexander Blockx
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 774 matches for 2025-10-31
+   ✅ Found event ID: 14932353
+   🏠 Player mapping: Johannus Monday = home, Mitchell Krueger = away
+   📊 Fetching results for event 14932353...
+Found 774 matches for 2025-10-31
+   ✅ Found event ID: 14935138
+   🏠 Player mapping: Kimberly Birrell = home, Donna Vekić = away
+   📊 Fetching results for event 14935138...
+Found 506 matches for 2025-11-01
+   ✅ Found event ID: 14932262
+   🏠 Player mapping: Raphael Collignon = home, Alexander Blockx = away
+   📊 Fetching results for event 14932262...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Johannus Monday ≥1 set (73.0% vs Mitchell Krueger 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Johannus Monday (home) won 2 sets
+   ✅ BET WINS! Johannus Monday won 2 sets
+Found 774 matches for 2025-10-31
+   ❌ No matching event found
+Found 774 matches for 2025-10-31
+   ✅ Found event ID: 14931867
+   🏠 Player mapping: Sho Shimabukuro = home, Elias Ymer = away
+   📊 Fetching results for event 14931867...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Kimberly Birrell ≥1 set (73.0% vs Donna Vekić 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Kimberly Birrell (home) won 2 sets
+   ✅ BET WINS! Kimberly Birrell won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Raphael Collignon ≥1 set (73.0% vs Alexander Blockx 50.7%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Raphael Collignon (home) won 0 sets
+   ❌ BET LOSES! Raphael Collignon won 0 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Sho Shimabukuro ≥1 set (73.0% vs Elias Ymer 51.5%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Sho Shimabukuro (home) won 2 sets
+   ✅ BET WINS! Sho Shimabukuro won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 5 (5 predictions)
+⏳ [21/219] Queuing: Tristan Schoolkate vs Dan Added
+⏳ [22/219] Queuing: Sascha Gueymard Wayenburg vs Daniel Masur
+⏳ [23/219] Queuing: Uisung Park vs Kaito Uesugi
+⏳ [24/219] Queuing: Felix Auger-Aliassime vs Jannik Sinner
+⏳ [25/219] Queuing: Alexei Popyrin vs Sebastian Korda
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 506 matches for 2025-11-01
+   ✅ Found event ID: 14987610
+   🏠 Player mapping: Uisung Park = home, Kaito Uesugi = away
+   📊 Fetching results for event 14987610...
+Found 506 matches for 2025-11-01
+   ✅ Found event ID: 14988621
+   🏠 Player mapping: Sascha Gueymard Wayenburg = home, Daniel Masur = away
+   📊 Fetching results for event 14988621...
+Found 506 matches for 2025-11-01
+   ✅ Found event ID: 14982066
+   🏠 Player mapping: Tristan Schoolkate = home, Dan Added = away
+   📊 Fetching results for event 14982066...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14988818
+   🏠 Player mapping: Felix Auger-Aliassime = home, Jannik Sinner = away
+   📊 Fetching results for event 14988818...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14982499
+   🏠 Player mapping: Alexei Popyrin = home, Sebastian Korda = away
+   📊 Fetching results for event 14982499...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Uisung Park ≥1 set (69.2% vs Kaito Uesugi 60.8%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Uisung Park (home) won 2 sets
+   ✅ BET WINS! Uisung Park won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Sascha Gueymard Wayenburg ≥1 set (73.0% vs Daniel Masur 53.4%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Sascha Gueymard Wayenburg (home) won 2 sets
+   ✅ BET WINS! Sascha Gueymard Wayenburg won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Tristan Schoolkate ≥1 set (73.0% vs Dan Added 51.5%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Tristan Schoolkate (home) won 1 sets
+   ✅ BET WINS! Tristan Schoolkate won 1 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Jannik Sinner ≥1 set (73.0% vs Felix Auger-Aliassime 52.2%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Jannik Sinner (away) won 2 sets
+   ✅ BET WINS! Jannik Sinner won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Sebastian Korda ≥1 set (73.0% vs Alexei Popyrin 53.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Sebastian Korda (away) won 2 sets
+   ✅ BET WINS! Sebastian Korda won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 6 (5 predictions)
+⏳ [26/219] Queuing: Damir Džumhur vs Jacob Fearnley
+⏳ [27/219] Queuing: Marcos Giron vs Pedro Martinez
+⏳ [28/219] Queuing: Miomir Kecmanovic vs Kamil Majchrzak
+⏳ [29/219] Queuing: Reilly Opelka vs Fábián Marozsán
+⏳ [30/219] Queuing: Anna Blinkova vs Lilli Tagger
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 506 matches for 2025-11-01
+   ✅ Found event ID: 14935114
+   🏠 Player mapping: Anna Blinkova = home, Lilli Tagger = away
+   📊 Fetching results for event 14935114...
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Anna Blinkova ≥1 set (68.1% vs Lilli Tagger 61.9%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Anna Blinkova (home) won 2 sets
+   ✅ BET WINS! Anna Blinkova won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 7 (5 predictions)
+⏳ [31/219] Queuing: Cristina Bucsa vs Victoria Mboko
+⏳ [32/219] Queuing: Tallon Griekspoor vs Aleksandar Kovacevic
+⏳ [33/219] Queuing: Kimmer Coppejans vs Brandon Holt
+⏳ [34/219] Queuing: Dimitar Kuzmanov vs Duje Ajduković
+⏳ [35/219] Queuing: Maximus Jones vs Garrett Johns
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14987777
+   🏠 Player mapping: Maximus Jones = home, Garrett Johns = away
+   📊 Fetching results for event 14987777...
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14982554
+   🏠 Player mapping: Tallon Griekspoor = home, Aleksandar Kovacevic = away
+   📊 Fetching results for event 14982554...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Maximus Jones ≥1 set (72.2% vs Garrett Johns 57.8%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Maximus Jones (home) won 1 sets
+   ✅ BET WINS! Maximus Jones won 1 sets
+Found 506 matches for 2025-11-01
+   ✅ Found event ID: 14935049
+   🏠 Player mapping: Cristina Bucsa = home, Victoria Mboko = away
+   📊 Fetching results for event 14935049...
+   ⏳ Match not finished (status: canceled)
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Victoria Mboko ≥1 set (65.6% vs Cristina Bucsa 64.4%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Victoria Mboko (away) won 2 sets
+   ✅ BET WINS! Victoria Mboko won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 8 (5 predictions)
+⏳ [36/219] Queuing: Oliver Crawford vs Hynek Barton
+⏳ [37/219] Queuing: Philip Sekulic vs Hyeon Chung
+⏳ [38/219] Queuing: Yusuke Takahashi vs Rio Noguchi
+⏳ [39/219] Queuing: Coleman Wong vs Luca Castelnuovo
+⏳ [40/219] Queuing: Jason Jung vs Arthur Weber
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14987781
+   🏠 Player mapping: Oliver Crawford = home, Hynek Barton = away
+   📊 Fetching results for event 14987781...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Oliver Crawford ≥1 set (72.2% vs Hynek Barton 57.8%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Oliver Crawford (home) won 2 sets
+   ✅ BET WINS! Oliver Crawford won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 9 (5 predictions)
+⏳ [41/219] Queuing: Sasikumar Mukund vs Kaichi Uchida
+⏳ [42/219] Queuing: Arthur Cazaux vs Adrian Mannarino
+⏳ [43/219] Queuing: Terence Atmane vs Hugo Gaston
+⏳ [44/219] Queuing: Giovanni Mpetshi Perricard vs Tomas Machac
+⏳ [45/219] Queuing: Ugo Blanchet vs Learner Tien
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14982552
+   🏠 Player mapping: Giovanni Mpetshi Perricard = home, Tomas Machac = away
+   📊 Fetching results for event 14982552...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14982555
+   🏠 Player mapping: Terence Atmane = home, Hugo Gaston = away
+   📊 Fetching results for event 14982555...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14982551
+   🏠 Player mapping: Arthur Cazaux = home, Adrian Mannarino = away
+   📊 Fetching results for event 14982551...
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+   ⏳ Match not finished (status: canceled)
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Hugo Gaston ≥1 set (73.0% vs Terence Atmane 53.4%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Hugo Gaston (away) won 2 sets
+   ✅ BET WINS! Hugo Gaston won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Arthur Cazaux ≥1 set (73.0% vs Adrian Mannarino 51.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Arthur Cazaux (home) won 2 sets
+   ✅ BET WINS! Arthur Cazaux won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 10 (5 predictions)
+⏳ [46/219] Queuing: Alex Molcan vs Yannick Hanfmann
+⏳ [47/219] Queuing: Vit Kopřiva vs Eliot Spizzirri
+⏳ [48/219] Queuing: Jan Choinski vs Kyrian Jacquet
+⏳ [49/219] Queuing: Vitaliy Sachko vs Clement Tabur
+⏳ [50/219] Queuing: Gauthier Onclin vs Otto Virtanen
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14987379
+   🏠 Player mapping: Alex Molcan = home, Yannick Hanfmann = away
+   📊 Fetching results for event 14987379...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14988104
+   🏠 Player mapping: Jan Choinski = home, Kyrian Jacquet = away
+   📊 Fetching results for event 14988104...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14988820
+   🏠 Player mapping: Vit Kopřiva = home, Eliot Spizzirri = away
+   📊 Fetching results for event 14988820...
+Found 365 matches for 2025-11-02
+   ❌ No matching event found
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Alex Molcan ≥1 set (69.9% vs Yannick Hanfmann 60.1%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Alex Molcan (home) won 0 sets
+   ❌ BET LOSES! Alex Molcan won 0 sets
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14988420
+   🏠 Player mapping: Vitaliy Sachko = home, Clement Tabur = away
+   📊 Fetching results for event 14988420...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Kyrian Jacquet ≥1 set (73.0% vs Jan Choinski 56.1%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Kyrian Jacquet (away) won 1 sets
+   ✅ BET WINS! Kyrian Jacquet won 1 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Eliot Spizzirri ≥1 set (73.0% vs Vit Kopřiva 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Eliot Spizzirri (away) won 2 sets
+   ✅ BET WINS! Eliot Spizzirri won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Clement Tabur ≥1 set (73.0% vs Vitaliy Sachko 56.4%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Clement Tabur (away) won 2 sets
+   ✅ BET WINS! Clement Tabur won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 11 (5 predictions)
+⏳ [51/219] Queuing: Martin Damm Jr vs Rafael Jodar
+⏳ [52/219] Queuing: Tsung-Hao Huang vs Evan Zhu
+⏳ [53/219] Queuing: Viktor Durasovic vs Rudolf Molleker
+⏳ [54/219] Queuing: Geoffrey Blancaneaux vs Norbert Gombos
+⏳ [55/219] Queuing: Sascha Gueymard Wayenburg vs Tom Gentzsch
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14991558
+   🏠 Player mapping: Sascha Gueymard Wayenburg = home, Tom Gentzsch = away
+   📊 Fetching results for event 14991558...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14991783
+   🏠 Player mapping: Geoffrey Blancaneaux = home, Norbert Gombos = away
+   📊 Fetching results for event 14991783...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14988620
+   🏠 Player mapping: Viktor Durasovic = home, Rudolf Molleker = away
+   📊 Fetching results for event 14988620...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14987791
+   🏠 Player mapping: Tsung-Hao Huang = home, Evan Zhu = away
+   📊 Fetching results for event 14987791...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14932354
+   🏠 Player mapping: Martin Damm Jr = home, Rafael Jodar = away
+   📊 Fetching results for event 14932354...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Sascha Gueymard Wayenburg ≥1 set (73.0% vs Tom Gentzsch 51.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Sascha Gueymard Wayenburg (home) won 2 sets
+   ✅ BET WINS! Sascha Gueymard Wayenburg won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Norbert Gombos ≥1 set (73.0% vs Geoffrey Blancaneaux 51.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Norbert Gombos (away) won 0 sets
+   ❌ BET LOSES! Norbert Gombos won 0 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Viktor Durasovic ≥1 set (68.2% vs Rudolf Molleker 61.8%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Viktor Durasovic (home) won 2 sets
+   ✅ BET WINS! Viktor Durasovic won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Tsung-Hao Huang ≥1 set (69.2% vs Evan Zhu 60.8%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Tsung-Hao Huang (home) won 2 sets
+   ✅ BET WINS! Tsung-Hao Huang won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Martin Damm Jr ≥1 set (73.0% vs Rafael Jodar 53.4%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Martin Damm Jr (home) won 0 sets
+   ❌ BET LOSES! Martin Damm Jr won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 12 (5 predictions)
+⏳ [56/219] Queuing: Yuki Mochizuki vs James Watt
+⏳ [57/219] Queuing: Max Basing vs Naoya Honda
+⏳ [58/219] Queuing: Reilly Opelka vs Vit Kopřiva
+⏳ [59/219] Queuing: Alexandre Muller vs Jan-Lennard Struff
+⏳ [60/219] Queuing: Eliot Spizzirri vs Laslo Djere
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14990294
+   🏠 Player mapping: Yuki Mochizuki = home, James Watt = away
+   📊 Fetching results for event 14990294...
+Found 365 matches for 2025-11-02
+   ✅ Found event ID: 14990600
+   🏠 Player mapping: Max Basing = home, Naoya Honda = away
+   📊 Fetching results for event 14990600...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992072
+   🏠 Player mapping: Reilly Opelka = home, Vit Kopřiva = away
+   📊 Fetching results for event 14992072...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992082
+   🏠 Player mapping: Eliot Spizzirri = home, Laslo Djere = away
+   📊 Fetching results for event 14992082...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992081
+   🏠 Player mapping: Alexandre Muller = home, Jan-Lennard Struff = away
+   📊 Fetching results for event 14992081...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on James Watt ≥1 set (72.9% vs Yuki Mochizuki 57.1%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 James Watt (away) won 1 sets
+   ✅ BET WINS! James Watt won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Max Basing ≥1 set (69.2% vs Naoya Honda 60.8%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Max Basing (home) won 2 sets
+   ✅ BET WINS! Max Basing won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Reilly Opelka ≥1 set (69.2% vs Vit Kopřiva 60.8%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Reilly Opelka (home) won 0 sets
+   ❌ BET LOSES! Reilly Opelka won 0 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Eliot Spizzirri ≥1 set (73.0% vs Laslo Djere 53.4%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Eliot Spizzirri (home) won 2 sets
+   ✅ BET WINS! Eliot Spizzirri won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Jan-Lennard Struff ≥1 set (73.0% vs Alexandre Muller 53.4%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Jan-Lennard Struff (away) won 1 sets
+   ✅ BET WINS! Jan-Lennard Struff won 1 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 13 (5 predictions)
+⏳ [61/219] Queuing: Clement Tabur vs Aleksandar Kovacevic
+⏳ [62/219] Queuing: Kyrian Jacquet vs Luca Van Assche
+⏳ [63/219] Queuing: Francesco Passaro vs Alexander Blockx
+⏳ [64/219] Queuing: Alfredo Perez vs Andrew Fenty
+⏳ [65/219] Queuing: Cedrik-Marcel Stebe vs Alex Rybakov
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992076
+   🏠 Player mapping: Clement Tabur = home, Aleksandar Kovacevic = away
+   📊 Fetching results for event 14992076...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992151
+   🏠 Player mapping: Kyrian Jacquet = home, Luca Van Assche = away
+   📊 Fetching results for event 14992151...
+Found 475 matches for 2025-11-03
+   ❌ No matching event found
+Found 475 matches for 2025-11-03
+   ❌ No matching event found
+Found 475 matches for 2025-11-03
+   ❌ No matching event found
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Clement Tabur ≥1 set (65.3% vs Aleksandar Kovacevic 64.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Clement Tabur (home) won 2 sets
+   ✅ BET WINS! Clement Tabur won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Kyrian Jacquet ≥1 set (72.9% vs Luca Van Assche 57.1%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Kyrian Jacquet (home) won 2 sets
+   ✅ BET WINS! Kyrian Jacquet won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 14 (5 predictions)
+⏳ [66/219] Queuing: Mats Rosenkranz vs Inaki Montes-de la Torre
+⏳ [67/219] Queuing: Saba Purtseladze vs Antoine Ghibaudo
+⏳ [68/219] Queuing: Joao Lucas Reis Da Silva vs Lautaro Midon
+⏳ [69/219] Queuing: Matej Dodig vs Marko Topo
+⏳ [70/219] Queuing: Mackenzie McDonald vs Tomas Martin Etcheverry
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14989783
+   🏠 Player mapping: Mats Rosenkranz = home, Inaki Montes-de la Torre = away
+   📊 Fetching results for event 14989783...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14991876
+   🏠 Player mapping: Matej Dodig = home, Marko Topo = away
+   📊 Fetching results for event 14991876...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14990233
+   🏠 Player mapping: Joao Lucas Reis Da Silva = home, Lautaro Midon = away
+   📊 Fetching results for event 14990233...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14989781
+   🏠 Player mapping: Saba Purtseladze = home, Antoine Ghibaudo = away
+   📊 Fetching results for event 14989781...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14992065
+   🏠 Player mapping: Mackenzie McDonald = home, Tomas Martin Etcheverry = away
+   📊 Fetching results for event 14992065...
+   ✅ FINAL Result: 0-1 sets
+   💰 We bet on Mats Rosenkranz ≥1 set (67.9% vs Inaki Montes-de la Torre 62.1%)
+   📊 MatchDataProvider result: home 0 - 1 away
+   🏆 Match winner: away
+   🚫 BET VOIDED - Match retired/walkover (0-1)
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Marko Topo ≥1 set (73.0% vs Matej Dodig 50.7%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Marko Topo (away) won 1 sets
+   ✅ BET WINS! Marko Topo won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Joao Lucas Reis Da Silva ≥1 set (68.0% vs Lautaro Midon 62.0%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Joao Lucas Reis Da Silva (home) won 2 sets
+   ✅ BET WINS! Joao Lucas Reis Da Silva won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Antoine Ghibaudo ≥1 set (73.0% vs Saba Purtseladze 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Antoine Ghibaudo (away) won 2 sets
+   ✅ BET WINS! Antoine Ghibaudo won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Tomas Martin Etcheverry ≥1 set (73.0% vs Mackenzie McDonald 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Tomas Martin Etcheverry (away) won 2 sets
+   ✅ BET WINS! Tomas Martin Etcheverry won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 15 (5 predictions)
+⏳ [71/219] Queuing: Andrea Collarini vs Juan Bautista Torres
+⏳ [72/219] Queuing: Lorenzo Joaquin Rodriguez vs Franco Roncadelli
+⏳ [73/219] Queuing: Polona Hercog vs Mayar Sherif
+⏳ [74/219] Queuing: Valeriya Strakhova vs Julia Riera
+⏳ [75/219] Queuing: Roman Andres Burruchaga vs Marco Cecchinato
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992789
+   🏠 Player mapping: Valeriya Strakhova = home, Julia Riera = away
+   📊 Fetching results for event 14992789...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992754
+   🏠 Player mapping: Polona Hercog = home, Mayar Sherif = away
+   📊 Fetching results for event 14992754...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992790
+   🏠 Player mapping: Lorenzo Joaquin Rodriguez = home, Franco Roncadelli = away
+   📊 Fetching results for event 14992790...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992647
+   🏠 Player mapping: Andrea Collarini = home, Juan Bautista Torres = away
+   📊 Fetching results for event 14992647...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14990240
+   🏠 Player mapping: Roman Andres Burruchaga = home, Marco Cecchinato = away
+   📊 Fetching results for event 14990240...
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Julia Riera ≥1 set (73.0% vs Valeriya Strakhova 53.0%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Julia Riera (away) won 2 sets
+   ✅ BET WINS! Julia Riera won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Mayar Sherif ≥1 set (73.0% vs Polona Hercog 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Mayar Sherif (away) won 2 sets
+   ✅ BET WINS! Mayar Sherif won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Andrea Collarini ≥1 set (72.7% vs Juan Bautista Torres 57.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Andrea Collarini (home) won 0 sets
+   ❌ BET LOSES! Andrea Collarini won 0 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Franco Roncadelli ≥1 set (68.0% vs Lorenzo Joaquin Rodriguez 62.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Franco Roncadelli (away) won 2 sets
+   ✅ BET WINS! Franco Roncadelli won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Roman Andres Burruchaga ≥1 set (68.1% vs Marco Cecchinato 61.9%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Roman Andres Burruchaga (home) won 2 sets
+   ✅ BET WINS! Roman Andres Burruchaga won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 16 (5 predictions)
+⏳ [76/219] Queuing: Ekaterine Gorgodze vs Elina Avanesyan
+⏳ [77/219] Queuing: Panna Udvardy vs Despina Papamichail
+⏳ [78/219] Queuing: Solana Sierra vs Miriam Bianca Bulgaru
+⏳ [79/219] Queuing: Matteo Berrettini vs Quentin Halys
+⏳ [80/219] Queuing: Max Basing vs Ryuki Matsuda
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14992769
+   🏠 Player mapping: Ekaterine Gorgodze = home, Elina Avanesyan = away
+   📊 Fetching results for event 14992769...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14994289
+   🏠 Player mapping: Max Basing = home, Ryuki Matsuda = away
+   📊 Fetching results for event 14994289...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14982553
+   🏠 Player mapping: Matteo Berrettini = home, Quentin Halys = away
+   📊 Fetching results for event 14982553...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14992766
+   🏠 Player mapping: Solana Sierra = home, Miriam Bianca Bulgaru = away
+   📊 Fetching results for event 14992766...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14992767
+   🏠 Player mapping: Panna Udvardy = home, Despina Papamichail = away
+   📊 Fetching results for event 14992767...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Ekaterine Gorgodze ≥1 set (73.0% vs Elina Avanesyan 53.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Ekaterine Gorgodze (home) won 2 sets
+   ✅ BET WINS! Ekaterine Gorgodze won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Max Basing ≥1 set (69.2% vs Ryuki Matsuda 60.8%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Max Basing (home) won 2 sets
+   ✅ BET WINS! Max Basing won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Matteo Berrettini ≥1 set (73.0% vs Quentin Halys 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Matteo Berrettini (home) won 2 sets
+   ✅ BET WINS! Matteo Berrettini won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Solana Sierra ≥1 set (73.0% vs Miriam Bianca Bulgaru 53.0%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Solana Sierra (home) won 2 sets
+   ✅ BET WINS! Solana Sierra won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Panna Udvardy ≥1 set (73.0% vs Despina Papamichail 53.4%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Panna Udvardy (home) won 0 sets
+   ❌ BET LOSES! Panna Udvardy won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 17 (5 predictions)
+⏳ [81/219] Queuing: Sho Shimabukuro vs Yuki Mochizuki
+⏳ [82/219] Queuing: Max Wiskandt vs Cooper Williams
+⏳ [83/219] Queuing: Murkel Dellien vs Guido Ivan Justo
+⏳ [84/219] Queuing: Whitney Osuigwe vs Anouk Koevermans
+⏳ [85/219] Queuing: Hina Inoue vs Renata Zarazua
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14994285
+   🏠 Player mapping: Sho Shimabukuro = home, Yuki Mochizuki = away
+   📊 Fetching results for event 14994285...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992974
+   🏠 Player mapping: Whitney Osuigwe = home, Anouk Koevermans = away
+   📊 Fetching results for event 14992974...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992648
+   🏠 Player mapping: Murkel Dellien = home, Guido Ivan Justo = away
+   📊 Fetching results for event 14992648...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992986
+   🏠 Player mapping: Max Wiskandt = home, Cooper Williams = away
+   📊 Fetching results for event 14992986...
+Found 475 matches for 2025-11-03
+   ✅ Found event ID: 14992975
+   🏠 Player mapping: Hina Inoue = home, Renata Zarazua = away
+   📊 Fetching results for event 14992975...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Sho Shimabukuro ≥1 set (73.0% vs Yuki Mochizuki 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Sho Shimabukuro (home) won 2 sets
+   ✅ BET WINS! Sho Shimabukuro won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Whitney Osuigwe ≥1 set (73.0% vs Anouk Koevermans 53.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Whitney Osuigwe (home) won 0 sets
+   ❌ BET LOSES! Whitney Osuigwe won 0 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Guido Ivan Justo ≥1 set (68.8% vs Murkel Dellien 61.3%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Guido Ivan Justo (away) won 1 sets
+   ✅ BET WINS! Guido Ivan Justo won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Max Wiskandt ≥1 set (70.6% vs Cooper Williams 59.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Max Wiskandt (home) won 2 sets
+   ✅ BET WINS! Max Wiskandt won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Renata Zarazua ≥1 set (73.0% vs Hina Inoue 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Renata Zarazua (away) won 2 sets
+   ✅ BET WINS! Renata Zarazua won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 18 (5 predictions)
+⏳ [86/219] Queuing: Alvaro Guillen Meza vs Tristan Boyer
+⏳ [87/219] Queuing: Caroline Dolehide vs Marina Stakusic
+⏳ [88/219] Queuing: Iryna Shymanovich vs Kayla Cross
+⏳ [89/219] Queuing: Sebastian Korda vs Damir Džumhur
+⏳ [90/219] Queuing: Eliot Spizzirri vs Nuno Borges
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956422
+   🏠 Player mapping: Eliot Spizzirri = home, Nuno Borges = away
+   📊 Fetching results for event 14956422...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956426
+   🏠 Player mapping: Sebastian Korda = home, Damir Džumhur = away
+   📊 Fetching results for event 14956426...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14992979
+   🏠 Player mapping: Iryna Shymanovich = home, Kayla Cross = away
+   📊 Fetching results for event 14992979...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14992970
+   🏠 Player mapping: Caroline Dolehide = home, Marina Stakusic = away
+   📊 Fetching results for event 14992970...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14990238
+   🏠 Player mapping: Alvaro Guillen Meza = home, Tristan Boyer = away
+   📊 Fetching results for event 14990238...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Eliot Spizzirri ≥1 set (73.0% vs Nuno Borges 51.5%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Eliot Spizzirri (home) won 1 sets
+   ✅ BET WINS! Eliot Spizzirri won 1 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Sebastian Korda ≥1 set (73.0% vs Damir Džumhur 51.5%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Sebastian Korda (home) won 2 sets
+   ✅ BET WINS! Sebastian Korda won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Iryna Shymanovich ≥1 set (73.0% vs Kayla Cross 55.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Iryna Shymanovich (home) won 1 sets
+   ✅ BET WINS! Iryna Shymanovich won 1 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Marina Stakusic ≥1 set (73.0% vs Caroline Dolehide 51.5%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Marina Stakusic (away) won 2 sets
+   ✅ BET WINS! Marina Stakusic won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Alvaro Guillen Meza ≥1 set (65.0% vs Tristan Boyer 65.0%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Alvaro Guillen Meza (home) won 2 sets
+   ✅ BET WINS! Alvaro Guillen Meza won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 19 (5 predictions)
+⏳ [91/219] Queuing: Patrick Kypson vs Geoffrey Blancaneaux
+⏳ [92/219] Queuing: Marin Čilić vs Stefano Napolitano
+⏳ [93/219] Queuing: Ivan Gakhov vs Arklon Huertas Del Pino Cordova
+⏳ [94/219] Queuing: Uisung Park vs Elias Ymer
+⏳ [95/219] Queuing: Mai Hontama vs Claire Liu
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14990236
+   🏠 Player mapping: Ivan Gakhov = home, Arklon Huertas Del Pino Cordova = away
+   📊 Fetching results for event 14990236...
+Found 879 matches for 2025-11-04
+   ❌ No matching event found
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 15001094
+   🏠 Player mapping: Patrick Kypson = home, Geoffrey Blancaneaux = away
+   📊 Fetching results for event 15001094...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 15001791
+   🏠 Player mapping: Mai Hontama = home, Claire Liu = away
+   📊 Fetching results for event 15001791...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Ivan Gakhov ≥1 set (73.0% vs Arklon Huertas Del Pino Cordova 53.0%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Ivan Gakhov (home) won 2 sets
+   ✅ BET WINS! Ivan Gakhov won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Patrick Kypson ≥1 set (73.0% vs Geoffrey Blancaneaux 51.5%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Patrick Kypson (home) won 2 sets
+   ✅ BET WINS! Patrick Kypson won 2 sets
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14999879
+   🏠 Player mapping: Uisung Park = home, Elias Ymer = away
+   📊 Fetching results for event 14999879...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Claire Liu ≥1 set (73.0% vs Mai Hontama 50.7%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Claire Liu (away) won 2 sets
+   ✅ BET WINS! Claire Liu won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Elias Ymer ≥1 set (73.0% vs Uisung Park 53.5%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Elias Ymer (away) won 2 sets
+   ✅ BET WINS! Elias Ymer won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 20 (5 predictions)
+⏳ [96/219] Queuing: Arthur Cazaux vs Cameron Norrie
+⏳ [97/219] Queuing: Carole Monnet vs Gergana Topalova
+⏳ [98/219] Queuing: Dan Added vs Kyrian Jacquet
+⏳ [99/219] Queuing: Flavio Cobolli vs Lorenzo Sonego
+⏳ [100/219] Queuing: Max Wiskandt vs Johannus Monday
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 15001989
+   🏠 Player mapping: Max Wiskandt = home, Johannus Monday = away
+   📊 Fetching results for event 15001989...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956457
+   🏠 Player mapping: Flavio Cobolli = home, Lorenzo Sonego = away
+   📊 Fetching results for event 14956457...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956458
+   🏠 Player mapping: Dan Added = home, Kyrian Jacquet = away
+   📊 Fetching results for event 14956458...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 15001774
+   🏠 Player mapping: Carole Monnet = home, Gergana Topalova = away
+   📊 Fetching results for event 15001774...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956448
+   🏠 Player mapping: Arthur Cazaux = home, Cameron Norrie = away
+   📊 Fetching results for event 14956448...
+   ⏳ Match not finished (status: canceled)
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Lorenzo Sonego ≥1 set (73.0% vs Flavio Cobolli 53.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Lorenzo Sonego (away) won 2 sets
+   ✅ BET WINS! Lorenzo Sonego won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Kyrian Jacquet ≥1 set (73.0% vs Dan Added 56.1%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Kyrian Jacquet (away) won 2 sets
+   ✅ BET WINS! Kyrian Jacquet won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Carole Monnet ≥1 set (73.0% vs Gergana Topalova 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Carole Monnet (home) won 2 sets
+   ✅ BET WINS! Carole Monnet won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Cameron Norrie ≥1 set (73.0% vs Arthur Cazaux 51.9%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Cameron Norrie (away) won 2 sets
+   ✅ BET WINS! Cameron Norrie won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 21 (5 predictions)
+⏳ [101/219] Queuing: Max Basing vs Frederico Ferreira Silva
+⏳ [102/219] Queuing: Oliver Crawford vs Marc-Andrea Huesler
+⏳ [103/219] Queuing: Genaro Alberto Olivieri vs Carlos Taberner
+⏳ [104/219] Queuing: Ignacio Buse vs Miguel Tobon
+⏳ [105/219] Queuing: James Duckworth vs Michael Vrbensky
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956995
+   🏠 Player mapping: Oliver Crawford = home, Marc-Andrea Huesler = away
+   📊 Fetching results for event 14956995...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956994
+   🏠 Player mapping: Max Basing = home, Frederico Ferreira Silva = away
+   📊 Fetching results for event 14956994...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14956539
+   🏠 Player mapping: James Duckworth = home, Michael Vrbensky = away
+   📊 Fetching results for event 14956539...
+Found 879 matches for 2025-11-04
+   ✅ Found event ID: 14990234
+   🏠 Player mapping: Ignacio Buse = home, Miguel Tobon = away
+   📊 Fetching results for event 14990234...
+Found 879 matches for 2025-11-04
+   ❌ No matching event found
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Marc-Andrea Huesler ≥1 set (73.0% vs Oliver Crawford 54.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Marc-Andrea Huesler (away) won 0 sets
+   ❌ BET LOSES! Marc-Andrea Huesler won 0 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Max Basing ≥1 set (72.9% vs Frederico Ferreira Silva 57.1%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Max Basing (home) won 0 sets
+   ❌ BET LOSES! Max Basing won 0 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on James Duckworth ≥1 set (73.0% vs Michael Vrbensky 53.4%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 James Duckworth (home) won 2 sets
+   ✅ BET WINS! James Duckworth won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Miguel Tobon ≥1 set (67.5% vs Ignacio Buse 62.5%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Miguel Tobon (away) won 1 sets
+   ✅ BET WINS! Miguel Tobon won 1 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 22 (5 predictions)
+⏳ [106/219] Queuing: Stan Wawrinka vs Lorenzo Musetti
+⏳ [107/219] Queuing: Alexandre Muller vs Tomas Martin Etcheverry
+⏳ [108/219] Queuing: Clement Tabur vs Alexander Blockx
+⏳ [109/219] Queuing: Learner Tien vs Moez Echargui
+⏳ [110/219] Queuing: Hugo Gaston vs Daniel Altmaier
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956463
+   🏠 Player mapping: Clement Tabur = home, Alexander Blockx = away
+   📊 Fetching results for event 14956463...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956418
+   🏠 Player mapping: Alexandre Muller = home, Tomas Martin Etcheverry = away
+   📊 Fetching results for event 14956418...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956417
+   🏠 Player mapping: Stan Wawrinka = home, Lorenzo Musetti = away
+   📊 Fetching results for event 14956417...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956464
+   🏠 Player mapping: Hugo Gaston = home, Daniel Altmaier = away
+   📊 Fetching results for event 14956464...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956460
+   🏠 Player mapping: Learner Tien = home, Moez Echargui = away
+   📊 Fetching results for event 14956460...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Alexander Blockx ≥1 set (73.0% vs Clement Tabur 55.6%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Alexander Blockx (away) won 1 sets
+   ✅ BET WINS! Alexander Blockx won 1 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Tomas Martin Etcheverry ≥1 set (73.0% vs Alexandre Muller 54.7%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Tomas Martin Etcheverry (away) won 1 sets
+   ✅ BET WINS! Tomas Martin Etcheverry won 1 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Stan Wawrinka ≥1 set (73.0% vs Lorenzo Musetti 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Stan Wawrinka (home) won 1 sets
+   ✅ BET WINS! Stan Wawrinka won 1 sets
+   ✅ FINAL Result: 1-1 sets
+   💰 We bet on Hugo Gaston ≥1 set (73.0% vs Daniel Altmaier 50.7%)
+   📊 MatchDataProvider result: home 1 - 1 away
+   🏆 Match winner: away
+   🎯 Hugo Gaston (home) won 1 sets
+   ✅ BET WINS! Hugo Gaston won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Learner Tien ≥1 set (73.0% vs Moez Echargui 53.4%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Learner Tien (home) won 2 sets
+   ✅ BET WINS! Learner Tien won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 23 (5 predictions)
+⏳ [111/219] Queuing: Aleksandar Vukic vs Matteo Berrettini
+⏳ [112/219] Queuing: Vitaliy Sachko vs Alexander Bublik
+⏳ [113/219] Queuing: Patrick Kypson vs Calvin Hemery
+⏳ [114/219] Queuing: Viktor Durasovic vs Luca Nardi
+⏳ [115/219] Queuing: Daniil Glinka vs Alfredo Perez
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1113 matches for 2025-11-05
+   ❌ No matching event found
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956501
+   🏠 Player mapping: Viktor Durasovic = home, Luca Nardi = away
+   📊 Fetching results for event 14956501...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956496
+   🏠 Player mapping: Patrick Kypson = home, Calvin Hemery = away
+   📊 Fetching results for event 14956496...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956452
+   🏠 Player mapping: Vitaliy Sachko = home, Alexander Bublik = away
+   📊 Fetching results for event 14956452...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956456
+   🏠 Player mapping: Aleksandar Vukic = home, Matteo Berrettini = away
+   📊 Fetching results for event 14956456...
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Viktor Durasovic ≥1 set (67.7% vs Luca Nardi 62.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Viktor Durasovic (home) won 0 sets
+   ❌ BET LOSES! Viktor Durasovic won 0 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Patrick Kypson ≥1 set (73.0% vs Calvin Hemery 53.4%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Patrick Kypson (home) won 2 sets
+   ✅ BET WINS! Patrick Kypson won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Alexander Bublik ≥1 set (73.0% vs Vitaliy Sachko 50.7%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Alexander Bublik (away) won 1 sets
+   ✅ BET WINS! Alexander Bublik won 1 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Matteo Berrettini ≥1 set (73.0% vs Aleksandar Vukic 53.4%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Matteo Berrettini (away) won 2 sets
+   ✅ BET WINS! Matteo Berrettini won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 24 (5 predictions)
+⏳ [116/219] Queuing: Andres Martin vs Darwin Blanch
+⏳ [117/219] Queuing: Antoine Ghibaudo vs Mitchell Krueger
+⏳ [118/219] Queuing: Sho Shimabukuro vs Garrett Johns
+⏳ [119/219] Queuing: Yasutaka Uchiyama vs Hugo Grenier
+⏳ [120/219] Queuing: Hady Habib vs Tomás Barrios Vera
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957009
+   🏠 Player mapping: Andres Martin = home, Darwin Blanch = away
+   📊 Fetching results for event 14957009...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957186
+   🏠 Player mapping: Hady Habib = home, Tomás Barrios Vera = away
+   📊 Fetching results for event 14957186...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956992
+   🏠 Player mapping: Yasutaka Uchiyama = home, Hugo Grenier = away
+   📊 Fetching results for event 14956992...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14956991
+   🏠 Player mapping: Sho Shimabukuro = home, Garrett Johns = away
+   📊 Fetching results for event 14956991...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Tomás Barrios Vera ≥1 set (73.0% vs Hady Habib 53.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Tomás Barrios Vera (away) won 2 sets
+   ✅ BET WINS! Tomás Barrios Vera won 2 sets
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957018
+   🏠 Player mapping: Antoine Ghibaudo = home, Mitchell Krueger = away
+   📊 Fetching results for event 14957018...
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Andres Martin ≥1 set (72.0% vs Darwin Blanch 58.1%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Andres Martin (home) won 0 sets
+   ❌ BET LOSES! Andres Martin won 0 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Hugo Grenier ≥1 set (73.0% vs Yasutaka Uchiyama 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Hugo Grenier (away) won 2 sets
+   ✅ BET WINS! Hugo Grenier won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Sho Shimabukuro ≥1 set (73.0% vs Garrett Johns 53.4%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Sho Shimabukuro (home) won 2 sets
+   ✅ BET WINS! Sho Shimabukuro won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Antoine Ghibaudo ≥1 set (73.0% vs Mitchell Krueger 53.4%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Antoine Ghibaudo (home) won 0 sets
+   ❌ BET LOSES! Antoine Ghibaudo won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 25 (5 predictions)
+⏳ [121/219] Queuing: Murkel Dellien vs Juan Bautista Torres
+⏳ [122/219] Queuing: Nicolas Kicker vs Alvaro Guillen Meza
+⏳ [123/219] Queuing: Varvara Lepchenko vs Louisa Chirico
+⏳ [124/219] Queuing: Claire Liu vs Renata Zarazua
+⏳ [125/219] Queuing: Antonia Vergara Rivera vs Luisina Giovannini
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1113 matches for 2025-11-05
+   ❌ No matching event found
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957057
+   🏠 Player mapping: Varvara Lepchenko = home, Louisa Chirico = away
+   📊 Fetching results for event 14957057...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957185
+   🏠 Player mapping: Nicolas Kicker = home, Alvaro Guillen Meza = away
+   📊 Fetching results for event 14957185...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957177
+   🏠 Player mapping: Murkel Dellien = home, Juan Bautista Torres = away
+   📊 Fetching results for event 14957177...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957082
+   🏠 Player mapping: Antonia Vergara Rivera = home, Luisina Giovannini = away
+   📊 Fetching results for event 14957082...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Varvara Lepchenko ≥1 set (73.0% vs Louisa Chirico 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Varvara Lepchenko (home) won 2 sets
+   ✅ BET WINS! Varvara Lepchenko won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Nicolas Kicker ≥1 set (73.0% vs Alvaro Guillen Meza 54.1%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Nicolas Kicker (home) won 1 sets
+   ✅ BET WINS! Nicolas Kicker won 1 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Juan Bautista Torres ≥1 set (66.2% vs Murkel Dellien 63.7%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Juan Bautista Torres (away) won 2 sets
+   ✅ BET WINS! Juan Bautista Torres won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Antonia Vergara Rivera ≥1 set (73.0% vs Luisina Giovannini 51.3%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Antonia Vergara Rivera (home) won 2 sets
+   ✅ BET WINS! Antonia Vergara Rivera won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 26 (5 predictions)
+⏳ [126/219] Queuing: Carole Monnet vs Julia Riera
+⏳ [127/219] Queuing: Jessica Pegula vs Jasmine Paolini
+⏳ [128/219] Queuing: Despina Papamichail vs Tina Nadine Smith
+⏳ [129/219] Queuing: Matteo Berrettini vs Learner Tien
+⏳ [130/219] Queuing: Marcos Giron vs Yannick Hanfmann
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 1113 matches for 2025-11-05
+   ✅ Found event ID: 14957090
+   🏠 Player mapping: Carole Monnet = home, Julia Riera = away
+   📊 Fetching results for event 14957090...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 15007096
+   🏠 Player mapping: Jessica Pegula = home, Jasmine Paolini = away
+   📊 Fetching results for event 15007096...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956451
+   🏠 Player mapping: Matteo Berrettini = home, Learner Tien = away
+   📊 Fetching results for event 14956451...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14957086
+   🏠 Player mapping: Despina Papamichail = home, Tina Nadine Smith = away
+   📊 Fetching results for event 14957086...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956432
+   🏠 Player mapping: Marcos Giron = home, Yannick Hanfmann = away
+   📊 Fetching results for event 14956432...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Carole Monnet ≥1 set (73.0% vs Julia Riera 51.5%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Carole Monnet (home) won 1 sets
+   ✅ BET WINS! Carole Monnet won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Jasmine Paolini ≥1 set (73.0% vs Jessica Pegula 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Jasmine Paolini (away) won 0 sets
+   ❌ BET LOSES! Jasmine Paolini won 0 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Matteo Berrettini ≥1 set (73.0% vs Learner Tien 53.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Matteo Berrettini (home) won 1 sets
+   ✅ BET WINS! Matteo Berrettini won 1 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Despina Papamichail ≥1 set (71.0% vs Tina Nadine Smith 59.0%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Despina Papamichail (home) won 2 sets
+   ✅ BET WINS! Despina Papamichail won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Marcos Giron ≥1 set (73.0% vs Yannick Hanfmann 50.7%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Marcos Giron (home) won 0 sets
+   ❌ BET LOSES! Marcos Giron won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 27 (5 predictions)
+⏳ [131/219] Queuing: Clement Tabur vs Vitaliy Sachko
+⏳ [132/219] Queuing: Nicolas Mejia vs Murphy Cassone
+⏳ [133/219] Queuing: Shunsuke Mitsui vs Max Wiskandt
+⏳ [134/219] Queuing: Henrique Rocha vs Rio Noguchi
+⏳ [135/219] Queuing: Oliver Crawford vs Frederico Ferreira Silva
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956987
+   🏠 Player mapping: Oliver Crawford = home, Frederico Ferreira Silva = away
+   📊 Fetching results for event 14956987...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956986
+   🏠 Player mapping: Henrique Rocha = home, Rio Noguchi = away
+   📊 Fetching results for event 14956986...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14957014
+   🏠 Player mapping: Shunsuke Mitsui = home, Max Wiskandt = away
+   📊 Fetching results for event 14957014...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14957017
+   🏠 Player mapping: Nicolas Mejia = home, Murphy Cassone = away
+   📊 Fetching results for event 14957017...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956449
+   🏠 Player mapping: Clement Tabur = home, Vitaliy Sachko = away
+   📊 Fetching results for event 14956449...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Oliver Crawford ≥1 set (66.9% vs Frederico Ferreira Silva 63.1%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Oliver Crawford (home) won 1 sets
+   ✅ BET WINS! Oliver Crawford won 1 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Henrique Rocha ≥1 set (73.0% vs Rio Noguchi 50.7%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Henrique Rocha (home) won 2 sets
+   ✅ BET WINS! Henrique Rocha won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Shunsuke Mitsui ≥1 set (66.2% vs Max Wiskandt 63.8%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Shunsuke Mitsui (home) won 2 sets
+   ✅ BET WINS! Shunsuke Mitsui won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Murphy Cassone ≥1 set (73.0% vs Nicolas Mejia 56.1%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Murphy Cassone (away) won 2 sets
+   ✅ BET WINS! Murphy Cassone won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Clement Tabur ≥1 set (73.0% vs Vitaliy Sachko 56.4%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Clement Tabur (home) won 1 sets
+   ✅ BET WINS! Clement Tabur won 1 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 28 (5 predictions)
+⏳ [136/219] Queuing: Stefano Travaglia vs Luca Nardi
+⏳ [137/219] Queuing: Ignacio Buse vs Joao Lucas Reis Da Silva
+⏳ [138/219] Queuing: Coleman Wong vs Maxime Janvier
+⏳ [139/219] Queuing: Aryna Sabalenka vs Amanda Anisimova
+⏳ [140/219] Queuing: Jessica Pegula vs Elena Rybakina
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956534
+   🏠 Player mapping: Coleman Wong = home, Maxime Janvier = away
+   📊 Fetching results for event 14956534...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14957173
+   🏠 Player mapping: Ignacio Buse = home, Joao Lucas Reis Da Silva = away
+   📊 Fetching results for event 14957173...
+Found 949 matches for 2025-11-06
+   ✅ Found event ID: 14956491
+   🏠 Player mapping: Stefano Travaglia = home, Luca Nardi = away
+   📊 Fetching results for event 14956491...
+Found 713 matches for 2025-11-07
+   ✅ Found event ID: 15015377
+   🏠 Player mapping: Aryna Sabalenka = home, Amanda Anisimova = away
+   📊 Fetching results for event 15015377...
+Found 713 matches for 2025-11-07
+   ✅ Found event ID: 15015376
+   🏠 Player mapping: Jessica Pegula = home, Elena Rybakina = away
+   📊 Fetching results for event 15015376...
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Joao Lucas Reis Da Silva ≥1 set (65.0% vs Ignacio Buse 65.0%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Joao Lucas Reis Da Silva (away) won 2 sets
+   ✅ BET WINS! Joao Lucas Reis Da Silva won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Coleman Wong ≥1 set (69.2% vs Maxime Janvier 60.8%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Coleman Wong (home) won 2 sets
+   ✅ BET WINS! Coleman Wong won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Stefano Travaglia ≥1 set (69.2% vs Luca Nardi 60.8%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Stefano Travaglia (home) won 2 sets
+   ✅ BET WINS! Stefano Travaglia won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Aryna Sabalenka ≥1 set (73.0% vs Amanda Anisimova 49.6%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Aryna Sabalenka (home) won 2 sets
+   ✅ BET WINS! Aryna Sabalenka won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Elena Rybakina ≥1 set (73.0% vs Jessica Pegula 53.4%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Elena Rybakina (away) won 2 sets
+   ✅ BET WINS! Elena Rybakina won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 29 (5 predictions)
+⏳ [141/219] Queuing: Inaki Montes-de la Torre vs Mitchell Krueger
+⏳ [142/219] Queuing: Aryna Sabalenka vs Elena Rybakina
+⏳ [143/219] Queuing: Patrick Kypson vs Stefano Travaglia
+⏳ [144/219] Queuing: Otto Virtanen vs Sascha Gueymard Wayenburg
+⏳ [145/219] Queuing: Mitchell Krueger vs Cedrik-Marcel Stebe
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14956490
+   🏠 Player mapping: Patrick Kypson = home, Stefano Travaglia = away
+   📊 Fetching results for event 14956490...
+Found 713 matches for 2025-11-07
+   ✅ Found event ID: 14957016
+   🏠 Player mapping: Inaki Montes-de la Torre = home, Mitchell Krueger = away
+   📊 Fetching results for event 14957016...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14957022
+   🏠 Player mapping: Mitchell Krueger = home, Cedrik-Marcel Stebe = away
+   📊 Fetching results for event 14957022...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14956488
+   🏠 Player mapping: Otto Virtanen = home, Sascha Gueymard Wayenburg = away
+   📊 Fetching results for event 14956488...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Patrick Kypson ≥1 set (73.0% vs Stefano Travaglia 50.7%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Patrick Kypson (home) won 2 sets
+   ✅ BET WINS! Patrick Kypson won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Mitchell Krueger ≥1 set (66.4% vs Inaki Montes-de la Torre 63.6%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Mitchell Krueger (away) won 2 sets
+   ✅ BET WINS! Mitchell Krueger won 2 sets
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 15020099
+   🏠 Player mapping: Aryna Sabalenka = home, Elena Rybakina = away
+   📊 Fetching results for event 15020099...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Cedrik-Marcel Stebe ≥1 set (65.5% vs Mitchell Krueger 64.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Cedrik-Marcel Stebe (away) won 0 sets
+   ❌ BET LOSES! Cedrik-Marcel Stebe won 0 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Otto Virtanen ≥1 set (73.0% vs Sascha Gueymard Wayenburg 54.8%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Otto Virtanen (home) won 2 sets
+   ✅ BET WINS! Otto Virtanen won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Aryna Sabalenka ≥1 set (73.0% vs Elena Rybakina 49.6%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Aryna Sabalenka (home) won 0 sets
+   ❌ BET LOSES! Aryna Sabalenka won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 30 (5 predictions)
+⏳ [146/219] Queuing: Henrique Rocha vs Frederico Ferreira Silva
+⏳ [147/219] Queuing: Ryan Peniston vs Sho Shimabukuro
+⏳ [148/219] Queuing: Gonzalo Bueno vs Cristian Garin
+⏳ [149/219] Queuing: Joao Lucas Reis Da Silva vs Genaro Alberto Olivieri
+⏳ [150/219] Queuing: Iva Jovic vs Marina Stakusic
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14957176
+   🏠 Player mapping: Joao Lucas Reis Da Silva = home, Genaro Alberto Olivieri = away
+   📊 Fetching results for event 14957176...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14956979
+   🏠 Player mapping: Ryan Peniston = home, Sho Shimabukuro = away
+   📊 Fetching results for event 14956979...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14956984
+   🏠 Player mapping: Henrique Rocha = home, Frederico Ferreira Silva = away
+   📊 Fetching results for event 14956984...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14957054
+   🏠 Player mapping: Iva Jovic = home, Marina Stakusic = away
+   📊 Fetching results for event 14957054...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14957180
+   🏠 Player mapping: Gonzalo Bueno = home, Cristian Garin = away
+   📊 Fetching results for event 14957180...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Joao Lucas Reis Da Silva ≥1 set (66.9% vs Genaro Alberto Olivieri 63.1%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Joao Lucas Reis Da Silva (home) won 2 sets
+   ✅ BET WINS! Joao Lucas Reis Da Silva won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Sho Shimabukuro ≥1 set (73.0% vs Ryan Peniston 51.5%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Sho Shimabukuro (away) won 2 sets
+   ✅ BET WINS! Sho Shimabukuro won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Henrique Rocha ≥1 set (73.0% vs Frederico Ferreira Silva 49.6%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Henrique Rocha (home) won 2 sets
+   ✅ BET WINS! Henrique Rocha won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Marina Stakusic ≥1 set (73.0% vs Iva Jovic 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Marina Stakusic (away) won 2 sets
+   ✅ BET WINS! Marina Stakusic won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Cristian Garin ≥1 set (73.0% vs Gonzalo Bueno 51.3%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Cristian Garin (away) won 1 sets
+   ✅ BET WINS! Cristian Garin won 1 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 31 (5 predictions)
+⏳ [151/219] Queuing: James Duckworth vs Coleman Wong
+⏳ [152/219] Queuing: Mayar Sherif vs Simona Waltert
+⏳ [153/219] Queuing: Alexander Zverev vs Ben Shelton
+⏳ [154/219] Queuing: Carlos Alcaraz vs Alex de Minaur
+⏳ [155/219] Queuing: Miguel Tobon vs Daniel Dutra Da Silva
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14956530
+   🏠 Player mapping: James Duckworth = home, Coleman Wong = away
+   📊 Fetching results for event 14956530...
+Found 506 matches for 2025-11-08
+   ✅ Found event ID: 14957091
+   🏠 Player mapping: Mayar Sherif = home, Simona Waltert = away
+   📊 Fetching results for event 14957091...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15017510
+   🏠 Player mapping: Alexander Zverev = home, Ben Shelton = away
+   📊 Fetching results for event 15017510...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15023346
+   🏠 Player mapping: Miguel Tobon = home, Daniel Dutra Da Silva = away
+   📊 Fetching results for event 15023346...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15017492
+   🏠 Player mapping: Carlos Alcaraz = home, Alex de Minaur = away
+   📊 Fetching results for event 15017492...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on James Duckworth ≥1 set (73.0% vs Coleman Wong 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 James Duckworth (home) won 2 sets
+   ✅ BET WINS! James Duckworth won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Simona Waltert ≥1 set (73.0% vs Mayar Sherif 53.4%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Simona Waltert (away) won 1 sets
+   ✅ BET WINS! Simona Waltert won 1 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Alexander Zverev ≥1 set (73.0% vs Ben Shelton 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Alexander Zverev (home) won 2 sets
+   ✅ BET WINS! Alexander Zverev won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Miguel Tobon ≥1 set (68.0% vs Daniel Dutra Da Silva 62.0%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Miguel Tobon (home) won 0 sets
+   ❌ BET LOSES! Miguel Tobon won 0 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Alex de Minaur ≥1 set (73.0% vs Carlos Alcaraz 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Alex de Minaur (away) won 0 sets
+   ❌ BET LOSES! Alex de Minaur won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 32 (5 predictions)
+⏳ [156/219] Queuing: Otto Virtanen vs Patrick Kypson
+⏳ [157/219] Queuing: Jannik Sinner vs Felix Auger-Aliassime
+⏳ [158/219] Queuing: Lorenzo Musetti vs Taylor Fritz
+⏳ [159/219] Queuing: Chun-Hsin Tseng vs Dimitar Kuzmanov
+⏳ [160/219] Queuing: Mitchell Krueger vs Darwin Blanch
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 14957023
+   🏠 Player mapping: Mitchell Krueger = home, Darwin Blanch = away
+   📊 Fetching results for event 14957023...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 14956495
+   🏠 Player mapping: Otto Virtanen = home, Patrick Kypson = away
+   📊 Fetching results for event 14956495...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15022053
+   🏠 Player mapping: Chun-Hsin Tseng = home, Dimitar Kuzmanov = away
+   📊 Fetching results for event 15022053...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15023082
+   🏠 Player mapping: Lorenzo Musetti = home, Taylor Fritz = away
+   📊 Fetching results for event 15023082...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022917
+   🏠 Player mapping: Jannik Sinner = home, Felix Auger-Aliassime = away
+   📊 Fetching results for event 15022917...
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Mitchell Krueger ≥1 set (68.4% vs Darwin Blanch 61.6%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Mitchell Krueger (home) won 2 sets
+   ✅ BET WINS! Mitchell Krueger won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Otto Virtanen ≥1 set (73.0% vs Patrick Kypson 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Otto Virtanen (home) won 1 sets
+   ✅ BET WINS! Otto Virtanen won 1 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Taylor Fritz ≥1 set (73.0% vs Lorenzo Musetti 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Taylor Fritz (away) won 2 sets
+   ✅ BET WINS! Taylor Fritz won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Dimitar Kuzmanov ≥1 set (73.0% vs Chun-Hsin Tseng 53.1%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Dimitar Kuzmanov (away) won 0 sets
+   ❌ BET LOSES! Dimitar Kuzmanov won 0 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Jannik Sinner ≥1 set (73.0% vs Felix Auger-Aliassime 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Jannik Sinner (home) won 2 sets
+   ✅ BET WINS! Jannik Sinner won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 33 (5 predictions)
+⏳ [161/219] Queuing: Tomás Barrios Vera vs Joao Lucas Reis Da Silva
+⏳ [162/219] Queuing: Federico Aguilar Cardozo vs Guido Ivan Justo
+⏳ [163/219] Queuing: Ivan Gakhov vs Joaquin Aguilar Cardozo
+⏳ [164/219] Queuing: Andrea Collarini vs Boris Arias
+⏳ [165/219] Queuing: Ignacio Carou vs David Jorda Sanchis
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 14957174
+   🏠 Player mapping: Tomás Barrios Vera = home, Joao Lucas Reis Da Silva = away
+   📊 Fetching results for event 14957174...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15023335
+   🏠 Player mapping: Ignacio Carou = home, David Jorda Sanchis = away
+   📊 Fetching results for event 15023335...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15023339
+   🏠 Player mapping: Andrea Collarini = home, Boris Arias = away
+   📊 Fetching results for event 15023339...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15023337
+   🏠 Player mapping: Ivan Gakhov = home, Joaquin Aguilar Cardozo = away
+   📊 Fetching results for event 15023337...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 15023334
+   🏠 Player mapping: Federico Aguilar Cardozo = home, Guido Ivan Justo = away
+   📊 Fetching results for event 15023334...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Tomás Barrios Vera ≥1 set (73.0% vs Joao Lucas Reis Da Silva 53.0%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Tomás Barrios Vera (home) won 2 sets
+   ✅ BET WINS! Tomás Barrios Vera won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Ignacio Carou ≥1 set (68.8% vs David Jorda Sanchis 61.2%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Ignacio Carou (home) won 0 sets
+   ❌ BET LOSES! Ignacio Carou won 0 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Andrea Collarini ≥1 set (73.0% vs Boris Arias 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Andrea Collarini (home) won 2 sets
+   ✅ BET WINS! Andrea Collarini won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Guido Ivan Justo ≥1 set (68.0% vs Federico Aguilar Cardozo 62.0%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Guido Ivan Justo (away) won 2 sets
+   ✅ BET WINS! Guido Ivan Justo won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Joaquin Aguilar Cardozo ≥1 set (65.7% vs Ivan Gakhov 64.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Joaquin Aguilar Cardozo (away) won 2 sets
+   ✅ BET WINS! Joaquin Aguilar Cardozo won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 34 (5 predictions)
+⏳ [166/219] Queuing: Marina Stakusic vs Renata Zarazua
+⏳ [167/219] Queuing: Oleksandra Oliynykova vs Mayar Sherif
+⏳ [168/219] Queuing: Jason Jung vs Yoshihito Nishioka
+⏳ [169/219] Queuing: Alex Barrena vs Tristan Boyer
+⏳ [170/219] Queuing: Carlos Taberner vs Gonzalo Bueno
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 14957047
+   🏠 Player mapping: Marina Stakusic = home, Renata Zarazua = away
+   📊 Fetching results for event 14957047...
+Found 348 matches for 2025-11-09
+   ✅ Found event ID: 14957092
+   🏠 Player mapping: Oleksandra Oliynykova = home, Mayar Sherif = away
+   📊 Fetching results for event 14957092...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022044
+   🏠 Player mapping: Jason Jung = home, Yoshihito Nishioka = away
+   📊 Fetching results for event 15022044...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Marina Stakusic ≥1 set (73.0% vs Renata Zarazua 51.5%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Marina Stakusic (home) won 1 sets
+   ✅ BET WINS! Marina Stakusic won 1 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Oleksandra Oliynykova ≥1 set (73.0% vs Mayar Sherif 53.4%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Oleksandra Oliynykova (home) won 2 sets
+   ✅ BET WINS! Oleksandra Oliynykova won 2 sets
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Yoshihito Nishioka ≥1 set (73.0% vs Jason Jung 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Yoshihito Nishioka (away) won 2 sets
+   ✅ BET WINS! Yoshihito Nishioka won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 35 (5 predictions)
+⏳ [171/219] Queuing: Franco Roncadelli vs Genaro Alberto Olivieri
+⏳ [172/219] Queuing: Gustavo Heide vs Rodrigo Pacheco Mendez
+⏳ [173/219] Queuing: Juan Carlos Prado Angelo vs Tomás Barrios Vera
+⏳ [174/219] Queuing: Marco Cecchinato vs Facundo Diaz Acosta
+⏳ [175/219] Queuing: Santiago Rodriguez Taverna vs Mariano Navone
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15023313
+   🏠 Player mapping: Marco Cecchinato = home, Facundo Diaz Acosta = away
+   📊 Fetching results for event 15023313...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15023312
+   🏠 Player mapping: Santiago Rodriguez Taverna = home, Mariano Navone = away
+   📊 Fetching results for event 15023312...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15023319
+   🏠 Player mapping: Gustavo Heide = home, Rodrigo Pacheco Mendez = away
+   📊 Fetching results for event 15023319...
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Facundo Diaz Acosta ≥1 set (73.0% vs Marco Cecchinato 51.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Facundo Diaz Acosta (away) won 0 sets
+   ❌ BET LOSES! Facundo Diaz Acosta won 0 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Mariano Navone ≥1 set (73.0% vs Santiago Rodriguez Taverna 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Mariano Navone (away) won 2 sets
+   ✅ BET WINS! Mariano Navone won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Gustavo Heide ≥1 set (66.2% vs Rodrigo Pacheco Mendez 63.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Gustavo Heide (home) won 2 sets
+   ✅ BET WINS! Gustavo Heide won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 36 (5 predictions)
+⏳ [176/219] Queuing: Sebastián Báez vs Alvaro Guillen Meza
+⏳ [177/219] Queuing: Kenta Miyoshi vs Inaki Montes-de la Torre
+⏳ [178/219] Queuing: Nicolas Mejia vs Cedrik-Marcel Stebe
+⏳ [179/219] Queuing: Stefan Kozlov vs Leo Borg
+⏳ [180/219] Queuing: Antoine Ghibaudo vs Clement Chidekh
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15023986
+   🏠 Player mapping: Antoine Ghibaudo = home, Clement Chidekh = away
+   📊 Fetching results for event 15023986...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Antoine Ghibaudo ≥1 set (73.0% vs Clement Chidekh 50.7%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Antoine Ghibaudo (home) won 2 sets
+   ✅ BET WINS! Antoine Ghibaudo won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 37 (5 predictions)
+⏳ [181/219] Queuing: Charles Broom vs Patrick Zahraj
+⏳ [182/219] Queuing: Justin Boulais vs Tristan McCormick
+⏳ [183/219] Queuing: Maks Kasnikowski vs Max Wiskandt
+⏳ [184/219] Queuing: Pavle Marinkov vs Dane Sweeny
+⏳ [185/219] Queuing: Blake Ellis vs Moerani Bouzige
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022033
+   🏠 Player mapping: Blake Ellis = home, Moerani Bouzige = away
+   📊 Fetching results for event 15022033...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022026
+   🏠 Player mapping: Pavle Marinkov = home, Dane Sweeny = away
+   📊 Fetching results for event 15022026...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Moerani Bouzige ≥1 set (70.6% vs Blake Ellis 59.5%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Moerani Bouzige (away) won 0 sets
+   ❌ BET LOSES! Moerani Bouzige won 0 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Dane Sweeny ≥1 set (73.0% vs Pavle Marinkov 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Dane Sweeny (away) won 2 sets
+   ✅ BET WINS! Dane Sweeny won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 38 (5 predictions)
+⏳ [186/219] Queuing: Filip Peliwo vs Alex Bolt
+⏳ [187/219] Queuing: James Duckworth vs Omar Jasika
+⏳ [188/219] Queuing: James McCabe vs Cruz Hewitt
+⏳ [189/219] Queuing: Gauthier Onclin vs Luca Van Assche
+⏳ [190/219] Queuing: Laslo Djere vs Ugo Blanchet
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022888
+   🏠 Player mapping: Laslo Djere = home, Ugo Blanchet = away
+   📊 Fetching results for event 15022888...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022889
+   🏠 Player mapping: Gauthier Onclin = home, Luca Van Assche = away
+   📊 Fetching results for event 15022889...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022025
+   🏠 Player mapping: James McCabe = home, Cruz Hewitt = away
+   📊 Fetching results for event 15022025...
+Found 528 matches for 2025-11-10
+   ❌ No matching event found
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Ugo Blanchet ≥1 set (72.9% vs Laslo Djere 57.1%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Ugo Blanchet (away) won 1 sets
+   ✅ BET WINS! Ugo Blanchet won 1 sets
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022031
+   🏠 Player mapping: Filip Peliwo = home, Alex Bolt = away
+   📊 Fetching results for event 15022031...
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Luca Van Assche ≥1 set (73.0% vs Gauthier Onclin 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Luca Van Assche (away) won 2 sets
+   ✅ BET WINS! Luca Van Assche won 2 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on James McCabe ≥1 set (73.0% vs Cruz Hewitt 53.0%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 James McCabe (home) won 0 sets
+   ❌ BET LOSES! James McCabe won 0 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Alex Bolt ≥1 set (73.0% vs Filip Peliwo 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Alex Bolt (away) won 2 sets
+   ✅ BET WINS! Alex Bolt won 2 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 39 (5 predictions)
+⏳ [191/219] Queuing: Mark Lajal vs Otto Virtanen
+⏳ [192/219] Queuing: Sascha Gueymard Wayenburg vs Francesco Maestrelli
+⏳ [193/219] Queuing: Tung-Lin Wu vs Kosuke Ogura
+⏳ [194/219] Queuing: Jakub Paul vs Matej Dodig
+⏳ [195/219] Queuing: George Loffhagen vs Charlie Robertson
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022884
+   🏠 Player mapping: Sascha Gueymard Wayenburg = home, Francesco Maestrelli = away
+   📊 Fetching results for event 15022884...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022852
+   🏠 Player mapping: George Loffhagen = home, Charlie Robertson = away
+   📊 Fetching results for event 15022852...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022842
+   🏠 Player mapping: Jakub Paul = home, Matej Dodig = away
+   📊 Fetching results for event 15022842...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15024617
+   🏠 Player mapping: Tung-Lin Wu = home, Kosuke Ogura = away
+   📊 Fetching results for event 15024617...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15023000
+   🏠 Player mapping: Mark Lajal = home, Otto Virtanen = away
+   📊 Fetching results for event 15023000...
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Francesco Maestrelli ≥1 set (73.0% vs Sascha Gueymard Wayenburg 51.3%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Francesco Maestrelli (away) won 2 sets
+   ✅ BET WINS! Francesco Maestrelli won 2 sets
+   ✅ FINAL Result: 2-1 sets
+   💰 We bet on Charlie Robertson ≥1 set (65.0% vs George Loffhagen 65.0%)
+   📊 MatchDataProvider result: home 2 - 1 away
+   🏆 Match winner: home
+   🎯 Charlie Robertson (away) won 1 sets
+   ✅ BET WINS! Charlie Robertson won 1 sets
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Matej Dodig ≥1 set (66.2% vs Jakub Paul 63.7%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Matej Dodig (away) won 2 sets
+   ✅ BET WINS! Matej Dodig won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Tung-Lin Wu ≥1 set (73.0% vs Kosuke Ogura 51.3%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Tung-Lin Wu (home) won 2 sets
+   ✅ BET WINS! Tung-Lin Wu won 2 sets
+   ⏳ Match not finished (status: canceled)
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 40 (5 predictions)
+⏳ [196/219] Queuing: Gregoire Barrere vs Geoffrey Blancaneaux
+⏳ [197/219] Queuing: Liam Broady vs Henri Squire
+⏳ [198/219] Queuing: Laslo Djere vs Tom Paris
+⏳ [199/219] Queuing: Max Basing vs Rei Sakamoto
+⏳ [200/219] Queuing: Lorenzo Musetti vs Alex de Minaur
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15023098
+   🏠 Player mapping: Lorenzo Musetti = home, Alex de Minaur = away
+   📊 Fetching results for event 15023098...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15027548
+   🏠 Player mapping: Max Basing = home, Rei Sakamoto = away
+   📊 Fetching results for event 15027548...
+Found 188 matches for 2025-11-13
+   ✅ Found event ID: 15011949
+   🏠 Player mapping: Laslo Djere = home, Tom Paris = away
+   📊 Fetching results for event 15011949...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022848
+   🏠 Player mapping: Gregoire Barrere = home, Geoffrey Blancaneaux = away
+   📊 Fetching results for event 15022848...
+Found 528 matches for 2025-11-10
+   ✅ Found event ID: 15022843
+   🏠 Player mapping: Liam Broady = home, Henri Squire = away
+   📊 Fetching results for event 15022843...
+   ⏳ Match not finished (status: notstarted)
+   ✅ FINAL Result: 1-2 sets
+   💰 We bet on Rei Sakamoto ≥1 set (65.0% vs Max Basing 65.0%)
+   📊 MatchDataProvider result: home 1 - 2 away
+   🏆 Match winner: away
+   🎯 Rei Sakamoto (away) won 2 sets
+   ✅ BET WINS! Rei Sakamoto won 2 sets
+   ⏳ Match not finished (status: notstarted)
+   ✅ FINAL Result: 0-2 sets
+   💰 We bet on Geoffrey Blancaneaux ≥1 set (73.0% vs Gregoire Barrere 51.3%)
+   📊 MatchDataProvider result: home 0 - 2 away
+   🏆 Match winner: away
+   🎯 Geoffrey Blancaneaux (away) won 2 sets
+   ✅ BET WINS! Geoffrey Blancaneaux won 2 sets
+   ⏳ No sets played yet
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 41 (5 predictions)
+⏳ [201/219] Queuing: Carlos Alcaraz vs Taylor Fritz
+⏳ [202/219] Queuing: Andrea Collarini vs Cristian Garin
+⏳ [203/219] Queuing: Daniel Dutra Da Silva vs Emilio Nava
+⏳ [204/219] Queuing: Roman Andres Burruchaga vs Federico Agustin Gomez
+⏳ [205/219] Queuing: James Trotter vs David Poljak
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15017473
+   🏠 Player mapping: Carlos Alcaraz = home, Taylor Fritz = away
+   📊 Fetching results for event 15017473...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15030442
+   🏠 Player mapping: James Trotter = home, David Poljak = away
+   📊 Fetching results for event 15030442...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15023320
+   🏠 Player mapping: Roman Andres Burruchaga = home, Federico Agustin Gomez = away
+   📊 Fetching results for event 15023320...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15030300
+   🏠 Player mapping: Daniel Dutra Da Silva = home, Emilio Nava = away
+   📊 Fetching results for event 15030300...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15030301
+   🏠 Player mapping: Andrea Collarini = home, Cristian Garin = away
+   📊 Fetching results for event 15030301...
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 42 (5 predictions)
+⏳ [206/219] Queuing: Hayato Matsuoka vs Rinky Hijikata
+⏳ [207/219] Queuing: Tung-Lin Wu vs Christian Langmo
+⏳ [208/219] Queuing: Bernard Tomic vs Marek Gengel
+⏳ [209/219] Queuing: Liam Broady vs Francesco Passaro
+⏳ [210/219] Queuing: Alexis Galarneau vs Dan Added
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15028783
+   🏠 Player mapping: Alexis Galarneau = home, Dan Added = away
+   📊 Fetching results for event 15028783...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15028785
+   🏠 Player mapping: Liam Broady = home, Francesco Passaro = away
+   📊 Fetching results for event 15028785...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15011272
+   🏠 Player mapping: Bernard Tomic = home, Marek Gengel = away
+   📊 Fetching results for event 15011272...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15027503
+   🏠 Player mapping: Tung-Lin Wu = home, Christian Langmo = away
+   📊 Fetching results for event 15027503...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15027501
+   🏠 Player mapping: Hayato Matsuoka = home, Rinky Hijikata = away
+   📊 Fetching results for event 15027501...
+   ⏳ Match not finished (status: inprogress)
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Francesco Passaro ≥1 set (68.0% vs Liam Broady 62.0%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Francesco Passaro (away) won 0 sets
+   ❌ BET LOSES! Francesco Passaro won 0 sets
+   ⏳ Match not finished (status: notstarted)
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Tung-Lin Wu ≥1 set (73.0% vs Christian Langmo 53.0%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Tung-Lin Wu (home) won 2 sets
+   ✅ BET WINS! Tung-Lin Wu won 2 sets
+   ✅ FINAL Result: 2-0 sets
+   💰 We bet on Rinky Hijikata ≥1 set (73.0% vs Hayato Matsuoka 53.4%)
+   📊 MatchDataProvider result: home 2 - 0 away
+   🏆 Match winner: home
+   🎯 Rinky Hijikata (away) won 0 sets
+   ❌ BET LOSES! Rinky Hijikata won 0 sets
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 43 (5 predictions)
+⏳ [211/219] Queuing: Jan-Lennard Struff vs Beibit Zhukayev
+⏳ [212/219] Queuing: Tristan Schoolkate vs Matej Dodig
+⏳ [213/219] Queuing: Mark Lajal vs Geoffrey Blancaneaux
+⏳ [214/219] Queuing: Viktor Durasovic vs Shintaro Mochizuki
+⏳ [215/219] Queuing: Titouan Droguet vs Kyrian Jacquet
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15028777
+   🏠 Player mapping: Mark Lajal = home, Geoffrey Blancaneaux = away
+   📊 Fetching results for event 15028777...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15028786
+   🏠 Player mapping: Tristan Schoolkate = home, Matej Dodig = away
+   📊 Fetching results for event 15028786...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15028781
+   🏠 Player mapping: Jan-Lennard Struff = home, Beibit Zhukayev = away
+   📊 Fetching results for event 15028781...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15022885
+   🏠 Player mapping: Titouan Droguet = home, Kyrian Jacquet = away
+   📊 Fetching results for event 15022885...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15028782
+   🏠 Player mapping: Viktor Durasovic = home, Shintaro Mochizuki = away
+   📊 Fetching results for event 15028782...
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: inprogress)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+⏸️  Waiting 2s between batches...
+
+🚀 Processing batch 44 (4 predictions)
+⏳ [216/219] Queuing: Yu Hsiou Hsu vs Hugo Grenier
+⏳ [217/219] Queuing: Jannik Sinner vs Alexander Zverev
+⏳ [218/219] Queuing: Marco Cecchinato vs Mariano Navone
+⏳ [219/219] Queuing: Marc Polmans vs Alex Bolt
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+   🔍 Finding event ID...
+Found 804 matches for 2025-11-11
+   ✅ Found event ID: 15011879
+   🏠 Player mapping: Yu Hsiou Hsu = home, Hugo Grenier = away
+   📊 Fetching results for event 15011879...
+Found 673 matches for 2025-11-12
+   ✅ Found event ID: 15011199
+   🏠 Player mapping: Marco Cecchinato = home, Mariano Navone = away
+   📊 Fetching results for event 15011199...
+Found 673 matches for 2025-11-12
+   ✅ Found event ID: 15011274
+   🏠 Player mapping: Marc Polmans = home, Alex Bolt = away
+   📊 Fetching results for event 15011274...
+Found 673 matches for 2025-11-12
+   ✅ Found event ID: 15017503
+   🏠 Player mapping: Jannik Sinner = home, Alexander Zverev = away
+   📊 Fetching results for event 15017503...
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+   ⏳ Match not finished (status: notstarted)
+💾 Validation results saved to: logs/validation_all_SERVE_STRENGTH_V3_OCT2025_3YEAR_20251111_134700.csv
+
+============================================================
+🎯 TENNIS PREDICTION VALIDATION SUMMARY
+============================================================
+📊 Total Predictions: 219
+🏁 Finished Matches: 161
+🚫 Voided Bets (Retirements): 2
+🎾 Set Betting Results: 133/159 = 83.6%
+
+📊 SET SCORE BREAKDOWN FOR WINS:
+   🎾 Total Wins (2-0 or 2-1): 133
+      - Straight Sets (2-0): 64
+      - Three Sets (2-1): 69
+   📈 Complete Match Wins: 100.0%
+   📈 Straight Sets: 48.1%
+   📈 Three Sets: 51.9%
+
+🏆 WINNING BETS (133):
+✅ Felix Auger-Aliassime vs Daniel Altmaier - Bet on Felix Auger-Aliassime ≥1 set (73.0%) - Won 2 sets
+✅ Lorenzo Sonego vs Daniil Medvedev - Bet on Daniil Medvedev ≥1 set (73.0%) - Won 2 sets
+✅ Francisco Cerundolo vs Jannik Sinner - Bet on Jannik Sinner ≥1 set (73.0%) - Won 2 sets
+✅ Sorana Cirstea vs Leylah Fernandez - Bet on Leylah Fernandez ≥1 set (73.0%) - Won 2 sets
+✅ Himeno Sakatsume vs Eudice Chong - Bet on Himeno Sakatsume ≥1 set (73.0%) - Won 2 sets
+✅ Titouan Droguet vs Laslo Djere - Bet on Titouan Droguet ≥1 set (73.0%) - Won 2 sets
+✅ Raphael Collignon vs Stan Wawrinka - Bet on Raphael Collignon ≥1 set (73.0%) - Won 2 sets
+✅ Yi Zhou vs Frederico Ferreira Silva - Bet on Yi Zhou ≥1 set (73.0%) - Won 2 sets
+✅ Sinja Kraus vs Selena Janicijevic - Bet on Sinja Kraus ≥1 set (73.0%) - Won 2 sets
+✅ Tristan Boyer vs Zdenek Kolar - Bet on Zdenek Kolar ≥1 set (73.0%) - Won 1 sets
+✅ Ben Shelton vs Jannik Sinner - Bet on Jannik Sinner ≥1 set (73.0%) - Won 2 sets
+✅ Alexander Bublik vs Alex de Minaur - Bet on Alexander Bublik ≥1 set (73.0%) - Won 2 sets
+✅ Kimberly Birrell vs Donna Vekić - Bet on Kimberly Birrell ≥1 set (73.0%) - Won 2 sets
+✅ Johannus Monday vs Mitchell Krueger - Bet on Johannus Monday ≥1 set (73.0%) - Won 2 sets
+✅ Sho Shimabukuro vs Elias Ymer - Bet on Sho Shimabukuro ≥1 set (73.0%) - Won 2 sets
+✅ Tristan Schoolkate vs Dan Added - Bet on Tristan Schoolkate ≥1 set (73.0%) - Won 1 sets
+✅ Sascha Gueymard Wayenburg vs Daniel Masur - Bet on Sascha Gueymard Wayenburg ≥1 set (73.0%) - Won 2 sets
+✅ Uisung Park vs Kaito Uesugi - Bet on Uisung Park ≥1 set (69.2%) - Won 2 sets
+✅ Felix Auger-Aliassime vs Jannik Sinner - Bet on Jannik Sinner ≥1 set (73.0%) - Won 2 sets
+✅ Alexei Popyrin vs Sebastian Korda - Bet on Sebastian Korda ≥1 set (73.0%) - Won 2 sets
+✅ Anna Blinkova vs Lilli Tagger - Bet on Anna Blinkova ≥1 set (68.1%) - Won 2 sets
+✅ Cristina Bucsa vs Victoria Mboko - Bet on Victoria Mboko ≥1 set (65.6%) - Won 2 sets
+✅ Maximus Jones vs Garrett Johns - Bet on Maximus Jones ≥1 set (72.2%) - Won 1 sets
+✅ Oliver Crawford vs Hynek Barton - Bet on Oliver Crawford ≥1 set (72.2%) - Won 2 sets
+✅ Arthur Cazaux vs Adrian Mannarino - Bet on Arthur Cazaux ≥1 set (73.0%) - Won 2 sets
+✅ Terence Atmane vs Hugo Gaston - Bet on Hugo Gaston ≥1 set (73.0%) - Won 2 sets
+✅ Vit Kopřiva vs Eliot Spizzirri - Bet on Eliot Spizzirri ≥1 set (73.0%) - Won 2 sets
+✅ Jan Choinski vs Kyrian Jacquet - Bet on Kyrian Jacquet ≥1 set (73.0%) - Won 1 sets
+✅ Vitaliy Sachko vs Clement Tabur - Bet on Clement Tabur ≥1 set (73.0%) - Won 2 sets
+✅ Tsung-Hao Huang vs Evan Zhu - Bet on Tsung-Hao Huang ≥1 set (69.2%) - Won 2 sets
+✅ Viktor Durasovic vs Rudolf Molleker - Bet on Viktor Durasovic ≥1 set (68.2%) - Won 2 sets
+✅ Sascha Gueymard Wayenburg vs Tom Gentzsch - Bet on Sascha Gueymard Wayenburg ≥1 set (73.0%) - Won 2 sets
+✅ Yuki Mochizuki vs James Watt - Bet on James Watt ≥1 set (72.9%) - Won 1 sets
+✅ Max Basing vs Naoya Honda - Bet on Max Basing ≥1 set (69.2%) - Won 2 sets
+✅ Alexandre Muller vs Jan-Lennard Struff - Bet on Jan-Lennard Struff ≥1 set (73.0%) - Won 1 sets
+✅ Eliot Spizzirri vs Laslo Djere - Bet on Eliot Spizzirri ≥1 set (73.0%) - Won 2 sets
+✅ Clement Tabur vs Aleksandar Kovacevic - Bet on Clement Tabur ≥1 set (65.3%) - Won 2 sets
+✅ Kyrian Jacquet vs Luca Van Assche - Bet on Kyrian Jacquet ≥1 set (72.9%) - Won 2 sets
+✅ Saba Purtseladze vs Antoine Ghibaudo - Bet on Antoine Ghibaudo ≥1 set (73.0%) - Won 2 sets
+✅ Joao Lucas Reis Da Silva vs Lautaro Midon - Bet on Joao Lucas Reis Da Silva ≥1 set (68.0%) - Won 2 sets
+✅ Matej Dodig vs Marko Topo - Bet on Marko Topo ≥1 set (73.0%) - Won 1 sets
+✅ Mackenzie McDonald vs Tomas Martin Etcheverry - Bet on Tomas Martin Etcheverry ≥1 set (73.0%) - Won 2 sets
+✅ Lorenzo Joaquin Rodriguez vs Franco Roncadelli - Bet on Franco Roncadelli ≥1 set (68.0%) - Won 2 sets
+✅ Polona Hercog vs Mayar Sherif - Bet on Mayar Sherif ≥1 set (73.0%) - Won 2 sets
+✅ Valeriya Strakhova vs Julia Riera - Bet on Julia Riera ≥1 set (73.0%) - Won 2 sets
+✅ Roman Andres Burruchaga vs Marco Cecchinato - Bet on Roman Andres Burruchaga ≥1 set (68.1%) - Won 2 sets
+✅ Ekaterine Gorgodze vs Elina Avanesyan - Bet on Ekaterine Gorgodze ≥1 set (73.0%) - Won 2 sets
+✅ Solana Sierra vs Miriam Bianca Bulgaru - Bet on Solana Sierra ≥1 set (73.0%) - Won 2 sets
+✅ Matteo Berrettini vs Quentin Halys - Bet on Matteo Berrettini ≥1 set (73.0%) - Won 2 sets
+✅ Max Basing vs Ryuki Matsuda - Bet on Max Basing ≥1 set (69.2%) - Won 2 sets
+✅ Sho Shimabukuro vs Yuki Mochizuki - Bet on Sho Shimabukuro ≥1 set (73.0%) - Won 2 sets
+✅ Max Wiskandt vs Cooper Williams - Bet on Max Wiskandt ≥1 set (70.6%) - Won 2 sets
+✅ Murkel Dellien vs Guido Ivan Justo - Bet on Guido Ivan Justo ≥1 set (68.8%) - Won 1 sets
+✅ Hina Inoue vs Renata Zarazua - Bet on Renata Zarazua ≥1 set (73.0%) - Won 2 sets
+✅ Alvaro Guillen Meza vs Tristan Boyer - Bet on Alvaro Guillen Meza ≥1 set (65.0%) - Won 2 sets
+✅ Caroline Dolehide vs Marina Stakusic - Bet on Marina Stakusic ≥1 set (73.0%) - Won 2 sets
+✅ Iryna Shymanovich vs Kayla Cross - Bet on Iryna Shymanovich ≥1 set (73.0%) - Won 1 sets
+✅ Sebastian Korda vs Damir Džumhur - Bet on Sebastian Korda ≥1 set (73.0%) - Won 2 sets
+✅ Eliot Spizzirri vs Nuno Borges - Bet on Eliot Spizzirri ≥1 set (73.0%) - Won 1 sets
+✅ Patrick Kypson vs Geoffrey Blancaneaux - Bet on Patrick Kypson ≥1 set (73.0%) - Won 2 sets
+✅ Ivan Gakhov vs Arklon Huertas Del Pino Cordova - Bet on Ivan Gakhov ≥1 set (73.0%) - Won 2 sets
+✅ Uisung Park vs Elias Ymer - Bet on Elias Ymer ≥1 set (73.0%) - Won 2 sets
+✅ Mai Hontama vs Claire Liu - Bet on Claire Liu ≥1 set (73.0%) - Won 2 sets
+✅ Arthur Cazaux vs Cameron Norrie - Bet on Cameron Norrie ≥1 set (73.0%) - Won 2 sets
+✅ Carole Monnet vs Gergana Topalova - Bet on Carole Monnet ≥1 set (73.0%) - Won 2 sets
+✅ Dan Added vs Kyrian Jacquet - Bet on Kyrian Jacquet ≥1 set (73.0%) - Won 2 sets
+✅ Flavio Cobolli vs Lorenzo Sonego - Bet on Lorenzo Sonego ≥1 set (73.0%) - Won 2 sets
+✅ Ignacio Buse vs Miguel Tobon - Bet on Miguel Tobon ≥1 set (67.5%) - Won 1 sets
+✅ James Duckworth vs Michael Vrbensky - Bet on James Duckworth ≥1 set (73.0%) - Won 2 sets
+✅ Stan Wawrinka vs Lorenzo Musetti - Bet on Stan Wawrinka ≥1 set (73.0%) - Won 1 sets
+✅ Alexandre Muller vs Tomas Martin Etcheverry - Bet on Tomas Martin Etcheverry ≥1 set (73.0%) - Won 1 sets
+✅ Clement Tabur vs Alexander Blockx - Bet on Alexander Blockx ≥1 set (73.0%) - Won 1 sets
+✅ Learner Tien vs Moez Echargui - Bet on Learner Tien ≥1 set (73.0%) - Won 2 sets
+✅ Hugo Gaston vs Daniel Altmaier - Bet on Hugo Gaston ≥1 set (73.0%) - Won 1 sets
+✅ Aleksandar Vukic vs Matteo Berrettini - Bet on Matteo Berrettini ≥1 set (73.0%) - Won 2 sets
+✅ Vitaliy Sachko vs Alexander Bublik - Bet on Alexander Bublik ≥1 set (73.0%) - Won 1 sets
+✅ Patrick Kypson vs Calvin Hemery - Bet on Patrick Kypson ≥1 set (73.0%) - Won 2 sets
+✅ Sho Shimabukuro vs Garrett Johns - Bet on Sho Shimabukuro ≥1 set (73.0%) - Won 2 sets
+✅ Yasutaka Uchiyama vs Hugo Grenier - Bet on Hugo Grenier ≥1 set (73.0%) - Won 2 sets
+✅ Hady Habib vs Tomás Barrios Vera - Bet on Tomás Barrios Vera ≥1 set (73.0%) - Won 2 sets
+✅ Murkel Dellien vs Juan Bautista Torres - Bet on Juan Bautista Torres ≥1 set (66.2%) - Won 2 sets
+✅ Nicolas Kicker vs Alvaro Guillen Meza - Bet on Nicolas Kicker ≥1 set (73.0%) - Won 1 sets
+✅ Varvara Lepchenko vs Louisa Chirico - Bet on Varvara Lepchenko ≥1 set (73.0%) - Won 2 sets
+✅ Antonia Vergara Rivera vs Luisina Giovannini - Bet on Antonia Vergara Rivera ≥1 set (73.0%) - Won 2 sets
+✅ Carole Monnet vs Julia Riera - Bet on Carole Monnet ≥1 set (73.0%) - Won 1 sets
+✅ Despina Papamichail vs Tina Nadine Smith - Bet on Despina Papamichail ≥1 set (71.0%) - Won 2 sets
+✅ Matteo Berrettini vs Learner Tien - Bet on Matteo Berrettini ≥1 set (73.0%) - Won 1 sets
+✅ Clement Tabur vs Vitaliy Sachko - Bet on Clement Tabur ≥1 set (73.0%) - Won 1 sets
+✅ Nicolas Mejia vs Murphy Cassone - Bet on Murphy Cassone ≥1 set (73.0%) - Won 2 sets
+✅ Shunsuke Mitsui vs Max Wiskandt - Bet on Shunsuke Mitsui ≥1 set (66.2%) - Won 2 sets
+✅ Henrique Rocha vs Rio Noguchi - Bet on Henrique Rocha ≥1 set (73.0%) - Won 2 sets
+✅ Oliver Crawford vs Frederico Ferreira Silva - Bet on Oliver Crawford ≥1 set (66.9%) - Won 1 sets
+✅ Stefano Travaglia vs Luca Nardi - Bet on Stefano Travaglia ≥1 set (69.2%) - Won 2 sets
+✅ Ignacio Buse vs Joao Lucas Reis Da Silva - Bet on Joao Lucas Reis Da Silva ≥1 set (65.0%) - Won 2 sets
+✅ Coleman Wong vs Maxime Janvier - Bet on Coleman Wong ≥1 set (69.2%) - Won 2 sets
+✅ Aryna Sabalenka vs Amanda Anisimova - Bet on Aryna Sabalenka ≥1 set (73.0%) - Won 2 sets
+✅ Jessica Pegula vs Elena Rybakina - Bet on Elena Rybakina ≥1 set (73.0%) - Won 2 sets
+✅ Inaki Montes-de la Torre vs Mitchell Krueger - Bet on Mitchell Krueger ≥1 set (66.4%) - Won 2 sets
+✅ Patrick Kypson vs Stefano Travaglia - Bet on Patrick Kypson ≥1 set (73.0%) - Won 2 sets
+✅ Otto Virtanen vs Sascha Gueymard Wayenburg - Bet on Otto Virtanen ≥1 set (73.0%) - Won 2 sets
+✅ Henrique Rocha vs Frederico Ferreira Silva - Bet on Henrique Rocha ≥1 set (73.0%) - Won 2 sets
+✅ Ryan Peniston vs Sho Shimabukuro - Bet on Sho Shimabukuro ≥1 set (73.0%) - Won 2 sets
+✅ Gonzalo Bueno vs Cristian Garin - Bet on Cristian Garin ≥1 set (73.0%) - Won 1 sets
+✅ Joao Lucas Reis Da Silva vs Genaro Alberto Olivieri - Bet on Joao Lucas Reis Da Silva ≥1 set (66.9%) - Won 2 sets
+✅ Iva Jovic vs Marina Stakusic - Bet on Marina Stakusic ≥1 set (73.0%) - Won 2 sets
+✅ James Duckworth vs Coleman Wong - Bet on James Duckworth ≥1 set (73.0%) - Won 2 sets
+✅ Mayar Sherif vs Simona Waltert - Bet on Simona Waltert ≥1 set (73.0%) - Won 1 sets
+✅ Alexander Zverev vs Ben Shelton - Bet on Alexander Zverev ≥1 set (73.0%) - Won 2 sets
+✅ Otto Virtanen vs Patrick Kypson - Bet on Otto Virtanen ≥1 set (73.0%) - Won 1 sets
+✅ Jannik Sinner vs Felix Auger-Aliassime - Bet on Jannik Sinner ≥1 set (73.0%) - Won 2 sets
+✅ Lorenzo Musetti vs Taylor Fritz - Bet on Taylor Fritz ≥1 set (73.0%) - Won 2 sets
+✅ Mitchell Krueger vs Darwin Blanch - Bet on Mitchell Krueger ≥1 set (68.4%) - Won 2 sets
+✅ Tomás Barrios Vera vs Joao Lucas Reis Da Silva - Bet on Tomás Barrios Vera ≥1 set (73.0%) - Won 2 sets
+✅ Federico Aguilar Cardozo vs Guido Ivan Justo - Bet on Guido Ivan Justo ≥1 set (68.0%) - Won 2 sets
+✅ Ivan Gakhov vs Joaquin Aguilar Cardozo - Bet on Joaquin Aguilar Cardozo ≥1 set (65.7%) - Won 2 sets
+✅ Andrea Collarini vs Boris Arias - Bet on Andrea Collarini ≥1 set (73.0%) - Won 2 sets
+✅ Marina Stakusic vs Renata Zarazua - Bet on Marina Stakusic ≥1 set (73.0%) - Won 1 sets
+✅ Oleksandra Oliynykova vs Mayar Sherif - Bet on Oleksandra Oliynykova ≥1 set (73.0%) - Won 2 sets
+✅ Jason Jung vs Yoshihito Nishioka - Bet on Yoshihito Nishioka ≥1 set (73.0%) - Won 2 sets
+✅ Gustavo Heide vs Rodrigo Pacheco Mendez - Bet on Gustavo Heide ≥1 set (66.2%) - Won 2 sets
+✅ Santiago Rodriguez Taverna vs Mariano Navone - Bet on Mariano Navone ≥1 set (73.0%) - Won 2 sets
+✅ Antoine Ghibaudo vs Clement Chidekh - Bet on Antoine Ghibaudo ≥1 set (73.0%) - Won 2 sets
+✅ Pavle Marinkov vs Dane Sweeny - Bet on Dane Sweeny ≥1 set (73.0%) - Won 2 sets
+✅ Filip Peliwo vs Alex Bolt - Bet on Alex Bolt ≥1 set (73.0%) - Won 2 sets
+✅ Gauthier Onclin vs Luca Van Assche - Bet on Luca Van Assche ≥1 set (73.0%) - Won 2 sets
+✅ Laslo Djere vs Ugo Blanchet - Bet on Ugo Blanchet ≥1 set (72.9%) - Won 1 sets
+✅ Sascha Gueymard Wayenburg vs Francesco Maestrelli - Bet on Francesco Maestrelli ≥1 set (73.0%) - Won 2 sets
+✅ Tung-Lin Wu vs Kosuke Ogura - Bet on Tung-Lin Wu ≥1 set (73.0%) - Won 2 sets
+✅ Jakub Paul vs Matej Dodig - Bet on Matej Dodig ≥1 set (66.2%) - Won 2 sets
+✅ George Loffhagen vs Charlie Robertson - Bet on Charlie Robertson ≥1 set (65.0%) - Won 1 sets
+✅ Gregoire Barrere vs Geoffrey Blancaneaux - Bet on Geoffrey Blancaneaux ≥1 set (73.0%) - Won 2 sets
+✅ Max Basing vs Rei Sakamoto - Bet on Rei Sakamoto ≥1 set (65.0%) - Won 2 sets
+✅ Tung-Lin Wu vs Christian Langmo - Bet on Tung-Lin Wu ≥1 set (73.0%) - Won 2 sets
+
+❌ LOSING BETS (26):
+❌ Raphael Collignon vs Alexander Blockx - Bet on Raphael Collignon ≥1 set (73.0%) - Won 0 sets
+❌ Alex Molcan vs Yannick Hanfmann - Bet on Alex Molcan ≥1 set (69.9%) - Won 0 sets
+❌ Martin Damm Jr vs Rafael Jodar - Bet on Martin Damm Jr ≥1 set (73.0%) - Won 0 sets
+❌ Geoffrey Blancaneaux vs Norbert Gombos - Bet on Norbert Gombos ≥1 set (73.0%) - Won 0 sets
+❌ Reilly Opelka vs Vit Kopřiva - Bet on Reilly Opelka ≥1 set (69.2%) - Won 0 sets
+❌ Andrea Collarini vs Juan Bautista Torres - Bet on Andrea Collarini ≥1 set (72.7%) - Won 0 sets
+❌ Panna Udvardy vs Despina Papamichail - Bet on Panna Udvardy ≥1 set (73.0%) - Won 0 sets
+❌ Whitney Osuigwe vs Anouk Koevermans - Bet on Whitney Osuigwe ≥1 set (73.0%) - Won 0 sets
+❌ Max Basing vs Frederico Ferreira Silva - Bet on Max Basing ≥1 set (72.9%) - Won 0 sets
+❌ Oliver Crawford vs Marc-Andrea Huesler - Bet on Marc-Andrea Huesler ≥1 set (73.0%) - Won 0 sets
+❌ Viktor Durasovic vs Luca Nardi - Bet on Viktor Durasovic ≥1 set (67.7%) - Won 0 sets
+❌ Andres Martin vs Darwin Blanch - Bet on Andres Martin ≥1 set (72.0%) - Won 0 sets
+❌ Antoine Ghibaudo vs Mitchell Krueger - Bet on Antoine Ghibaudo ≥1 set (73.0%) - Won 0 sets
+❌ Jessica Pegula vs Jasmine Paolini - Bet on Jasmine Paolini ≥1 set (73.0%) - Won 0 sets
+❌ Marcos Giron vs Yannick Hanfmann - Bet on Marcos Giron ≥1 set (73.0%) - Won 0 sets
+❌ Aryna Sabalenka vs Elena Rybakina - Bet on Aryna Sabalenka ≥1 set (73.0%) - Won 0 sets
+❌ Mitchell Krueger vs Cedrik-Marcel Stebe - Bet on Cedrik-Marcel Stebe ≥1 set (65.5%) - Won 0 sets
+❌ Carlos Alcaraz vs Alex de Minaur - Bet on Alex de Minaur ≥1 set (73.0%) - Won 0 sets
+❌ Miguel Tobon vs Daniel Dutra Da Silva - Bet on Miguel Tobon ≥1 set (68.0%) - Won 0 sets
+❌ Chun-Hsin Tseng vs Dimitar Kuzmanov - Bet on Dimitar Kuzmanov ≥1 set (73.0%) - Won 0 sets
+❌ Ignacio Carou vs David Jorda Sanchis - Bet on Ignacio Carou ≥1 set (68.8%) - Won 0 sets
+❌ Marco Cecchinato vs Facundo Diaz Acosta - Bet on Facundo Diaz Acosta ≥1 set (73.0%) - Won 0 sets
+❌ Blake Ellis vs Moerani Bouzige - Bet on Moerani Bouzige ≥1 set (70.6%) - Won 0 sets
+❌ James McCabe vs Cruz Hewitt - Bet on James McCabe ≥1 set (73.0%) - Won 0 sets
+❌ Hayato Matsuoka vs Rinky Hijikata - Bet on Rinky Hijikata ≥1 set (73.0%) - Won 0 sets
+❌ Liam Broady vs Francesco Passaro - Bet on Francesco Passaro ≥1 set (68.0%) - Won 0 sets
+
+🚫 VOIDED BETS (2):
+🚫 Yulia Putintseva vs Viktorija Golubic - Bet on Viktorija Golubic ≥1 set (73.0%) - RETIRED (0-1)
+🚫 Mats Rosenkranz vs Inaki Montes-de la Torre - Bet on Mats Rosenkranz ≥1 set (67.9%) - RETIRED (0-1)
+
+📈 PERFORMANCE METRICS (+1.5 Sets):
+   🎯 Win Rate: 83.6% (133 wins / 159 completed bets)
+   🚫 Voided bets excluded from win rate: 2
+   📊 Avg Win Confidence: 71.7%
+   📊 Avg Loss Confidence: 71.5%

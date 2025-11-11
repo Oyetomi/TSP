@@ -1,8 +1,8 @@
 # Tennis Set Prediction System
 
-## 79% Prediction Accuracy
+## 83.6% Prediction Accuracy (V3 - 3-Year Data)
 
-A statistical tennis prediction system specializing in +1.5 set betting markets. Built on advanced statistical analysis, multi-year performance data, and comprehensive risk management.
+A statistical tennis prediction system specializing in +1.5 set betting markets. Built on advanced statistical analysis, multi-year performance data (2023-2025), universal surface data quality filtering, and comprehensive risk management.
 
 ![Tennis Prediction Dashboard](assets/prediction-dashboard.png)
 *Interactive prediction dashboard with real-time analysis and filtering*
@@ -11,13 +11,17 @@ A statistical tennis prediction system specializing in +1.5 set betting markets.
 
 ## Overview
 
-A data-driven tennis prediction system that analyzes player performance across multiple dimensions to predict match outcomes with 79% accuracy. The system focuses on +1.5 set predictions, identifying matches where the favored player is likely to win at least one set.
+A data-driven tennis prediction system that analyzes player performance across multiple dimensions to predict match outcomes with 83.6% accuracy. The system uses 3-year historical data (2023-2025), universal surface data quality filtering, and advanced statistical modeling to identify high-probability +1.5 set predictions.
 
 ### Key Metrics
 
-- **Prediction Accuracy**: ~79%
-- **Analysis Depth**: Multi-year statistical modeling
-- **Data Sources**: Professional match data, UTR ratings, ATP/WTA rankings
+- **Prediction Accuracy**: 83.6% (V3 with 3-year data, validated on 159 completed matches, Oct 30 - Nov 11, 2025)
+- **Dataset Size**: 779 total rows (with duplicates), 219 unique predictions, 161 matches completed
+- **Win Breakdown**: 133 wins / 26 losses (51.9% three-set matches, 48.1% straight sets)
+- **Note**: Raw CSV contains same matches predicted multiple times (from daily runs). Validation deduplicates to unique matches.
+- **Analysis Depth**: 3-year historical data (2023-2025) with weighted blending (60% current, 30% previous, 10% two years ago)
+- **Surface Data Quality Filter**: Rejects predictions with <50% confidence or <10 matches on surface
+- **Data Sources**: Professional match data, UTR ratings, ATP/WTA rankings, Tennis Abstract Elo
 - **Prediction Focus**: +1.5 set markets (player wins ≥1 set)
 
 ---
@@ -33,6 +37,11 @@ A data-driven tennis prediction system that analyzes player performance across m
 
 ### Risk Management
 - **73% Confidence Cap** - Universal maximum to prevent overconfidence (validation-driven)
+- **Universal Surface Data Quality Filter** - Rejects predictions when either player has:
+  - <50% confidence on the match surface
+  - <10 total matches on the surface (across all years)
+  - >80% of data from current year only (no historical baseline)
+  - Missing or incomplete surface data
 - **Data quality gates** - Automatic skip for insufficient data samples
 - **Sample size thresholds** - Minimum match/set requirements enforced
 - **Ranking gap penalties** - Hot streak detection prevents false signals
@@ -41,11 +50,13 @@ A data-driven tennis prediction system that analyzes player performance across m
 
 ### Advanced Features
 - **Hannah Fry Mathematical Insights** - Amplification of small performance edges
+- **Tennis Abstract Elo Integration** - Real Elo ratings with fuzzy name matching (rapidfuzz) and surface-specific ratings
 - **Mental toughness metrics** - Clutch performance and competitive resilience
 - **Return of serve analysis** - Breaking the serve advantage
 - **Momentum tracking** - Recent match trends and streaks
 - **Tournament classification** - Grand Slam vs regular tournament adjustments
 - **Injury filtering** - Automatic exclusion of recently injured players
+- **3-Year Historical Analysis** - Weighted blending (60/30/10) for deeper context
 
 ---
 
@@ -135,28 +146,46 @@ pnpm dev
 
 ## Prediction Model
 
-### Weight Configuration (FORM_OPTIMIZED_OCT2025)
+### Weight Configuration (SERVE_STRENGTH_V3_OCT2025 - Active)
+
+**Configuration:** Post-Blinkova loss analysis fix with mental/pressure boost and close-match amplification
 
 | Factor | Weight | Description |
 |--------|--------|-------------|
-| Set Performance | 30% | Historical set win rate against quality opponents |
-| Recent Form | 23% | Current performance and momentum |
-| UTR Rating | 10% | Universal skill assessment |
-| Ranking Advantage | 8% | ATP/WTA ranking differential |
-| Return of Serve | 8% | Return game effectiveness |
-| Surface Performance | 8% | Court-specific win rates |
-| Momentum | 5% | Recent match trends |
-| Serve Dominance | 3% | Ace rate and first serve percentage |
-| Pressure Performance | 3% | Break point conversion |
-| Tiebreak Performance | 2% | Clutch performance in tiebreaks |
+| Set Performance | 22% | Historical set win rate against quality opponents |
+| Serve Dominance | 18% | Ace rate, first serve percentage, and serve effectiveness |
+| Recent Form | 15% | Current performance and momentum (dual-weighted) |
+| Mental Toughness | 14% | Competitive resilience and psychological strength |
+| Surface Performance | 11% | Court-specific win rates with confidence weighting |
+| Pressure Performance | 10% | Break point conversion and clutch moments |
+| Clutch Factor | 6% | Performance in decisive moments |
+| Sets in Losses | 6% | Competitiveness even when losing |
+| ATP/WTA Ranking | 2% | Official ranking (minimal weight - execution over reputation) |
+
+**Key Features:**
+- ✅ 3-year historical data (2023-2025) with 60/30/10 weighted blending
+- ✅ Universal surface data quality filter (min 50% confidence, 10+ matches)
+- ✅ Close match mental amplification (1.5x boost when set probability gap <5%)
+- ✅ Hannah Fry amplification for 3%+ performance edges
+- ✅ Surface-specific serve boost on faster surfaces
+- ✅ Crowd sentiment as confidence modifier (not prediction driver)
+- ✅ Tennis Abstract Elo integration (toggleable, currently disabled)
 
 ### Skip Logic
 
 Matches are automatically excluded when:
+- **Surface Data Quality Filter** (NEW):
+  - Either player has <50% confidence on the match surface
+  - Either player has <10 total matches on the surface
+  - Either player has >80% of data from current year only (no historical baseline)
+  - Either player has missing or incomplete surface data
 - Either player has < 5 sets of data (insufficient sample)
 - Either player has 0 current-year matches on surface (pure extrapolation)
 - Either player has < 30% win rate with ≥4 matches (extreme poor form indicator)
+- Recent injury or retirement (last 5 days)
 - Network data quality issues detected
+
+**Impact:** The surface data quality filter significantly reduces low-confidence predictions, improving overall win rate from ~78% to 83.6%
 
 ### 73% Confidence Cap
 
@@ -232,7 +261,8 @@ This philosophy is validated by results: **11/11 completed predictions correct (
 | v4.0 | 68% | Multi-year data blending |
 | v5.0 | 73% | Enhanced form weighting |
 | v6.0 | 74% | Loss analysis and opponent quality |
-| **v7.0** | **79%** | Hot streak detection and data quality gates |
+| v7.0 | 79% | Hot streak detection and data quality gates |
+| **v7.1** | **83.6%** | Universal surface data quality filter + 3-year data + mental/pressure boost (validated on 159 matches) |
 
 ---
 
