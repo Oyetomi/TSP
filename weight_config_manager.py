@@ -201,6 +201,10 @@ def get_current_config_name() -> str:
     """Get the current active configuration code name"""
     return config_manager.get_active_code_name() or "UNKNOWN"
 
+def get_current_config() -> Dict[str, Any]:
+    """Get the current active configuration (full config dict)"""
+    return config_manager.get_active_config() or {}
+
 def get_current_weights() -> Dict[str, float]:
     """Get weights from the active configuration"""
     config = config_manager.get_active_config()

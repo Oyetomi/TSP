@@ -221,7 +221,7 @@ class TennisEvent(BaseModel):
     
     # Tournament and match info
     tournament: Tournament
-    season: Season
+    season: Optional[Season] = None  # Optional - some API responses don't include season
     round_info: Optional[RoundInfo] = Field(None, alias="roundInfo")
     
     # Players

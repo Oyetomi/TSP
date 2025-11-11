@@ -522,6 +522,53 @@ class TennisBettingAnalyzer:
         # Initialize Forebet provider (fetched later during match analysis for better logging)
         self.forebet_provider = ForebetProvider(logger=self.logger)
         self.forebet_fetched = False  # Track if Forebet has been fetched
+        
+        # Initialize Elo rating service (uses Tennis Abstract data)
+        from elo_rating_service import EloRatingService
+        elo_enabled = prediction_config.ELO_INTEGRATION.get('enabled', False)
+        elo_csv_path = prediction_config.ELO_INTEGRATION.get('csv_path', 'tennis_abstract_elo.csv')
+        elo_auto_update = prediction_config.ELO_INTEGRATION.get('auto_update', True)
+        elo_freshness_days = prediction_config.ELO_INTEGRATION.get('freshness_days', 7)
+        self.elo_service = EloRatingService(
+            enabled=elo_enabled, 
+            csv_path=elo_csv_path,
+            auto_update=elo_auto_update,
+            freshness_days=elo_freshness_days
+        )
+        if elo_enabled:
+            print(f"🎾 Elo Rating Service ENABLED ({len(self.elo_service.csv_elo_data)} players from Tennis Abstract)")
+            if elo_auto_update:
+                print(f"   Auto-update: ON (freshness threshold: {elo_freshness_days} days)")
+        
+        # Surface data quality gate thresholds (applies to ALL surfaces)
+        self.MIN_SURFACE_CONFIDENCE = 0.50  # 50% minimum confidence
+        self.MIN_SURFACE_MATCHES = 10        # Minimum 10 matches on surface
+        self.MIN_HISTORICAL_YEARS = 2        # Require at least 2 years of data
+        self.MAX_CURRENT_YEAR_WEIGHT = 0.80  # Max 80% weight from current year alone
+        print(f"🚫 Surface Data Quality Gate ENABLED:")
+        print(f"   Min confidence: {self.MIN_SURFACE_CONFIDENCE:.0%}")
+        print(f"   Min matches per player: {self.MIN_SURFACE_MATCHES}")
+        print(f"   Max current year weight: {self.MAX_CURRENT_YEAR_WEIGHT:.0%}")
+        
+        # Track skipped matches for surface data quality
+        self.skipped_matches_surface = []
+        
+        # Initialize V3.5 logger (if V3.5 config is active)
+        self.v3_5_logger = None
+        try:
+            from weight_config_manager import get_current_config_name, get_current_config
+            current_config = get_current_config_name()
+            if current_config == 'SERVE_STRENGTH_V3_5_NOV2025':
+                from v3_5_logger import V35Logger
+                self.v3_5_logger = V35Logger()
+                print(f"✅ V3.5 Logger ENABLED - Detailed logs: logs/v3_5_predictions.log")
+                
+                # Log weight configuration
+                self.v3_5_logger.log_weight_config(get_current_config())
+            else:
+                print(f"ℹ️  V3.5 Logger DISABLED (current config: {current_config})")
+        except Exception as e:
+            print(f"⚠️  V3.5 Logger initialization failed: {e}")
     
     def _check_fundamental_disadvantage(self, predicted_player: Dict, opponent: Dict) -> Dict:
         """
@@ -630,6 +677,208 @@ class TennisBettingAnalyzer:
             }
         
         return {'should_skip': False}
+    
+    def evaluate_surface_data_quality(self, player1_id: int, player2_id: int, 
+                                      player1_name: str, player2_name: str,
+                                      surface: str) -> tuple:
+        """
+        Evaluate surface data quality for BOTH players (UNIVERSAL - ALL SURFACES)
+        
+        Returns:
+            (should_skip: bool, skip_reason: str, quality_score: float)
+        """
+        
+        # Get surface data for both players
+        p1_surface_data = self._get_surface_data_details(player1_id, surface)
+        p2_surface_data = self._get_surface_data_details(player2_id, surface)
+        
+        # Check 1: Confidence threshold
+        p1_confidence = p1_surface_data.get('confidence', 0.0)
+        p2_confidence = p2_surface_data.get('confidence', 0.0)
+        
+        if p1_confidence < self.MIN_SURFACE_CONFIDENCE:
+            return (
+                True, 
+                f"{player1_name} surface confidence too low: {p1_confidence:.1%} < {self.MIN_SURFACE_CONFIDENCE:.0%}",
+                p1_confidence
+            )
+        
+        if p2_confidence < self.MIN_SURFACE_CONFIDENCE:
+            return (
+                True, 
+                f"{player2_name} surface confidence too low: {p2_confidence:.1%} < {self.MIN_SURFACE_CONFIDENCE:.0%}",
+                p2_confidence
+            )
+        
+        # Check 2: Sample size threshold
+        p1_matches = p1_surface_data.get('total_matches', 0)
+        p2_matches = p2_surface_data.get('total_matches', 0)
+        
+        if p1_matches < self.MIN_SURFACE_MATCHES:
+            return (
+                True,
+                f"{player1_name} insufficient matches on {surface}: {p1_matches} < {self.MIN_SURFACE_MATCHES}",
+                p1_matches / self.MIN_SURFACE_MATCHES
+            )
+        
+        if p2_matches < self.MIN_SURFACE_MATCHES:
+            return (
+                True,
+                f"{player2_name} insufficient matches on {surface}: {p2_matches} < {self.MIN_SURFACE_MATCHES}",
+                p2_matches / self.MIN_SURFACE_MATCHES
+            )
+        
+        # Check 3: No surface data flag
+        if p1_surface_data.get('no_data', False):
+            return (
+                True,
+                f"{player1_name} has no surface-specific data for {surface}",
+                0.0
+            )
+        
+        if p2_surface_data.get('no_data', False):
+            return (
+                True,
+                f"{player2_name} has no surface-specific data for {surface}",
+                0.0
+            )
+        
+        # Check 4: Current year bias (only 2025 data with no historical baseline)
+        p1_current_year_weight = p1_surface_data.get('current_year_weight', 0.0)
+        p2_current_year_weight = p2_surface_data.get('current_year_weight', 0.0)
+        
+        if p1_current_year_weight > self.MAX_CURRENT_YEAR_WEIGHT:
+            return (
+                True,
+                f"{player1_name} has {p1_current_year_weight:.0%} data from current year only - no historical baseline",
+                1.0 - p1_current_year_weight
+            )
+        
+        if p2_current_year_weight > self.MAX_CURRENT_YEAR_WEIGHT:
+            return (
+                True,
+                f"{player2_name} has {p2_current_year_weight:.0%} data from current year only - no historical baseline",
+                1.0 - p2_current_year_weight
+            )
+        
+        # All checks passed
+        avg_confidence = (p1_confidence + p2_confidence) / 2
+        return (False, None, avg_confidence)
+    
+    def _get_surface_data_details(self, player_id: int, surface: str) -> dict:
+        """
+        Extract detailed surface data for quality evaluation
+        
+        Returns:
+            {
+                'confidence': float,
+                'total_matches': int,
+                'no_data': bool,
+                'current_year_weight': float,
+                'years_with_data': list
+            }
+        """
+        
+        # Get enhanced statistics for player (already surface-specific)
+        enhanced_stats = self.stats_handler.get_enhanced_player_statistics(
+            player_id, 
+            surface
+        )
+        
+        # Extract surface-specific stats (blended)
+        surface_data = enhanced_stats.get('statistics', {})
+        
+        # ⚠️  CRITICAL: The 'matches' field in surface_data is WEIGHTED/BLENDED
+        # We need to calculate the RAW TOTAL by summing up individual years
+        
+        # Fetch raw year data for accurate sample size calculation
+        from datetime import datetime
+        current_year = datetime.now().year
+        
+        # Check if 3-year mode is enabled
+        use_three_years = self.config.MULTI_YEAR_STATS.get('enable_three_year_stats', False)
+        years_to_check = [current_year, current_year - 1]
+        if use_three_years:
+            years_to_check.append(current_year - 2)
+        
+        # Sum up raw matches across all available years
+        total_raw_matches = 0
+        current_year_matches = 0
+        
+        for year in years_to_check:
+            year_stats = self.stats_handler._fetch_year_stats(player_id, year)
+            if year_stats and not year_stats.get('_404_error'):
+                year_surface_stats = self.stats_handler._extract_surface_stats(year_stats, surface)
+                year_matches = year_surface_stats.get('matches', 0)
+                total_raw_matches += year_matches
+                
+                if year == current_year:
+                    current_year_matches = year_matches
+        
+        # Use RAW TOTAL for confidence calculation
+        confidence = self._calculate_confidence_from_sample_size(total_raw_matches)
+        
+        # Check for no data flag
+        no_data = (
+            total_raw_matches == 0 or 
+            'no_surface_data' in str(surface_data).lower() or
+            enhanced_stats.get('has_404_error', False)
+        )
+        
+        # Calculate current year weight
+        current_year_weight = (
+            current_year_matches / total_raw_matches 
+            if total_raw_matches > 0 
+            else 1.0
+        )
+        
+        return {
+            'confidence': confidence,
+            'total_matches': total_raw_matches,  # Use RAW total
+            'no_data': no_data,
+            'current_year_weight': current_year_weight,
+            'years_with_data': years_to_check,
+            'surface_stats': surface_data
+        }
+    
+    def _calculate_confidence_from_sample_size(self, sample_size: int) -> float:
+        """
+        Calculate confidence based on sample size
+        
+        Uses same logic as _apply_sample_size_weighting
+        """
+        if sample_size >= 20:
+            return 1.0
+        elif sample_size >= 10:
+            return 0.5 + (sample_size - 10) / 20  # 50% -> 100%
+        elif sample_size >= 5:
+            return 0.25 + (sample_size - 5) / 20  # 25% -> 50%
+        else:
+            return sample_size / 20  # 0% -> 25%
+    
+    def _normalize_surface_name(self, surface: str) -> str:
+        """
+        Normalize surface name for consistent lookup
+        
+        Maps variations to canonical names
+        """
+        surface_lower = surface.lower()
+        
+        if 'hard' in surface_lower:
+            if 'indoor' in surface_lower:
+                return 'Hardcourt indoor'
+            elif 'outdoor' in surface_lower:
+                return 'Hardcourt outdoor'
+            else:
+                return 'Hardcourt'
+        elif 'clay' in surface_lower or 'red' in surface_lower:
+            return 'Clay'
+        elif 'grass' in surface_lower:
+            return 'Grass'
+        elif 'carpet' in surface_lower:
+            return 'Carpet'
+        else:
+            return surface
     
     def _convert_gender(self, gender_code: Optional[str]) -> str:
         """Convert gender code from API (M/F) to readable format (Male/Female)"""
@@ -7006,7 +7255,11 @@ class TennisBettingAnalyzer:
                         'recommended_total_games_line', 'recommended_total_games_bet', 'recommended_total_games_odds', 'total_games_edge',  # Best Total Games bet
                         'recommended_bet', 'key_factors', 'reasoning', 'weight_breakdown',
                         'forebet_available', 'forebet_predicted_winner', 'forebet_probability', 'forebet_agrees',  # Forebet integration
-                        'odds_provider_event_id', 'player1_odds_1_5', 'player2_odds_1_5', 'player1_odds_2_5', 'player2_odds_2_5', 'matched_player1', 'matched_player2'
+                        'odds_provider_event_id', 'player1_odds_1_5', 'player2_odds_1_5', 'player1_odds_2_5', 'player2_odds_2_5', 'matched_player1', 'matched_player2',
+                        # Tennis Abstract Elo Integration
+                        'elo_available', 'elo_enhancement_level', 'player1_elo', 'player2_elo', 'elo_difference', 
+                        'player1_surface_elo', 'player2_surface_elo', 'surface_elo_difference', 
+                        'elo_probability', 'elo_confidence', 'elo_blend_factor'
                     ]
                     
                     # Open CSV file for writing (append mode for subsequent dates)
@@ -7140,6 +7393,40 @@ class TennisBettingAnalyzer:
                     # 4. Fallback to Unknown (no hardcoded surface)
                     if not surface:
                         surface = 'Unknown'
+                    
+                    # ✅ SURFACE DATA QUALITY CHECK (UNIVERSAL - ALL SURFACES)
+                    should_skip, skip_reason, quality_score = self.evaluate_surface_data_quality(
+                        match_data_match['home_team'].id,
+                        match_data_match['away_team'].id,
+                        player1_name,
+                        player2_name,
+                        surface
+                    )
+                    
+                    if should_skip:
+                        print(f"[Thread-{thread_id}] ⚠️  SKIPPING MATCH: {skip_reason}")
+                        print(f"[Thread-{thread_id}]    Surface: {surface}")
+                        print(f"[Thread-{thread_id}]    Quality Score: {quality_score:.2%}")
+                        
+                        # Log skip to skip_logger
+                        self.skip_logger.log_skip(
+                            reason_type="SURFACE_DATA_QUALITY",
+                            player1_name=player1_name,
+                            player2_name=player2_name,
+                            tournament=match_data_match.get('tournament_name', 'Unknown'),
+                            surface=surface,
+                            reason=skip_reason
+                        )
+                        
+                        # Track skipped match
+                        self.skipped_matches_surface.append({
+                            'match': f"{player1_name} vs {player2_name}",
+                            'surface': surface,
+                            'reason': skip_reason,
+                            'quality_score': quality_score
+                        })
+                        
+                        return None  # Skip this match
                     
                     # Log match analysis start (thread-safe)
                     if self.prediction_logger:
@@ -7448,7 +7735,7 @@ class TennisBettingAnalyzer:
                         # Extract tournament information from actual MatchDataProvider structure
                         tournament_name = event.tournament.unique_tournament.name if (event.tournament and hasattr(event.tournament, 'unique_tournament')) else "Unknown"
                         category = event.tournament.category.slug if (event.tournament and hasattr(event.tournament, 'category')) else "unknown"
-                        season_name = event.season.name if hasattr(event, 'season') else ""
+                        season_name = event.season.name if event.season else ""
                         
                         # Extract player genders
                         player1_gender = match_data_match['home_team'].gender if hasattr(match_data_match['home_team'], 'gender') else 'M'
@@ -7645,6 +7932,125 @@ class TennisBettingAnalyzer:
                         'forebet_agrees': forebet_info['forebet_agrees']
                     })
                     
+                    # ====================
+                    # ELO INTEGRATION (Tennis Abstract)
+                    # ====================
+                    if self.elo_service and self.elo_service.is_enabled():
+                        try:
+                            elo_data = self.elo_service.get_elo_blend_factor(
+                                player1_name=player1_name,
+                                player2_name=player2_name,
+                                player1_atp_rank=player1_profile.atp_ranking,
+                                player2_atp_rank=player2_profile.atp_ranking,
+                                surface=surface
+                            )
+                            
+                            # Determine enhancement level based on confidence
+                            if elo_data['confidence'] >= 0.90:
+                                enhancement_level = 'ELO+'
+                            elif elo_data['confidence'] >= 0.70:
+                                enhancement_level = 'ELO'
+                            else:
+                                enhancement_level = 'Baseline'
+                            
+                            elo_result = {
+                                'elo_available': True,
+                                'elo_enhancement_level': enhancement_level,
+                                'player1_elo': round(elo_data['p1_elo'], 1),
+                                'player2_elo': round(elo_data['p2_elo'], 1),
+                                'elo_difference': round(elo_data['p1_elo'] - elo_data['p2_elo'], 1),
+                                'player1_surface_elo': '',  # Reserved for future surface-specific display
+                                'player2_surface_elo': '',
+                                'surface_elo_difference': '',
+                                'elo_probability': f"{elo_data['elo_probability']:.1%}",
+                                'elo_confidence': f"{elo_data['confidence']:.1%}",
+                                'elo_blend_factor': f"{elo_data['elo_factor']:.1%}"
+                            }
+                        except Exception as e:
+                            self.logger.warning(f"Elo integration error: {e}")
+                            elo_result = {
+                                'elo_available': False,
+                                'elo_enhancement_level': 'Baseline',
+                                'player1_elo': '',
+                                'player2_elo': '',
+                                'elo_difference': '',
+                                'player1_surface_elo': '',
+                                'player2_surface_elo': '',
+                                'surface_elo_difference': '',
+                                'elo_probability': '',
+                                'elo_confidence': '',
+                                'elo_blend_factor': ''
+                            }
+                    else:
+                        elo_result = {
+                            'elo_available': False,
+                            'elo_enhancement_level': 'Baseline',
+                            'player1_elo': '',
+                            'player2_elo': '',
+                            'elo_difference': '',
+                            'player1_surface_elo': '',
+                            'player2_surface_elo': '',
+                            'surface_elo_difference': '',
+                            'elo_probability': '',
+                            'elo_confidence': '',
+                            'elo_blend_factor': ''
+                        }
+                    
+                    # Add Elo fields to result
+                    result.update(elo_result)
+                    
+                    # ====================
+                    # V3.5 LOGGER (if enabled)
+                    # ====================
+                    if self.v3_5_logger:
+                        try:
+                            # Collect factor scores for logging
+                            player1_factors = {
+                                'set_performance': player1_profile.set_win_rate or 0.0,
+                                'serve_dominance': getattr(player1_profile, 'serve_dominance', 0.0),
+                                'return_of_serve': getattr(player1_profile, 'return_strength', 0.0),
+                                'recent_form': (player1_profile.recent_form_score / 100.0) if player1_profile.recent_form_score else 0.0,
+                                'surface_performance': getattr(player1_profile, 'surface_win_rate', 0.0),
+                                'pressure_performance': getattr(player1_profile, 'pressure_performance', 0.0),
+                                'sets_in_losses': getattr(player1_profile, 'sets_won_in_losses_rate', 0.0),
+                                'psychological_resilience': getattr(player1_profile, 'mental_toughness', 0.0)
+                            }
+                            
+                            player2_factors = {
+                                'set_performance': player2_profile.set_win_rate or 0.0,
+                                'serve_dominance': getattr(player2_profile, 'serve_dominance', 0.0),
+                                'return_of_serve': getattr(player2_profile, 'return_strength', 0.0),
+                                'recent_form': (player2_profile.recent_form_score / 100.0) if player2_profile.recent_form_score else 0.0,
+                                'surface_performance': getattr(player2_profile, 'surface_win_rate', 0.0),
+                                'pressure_performance': getattr(player2_profile, 'pressure_performance', 0.0),
+                                'sets_in_losses': getattr(player2_profile, 'sets_won_in_losses_rate', 0.0),
+                                'psychological_resilience': getattr(player2_profile, 'mental_toughness', 0.0)
+                            }
+                            
+                            self.v3_5_logger.log_match_prediction(
+                                match_data={
+                                    'player1_name': player1_name,
+                                    'player2_name': player2_name,
+                                    'tournament': tournament.name if tournament else 'Unknown',
+                                    'surface': surface,
+                                    'player1_weights': self.WEIGHTS,
+                                    'player2_weights': self.WEIGHTS
+                                },
+                                player1_factors=player1_factors,
+                                player2_factors=player2_factors,
+                                elo_data=elo_result if elo_result.get('elo_available') else None,
+                                prediction_result={
+                                    'predicted_winner': prediction.predicted_winner,
+                                    'confidence': prediction.confidence_level,
+                                    'player1_set_probability': prediction.player1_probability,
+                                    'player2_set_probability': prediction.player2_probability,
+                                    'recommended_bet': result.get('recommended_bet', ''),
+                                    'key_factors': prediction.key_factors[:3]
+                                }
+                            )
+                        except Exception as e:
+                            self.logger.warning(f"⚠️ V3.5 logging error: {e}")
+                    
                     # Log prediction results using thread-safe logging
                     if self.prediction_logger:
                         self.prediction_logger.log_match_message("⚖️ WEIGHT CALCULATIONS:")
@@ -7732,9 +8138,48 @@ class TennisBettingAnalyzer:
                 except Exception as e:
                     print(f"❌ Error closing config CSV file: {e}")
             
+            # Close V3.5 logger and generate session summary
+            if self.v3_5_logger:
+                try:
+                    self.v3_5_logger.close()
+                    print(f"📊 V3.5 session summary saved")
+                except Exception as e:
+                    print(f"⚠️  Error closing V3.5 logger: {e}")
+            
             print(f"✅ Completed analysis of {analyzed_count} matches")
             if analysis_insufficient_data_skipped > 0:
                 print(f"⚠️ Skipped {analysis_insufficient_data_skipped} matches during analysis due to insufficient player data")
+            
+            # Surface data quality summary
+            if self.skipped_matches_surface:
+                print(f"\n🚫 SURFACE DATA QUALITY FILTER SUMMARY:")
+                print(f"   Total matches skipped: {len(self.skipped_matches_surface)}")
+                
+                # Group by reason
+                reasons = {}
+                for skip in self.skipped_matches_surface:
+                    # Extract reason type (first part before colon)
+                    reason_type = skip['reason'].split(':')[0].strip()
+                    if reason_type not in reasons:
+                        reasons[reason_type] = []
+                    reasons[reason_type].append(skip)
+                
+                print(f"   Breakdown by reason:")
+                for reason_type, skips in sorted(reasons.items()):
+                    print(f"     - {reason_type}: {len(skips)} matches")
+                
+                # Group by surface
+                surfaces = {}
+                for skip in self.skipped_matches_surface:
+                    surf = skip['surface']
+                    if surf not in surfaces:
+                        surfaces[surf] = 0
+                    surfaces[surf] += 1
+                
+                print(f"   Breakdown by surface:")
+                for surf, count in sorted(surfaces.items(), key=lambda x: x[1], reverse=True):
+                    print(f"     - {surf}: {count} matches")
+            
             return analysis_results
             
         except Exception as e:

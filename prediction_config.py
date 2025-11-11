@@ -246,6 +246,28 @@ class PredictionConfig:
             }
         }
         
+        # Elo Rating Integration (Tennis Abstract)
+        self.ELO_INTEGRATION = {
+            'enabled': False,                   # Master toggle to enable/disable Elo integration
+            'csv_path': 'tennis_abstract_elo.csv',  # Path to Tennis Abstract Elo CSV export
+            'max_influence': 0.15,              # Maximum influence on predictions (15%)
+            'auto_update': True,                # Automatically fetch fresh data when stale
+            'freshness_days': 7,                # Days before CSV is considered stale (default: 7)
+            'description': 'Uses real Tennis Abstract Elo ratings for dynamic skill assessment',
+            'data_source': 'tennisabstract.com - Jeff Sackmann Elo ratings',
+            'features': {
+                'surface_specific': True,        # Use surface-specific Elo (hard/clay/grass)
+                'confidence_based': True,        # Adjust influence based on data confidence
+                'fallback_to_atp': True         # Use ATP-derived Elo if Tennis Abstract unavailable
+            },
+            'notes': {
+                'coverage': '990 players (479 ATP + 511 WTA) - auto-updated',
+                'update_frequency': 'Automatic when data is > 7 days old (configurable)',
+                'integration': 'Blends with ranking_elo_blend weight (3% in V3.5)',
+                'behavior': 'Auto-fetches fresh data from Tennis Abstract when V3.5 is active'
+            }
+        }
+        
         # Probability conversion settings
         self.PROBABILITY_SETTINGS = {
             'min_match_prob': 0.05,         # Minimum match probability

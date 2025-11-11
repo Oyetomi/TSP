@@ -1,351 +1,563 @@
 {
-  "configs": {
-    "CLUTCH_V1_20251025": {
-      "name": "Clutch-Focused Configuration V1",
-      "description": "Increased clutch/surface weights, reduced form weight after Fonseca/Munar analysis. Better for tight matches.",
-      "created": "2025-10-25",
-      "weights": {
-        "set_performance": 0.3,
-        "recent_form": 0.18,
-        "clutch_factor": 0.13,
-        "surface_performance": 0.13,
-        "momentum": 0.11,
-        "ranking_advantage": 0.1,
-        "physical_factors": 0.05
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": false,
-        "serve_dominance": false,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-25"
-      }
-    },
-    "CLUTCH_V2_20251026": {
-      "name": "Class Over Form V2",
-      "description": "Fixed hot-streak bias. Respects ranking class over recent form. Addresses L.Sun vs A.Li and Fonseca vs Munar losses. Ranking +50%, Form -20%.",
-      "created": "2025-10-26",
-      "weights": {
-        "set_performance": 0.3,
-        "recent_form": 0.12,
-        "clutch_factor": 0.15,
-        "surface_performance": 0.15,
-        "momentum": 0.08,
-        "ranking_advantage": 0.15,
-        "physical_factors": 0.05
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": false,
-        "serve_dominance": false,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-26"
-      }
-    },
-    "HOT_STREAK_74PCT": {
-      "name": "Hot Streak 74% Baseline - Confirmed Weights",
-      "description": "Optimized weights with UTR emphasis, reduced form bias, mental toughness focus. Confirmed backup configuration.",
-      "created": "2025-10-27",
-      "weights": {
-        "utr_rating": 0.18,
-        "atp_ranking": 0.15,
-        "sets_in_losses": 0.15,
-        "set_performance": 0.22,
-        "recent_form": 0.12,
-        "surface_performance": 0.1,
-        "mental_toughness": 0.08,
-        "momentum": 0.0,
-        "clutch_factor": 0.0,
-        "physical_factors": 0.0,
-        "return_of_serve": 0.0
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": false,
-        "serve_dominance": false,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": false
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-27"
-      }
-    },
-    "FORM_OPTIMIZED_OCT2025": {
-      "name": "Form-Optimized October 2025",
-      "description": "Enhanced configuration with recent form emphasis (23%) and new granular features: serve dominance, pressure performance, tiebreak performance. Reduced ranking weight for better edge detection.",
-      "created": "2025-10-26",
-      "weights": {
-        "set_performance": 0.3,
-        "recent_form": 0.23,
-        "utr_rating": 0.1,
-        "ranking_advantage": 0.08,
-        "return_of_serve": 0.08,
-        "surface_performance": 0.08,
-        "momentum": 0.05,
-        "serve_dominance": 0.03,
-        "pressure_performance": 0.03,
-        "tiebreak_performance": 0.02
-      },
-      "features": {
-        "tiebreak_performance": true,
-        "pressure_performance": true,
-        "serve_dominance": true,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-26"
-      }
-    },
-    "RESEARCH_OPTIMIZED_OCT2025": {
-      "name": "Research-Optimized October 2025",
-      "description": "Evidence-based weights from 2024 tennis prediction research. Emphasizes serve strength (18%), form over ranking (7% total), and psychological factors. Reduces ranking bias, increases surface context and mental game impact.",
-      "created": "2025-10-28",
-      "weights": {
-        "set_performance": 0.25,
-        "return_of_serve": 0.18,
-        "recent_form": 0.15,
-        "surface_performance": 0.12,
-        "mental_toughness": 0.1,
-        "sets_in_losses": 0.08,
-        "atp_ranking": 0.05,
-        "utr_rating": 0.02,
-        "momentum": 0.05,
-        "clutch_factor": 0.0,
-        "physical_factors": 0.0
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": false,
-        "serve_dominance": false,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-28"
-      }
-    },
-    "SERVE_STRENGTH_OCT2025": {
-      "name": "Serve Strength October 2025",
-      "description": "Fixes RESEARCH_OPTIMIZED by using actual serve statistics (aces, 1st serve %) instead of useless return-of-serve (~25% for everyone). Enables serve_dominance feature which calculates real differentiation: 40% aces + 60% first serve win rate. Also adds break point performance for pressure situations. Research shows serve is 80%+ accurate predictor.",
-      "created": "2025-10-28",
-      "weights": {
-        "set_performance": 0.24,
-        "serve_dominance": 0.2,
-        "recent_form": 0.16,
-        "surface_performance": 0.12,
-        "mental_toughness": 0.1,
-        "sets_in_losses": 0.06,
-        "pressure_performance": 0.06,
-        "atp_ranking": 0.04,
-        "utr_rating": 0.02,
-        "momentum": 0.0,
-        "clutch_factor": 0.0,
-        "physical_factors": 0.0,
-        "return_of_serve": 0.0
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": true,
-        "serve_dominance": true,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": false
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-28"
-      }
-    },
-    "SERVE_STRENGTH_V2_OCT2025": {
-      "name": "Serve Strength V2 October 2025 - Clutch Re-enabled",
-      "description": "Post-Ruud loss analysis fix. Re-enables clutch_factor at 6% (Altmaier had +9.5% clutch edge that was ignored). Reduces serve slightly, eliminates UTR (was misleading in Ruud case), reduces ranking bias. Adds surface-specific serve amplification for indoor hardcourt. Implements aggressive sample size confidence caps (<15 sets = max 68%, <10 sets = max 60%, <5 sets = max 50%).",
-      "created": "2025-10-30",
-      "weights": {
-        "set_performance": 0.23,
-        "serve_dominance": 0.19,
-        "recent_form": 0.16,
-        "surface_performance": 0.12,
-        "mental_toughness": 0.1,
-        "clutch_factor": 0.06,
-        "sets_in_losses": 0.06,
-        "pressure_performance": 0.06,
-        "atp_ranking": 0.02,
-        "utr_rating": 0.0,
-        "momentum": 0.0,
-        "physical_factors": 0.0,
-        "return_of_serve": 0.0
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": true,
-        "serve_dominance": true,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": false,
-        "surface_specific_serve_boost": true,
-        "aggressive_sample_size_caps": true,
-        "data_quality_crowd_gating": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-30"
-      }
-    },
-    "SERVE_STRENGTH_V3_OCT2025": {
-      "name": "Serve Strength V3 October 2025 - Mental/Pressure Boost",
-      "description": "Post-Blinkova loss analysis fix. Increases mental_toughness from 10% to 14% and pressure_performance from 6% to 10% (combined 24% vs 16%). Adds close_match_mental_amplification feature that amplifies mental/pressure factors by 1.5x when set probability gap < 5%. Addresses Blinkova loss where mental toughness (+4%) and pressure performance (+3.7%) proved decisive in 7-6, 7-5 tiebreak sets.",
-      "created": "2025-10-30",
-      "weights": {
-        "set_performance": 0.22,
-        "serve_dominance": 0.18,
-        "recent_form": 0.15,
-        "surface_performance": 0.11,
-        "mental_toughness": 0.14,
-        "clutch_factor": 0.06,
-        "sets_in_losses": 0.06,
-        "pressure_performance": 0.1,
-        "atp_ranking": 0.02,
-        "utr_rating": 0.0,
-        "momentum": 0.0,
-        "physical_factors": 0.0,
-        "return_of_serve": 0.0
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": true,
-        "serve_dominance": true,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": false,
-        "surface_specific_serve_boost": true,
-        "aggressive_sample_size_caps": true,
-        "data_quality_crowd_gating": true,
-        "close_match_mental_amplification": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-10-30"
-      }
-    },
-    "HYBRID_V1_NOV2025": {
-      "name": "Hybrid V1 November 2025 - Best of Both Worlds",
-      "description": "Combines SERVE_V3 performance metrics (serve 16%, mental 12%, pressure 8%) with HOT_STREAK skill metrics (UTR 10%, ranking 10%, resilience 8%). Balances class (skill) with current form (performance). Designed to capture both long-term ability and short-term execution.",
-      "created": "2025-11-03",
-      "weights": {
-        "set_performance": 0.2,
-        "serve_dominance": 0.16,
-        "mental_toughness": 0.12,
-        "utr_rating": 0.1,
-        "atp_ranking": 0.1,
-        "recent_form": 0.12,
-        "pressure_performance": 0.08,
-        "sets_in_losses": 0.08,
-        "surface_performance": 0.04,
-        "momentum": 0.0,
-        "clutch_factor": 0.0,
-        "physical_factors": 0.0,
-        "return_of_serve": 0.0
-      },
-      "features": {
-        "tiebreak_performance": false,
-        "pressure_performance": true,
-        "serve_dominance": true,
-        "enhanced_year_blending": true,
-        "crowd_sentiment": true,
-        "dual_weighted_form": true,
-        "hannah_fry_amplification": true,
-        "return_of_serve_focus": false,
-        "surface_specific_serve_boost": true,
-        "aggressive_sample_size_caps": true,
-        "data_quality_crowd_gating": true,
-        "close_match_mental_amplification": true
-      },
-      "performance": {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "profit_loss": 0.0,
-        "roi": 0.0,
-        "last_updated": "2025-11-03"
-      }
-    }
-  },
-  "active_config": "SERVE_STRENGTH_V3_OCT2025",
-  "metadata": {
-    "version": "1.0",
-    "last_updated": "2025-11-03",
-    "total_configs": 9
-  }
+	"configs": {
+		"CLUTCH_V1_20251025": {
+			"name": "Clutch-Focused Configuration V1",
+			"description": "Increased clutch/surface weights, reduced form weight after Fonseca/Munar analysis. Better for tight matches.",
+			"created": "2025-10-25",
+			"weights": {
+				"set_performance": 0.3,
+				"recent_form": 0.18,
+				"clutch_factor": 0.13,
+				"surface_performance": 0.13,
+				"momentum": 0.11,
+				"ranking_advantage": 0.1,
+				"physical_factors": 0.05
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": false,
+				"serve_dominance": false,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-25"
+			}
+		},
+		"CLUTCH_V2_20251026": {
+			"name": "Class Over Form V2",
+			"description": "Fixed hot-streak bias. Respects ranking class over recent form. Addresses L.Sun vs A.Li and Fonseca vs Munar losses. Ranking +50%, Form -20%.",
+			"created": "2025-10-26",
+			"weights": {
+				"set_performance": 0.3,
+				"recent_form": 0.12,
+				"clutch_factor": 0.15,
+				"surface_performance": 0.15,
+				"momentum": 0.08,
+				"ranking_advantage": 0.15,
+				"physical_factors": 0.05
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": false,
+				"serve_dominance": false,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-26"
+			}
+		},
+		"HOT_STREAK_74PCT": {
+			"name": "Hot Streak 74% Baseline - Confirmed Weights",
+			"description": "Optimized weights with UTR emphasis, reduced form bias, mental toughness focus. Confirmed backup configuration.",
+			"created": "2025-10-27",
+			"weights": {
+				"utr_rating": 0.18,
+				"atp_ranking": 0.15,
+				"sets_in_losses": 0.15,
+				"set_performance": 0.22,
+				"recent_form": 0.12,
+				"surface_performance": 0.1,
+				"mental_toughness": 0.08,
+				"momentum": 0.0,
+				"clutch_factor": 0.0,
+				"physical_factors": 0.0,
+				"return_of_serve": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": false,
+				"serve_dominance": false,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": false
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-27"
+			}
+		},
+		"FORM_OPTIMIZED_OCT2025": {
+			"name": "Form-Optimized October 2025",
+			"description": "Enhanced configuration with recent form emphasis (23%) and new granular features: serve dominance, pressure performance, tiebreak performance. Reduced ranking weight for better edge detection.",
+			"created": "2025-10-26",
+			"weights": {
+				"set_performance": 0.3,
+				"recent_form": 0.23,
+				"utr_rating": 0.1,
+				"ranking_advantage": 0.08,
+				"return_of_serve": 0.08,
+				"surface_performance": 0.08,
+				"momentum": 0.05,
+				"serve_dominance": 0.03,
+				"pressure_performance": 0.03,
+				"tiebreak_performance": 0.02
+			},
+			"features": {
+				"tiebreak_performance": true,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-26"
+			}
+		},
+		"RESEARCH_OPTIMIZED_OCT2025": {
+			"name": "Research-Optimized October 2025",
+			"description": "Evidence-based weights from 2024 tennis prediction research. Emphasizes serve strength (18%), form over ranking (7% total), and psychological factors. Reduces ranking bias, increases surface context and mental game impact.",
+			"created": "2025-10-28",
+			"weights": {
+				"set_performance": 0.25,
+				"return_of_serve": 0.18,
+				"recent_form": 0.15,
+				"surface_performance": 0.12,
+				"mental_toughness": 0.1,
+				"sets_in_losses": 0.08,
+				"atp_ranking": 0.05,
+				"utr_rating": 0.02,
+				"momentum": 0.05,
+				"clutch_factor": 0.0,
+				"physical_factors": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": false,
+				"serve_dominance": false,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-28"
+			}
+		},
+		"SERVE_STRENGTH_OCT2025": {
+			"name": "Serve Strength October 2025",
+			"description": "Fixes RESEARCH_OPTIMIZED by using actual serve statistics (aces, 1st serve %) instead of useless return-of-serve (~25% for everyone). Enables serve_dominance feature which calculates real differentiation: 40% aces + 60% first serve win rate. Also adds break point performance for pressure situations. Research shows serve is 80%+ accurate predictor.",
+			"created": "2025-10-28",
+			"weights": {
+				"set_performance": 0.24,
+				"serve_dominance": 0.2,
+				"recent_form": 0.16,
+				"surface_performance": 0.12,
+				"mental_toughness": 0.1,
+				"sets_in_losses": 0.06,
+				"pressure_performance": 0.06,
+				"atp_ranking": 0.04,
+				"utr_rating": 0.02,
+				"momentum": 0.0,
+				"clutch_factor": 0.0,
+				"physical_factors": 0.0,
+				"return_of_serve": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": false
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-28"
+			}
+		},
+		"SERVE_STRENGTH_V2_OCT2025": {
+			"name": "Serve Strength V2 October 2025 - Clutch Re-enabled",
+			"description": "Post-Ruud loss analysis fix. Re-enables clutch_factor at 6% (Altmaier had +9.5% clutch edge that was ignored). Reduces serve slightly, eliminates UTR (was misleading in Ruud case), reduces ranking bias. Adds surface-specific serve amplification for indoor hardcourt. Implements aggressive sample size confidence caps (<15 sets = max 68%, <10 sets = max 60%, <5 sets = max 50%).",
+			"created": "2025-10-30",
+			"weights": {
+				"set_performance": 0.23,
+				"serve_dominance": 0.19,
+				"recent_form": 0.16,
+				"surface_performance": 0.12,
+				"mental_toughness": 0.1,
+				"clutch_factor": 0.06,
+				"sets_in_losses": 0.06,
+				"pressure_performance": 0.06,
+				"atp_ranking": 0.02,
+				"utr_rating": 0.0,
+				"momentum": 0.0,
+				"physical_factors": 0.0,
+				"return_of_serve": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": false,
+				"surface_specific_serve_boost": true,
+				"aggressive_sample_size_caps": true,
+				"data_quality_crowd_gating": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-30"
+			}
+		},
+		"SERVE_STRENGTH_V3_OCT2025": {
+			"name": "Serve Strength V3 October 2025 - Mental/Pressure Boost",
+			"description": "Post-Blinkova loss analysis fix. Increases mental_toughness from 10% to 14% and pressure_performance from 6% to 10% (combined 24% vs 16%). Adds close_match_mental_amplification feature that amplifies mental/pressure factors by 1.5x when set probability gap < 5%. Addresses Blinkova loss where mental toughness (+4%) and pressure performance (+3.7%) proved decisive in 7-6, 7-5 tiebreak sets.",
+			"created": "2025-10-30",
+			"weights": {
+				"set_performance": 0.22,
+				"serve_dominance": 0.18,
+				"recent_form": 0.15,
+				"surface_performance": 0.11,
+				"mental_toughness": 0.14,
+				"clutch_factor": 0.06,
+				"sets_in_losses": 0.06,
+				"pressure_performance": 0.1,
+				"atp_ranking": 0.02,
+				"utr_rating": 0.0,
+				"momentum": 0.0,
+				"physical_factors": 0.0,
+				"return_of_serve": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": false,
+				"surface_specific_serve_boost": true,
+				"aggressive_sample_size_caps": true,
+				"data_quality_crowd_gating": true,
+				"close_match_mental_amplification": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-10-30"
+			}
+		},
+		"SERVE_STRENGTH_V3_5_NOV2025": {
+			"name": "Serve Strength V3.5 November 2025 - Balanced Execution + Return",
+			"description": "Evolution of V3 with return strength reactivated (12%). Merges mental_toughness + clutch_factor into psychological_resilience (14%). Balances serve (15%) + return (12%) for complete game control. Bumps Elo/ranking integration (3%) for dynamic class adjustment. Total: 100%. Philosophy: Balanced execution (serve+return=27%) while preserving proven mental edge and pressure performance.",
+			"created": "2025-11-10",
+			"weights": {
+				"set_performance": 0.17,
+				"serve_dominance": 0.15,
+				"return_of_serve": 0.12,
+				"recent_form": 0.15,
+				"psychological_resilience": 0.14,
+				"surface_performance": 0.1,
+				"pressure_performance": 0.09,
+				"sets_in_losses": 0.05,
+				"ranking_elo_blend": 0.03,
+				"utr_rating": 0.0,
+				"momentum": 0.0,
+				"physical_factors": 0.0,
+				"mental_toughness": 0.0,
+				"clutch_factor": 0.0,
+				"atp_ranking": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": true,
+				"surface_specific_serve_boost": true,
+				"aggressive_sample_size_caps": true,
+				"data_quality_crowd_gating": true,
+				"close_match_mental_amplification": true,
+				"elo_integration": true,
+				"psychological_resilience_merge": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-11-10"
+			},
+			"notes": {
+				"changes_from_v3": [
+					"Reactivated return_of_serve at 13% (was 0%)",
+					"Merged mental_toughness (14%) + clutch_factor (6%) → psychological_resilience (14%)",
+					"Reduced serve_dominance from 18% to 16% to balance with return",
+					"Increased recent_form from 15% to 16% for momentum emphasis",
+					"Reduced pressure_performance from 10% to 9% (still amplifies 1.5x in close matches)",
+					"Reduced sets_in_losses from 6% to 5%",
+					"Added ranking_elo_blend at 3% (replaces static atp_ranking 2%)",
+					"Set performance reduced from 22% to 20% to accommodate return metrics"
+				],
+				"key_philosophy": "Balanced execution (serve+return) + proven psychological edge",
+				"testing_status": "untested - requires backtest validation vs V3"
+			}
+		},
+		"HYBRID_V1_NOV2025": {
+			"name": "Hybrid V1 November 2025 - Best of Both Worlds",
+			"description": "Combines SERVE_V3 performance metrics (serve 16%, mental 12%, pressure 8%) with HOT_STREAK skill metrics (UTR 10%, ranking 10%, resilience 8%). Balances class (skill) with current form (performance). Designed to capture both long-term ability and short-term execution.",
+			"created": "2025-11-03",
+			"weights": {
+				"set_performance": 0.2,
+				"serve_dominance": 0.16,
+				"mental_toughness": 0.12,
+				"utr_rating": 0.1,
+				"atp_ranking": 0.1,
+				"recent_form": 0.12,
+				"pressure_performance": 0.08,
+				"sets_in_losses": 0.08,
+				"surface_performance": 0.04,
+				"momentum": 0.0,
+				"clutch_factor": 0.0,
+				"physical_factors": 0.0,
+				"return_of_serve": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": false,
+				"surface_specific_serve_boost": true,
+				"aggressive_sample_size_caps": true,
+				"data_quality_crowd_gating": true,
+				"close_match_mental_amplification": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-11-03"
+			}
+		},
+		"SERVE_RETURN_DOMINANCE_V1_NOV2025": {
+			"name": "Serve+Return Dominance V1 November 2025 - Execution Over Psychology",
+			"description": "Research-backed execution-first model. Serve (28%) + Return (22%) = 50% total weight on fundamental game control. Rankings/Elo (18%) captures skill gaps. Minimal psychological factors (6% total). Philosophy: In tennis, serve+return execution predicts outcomes better than mental toughness. Based on ATP research showing serve dominance is the #1 predictor of set outcomes, followed by return strength and class differential.",
+			"created": "2025-11-10",
+			"weights": {
+				"serve_dominance": 0.28,
+				"return_of_serve": 0.22,
+				"ranking_elo_blend": 0.18,
+				"surface_performance": 0.12,
+				"recent_form": 0.08,
+				"set_performance": 0.06,
+				"psychological_resilience": 0.04,
+				"pressure_performance": 0.02,
+				"sets_in_losses": 0.0,
+				"utr_rating": 0.0,
+				"momentum": 0.0,
+				"physical_factors": 0.0,
+				"mental_toughness": 0.0,
+				"clutch_factor": 0.0,
+				"atp_ranking": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": true,
+				"surface_specific_serve_boost": true,
+				"aggressive_sample_size_caps": true,
+				"data_quality_crowd_gating": true,
+				"close_match_mental_amplification": false,
+				"elo_integration": true,
+				"psychological_resilience_merge": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-11-10"
+			},
+			"notes": {
+				"philosophy": "Execution > Psychology: Serve+return control (50%) is the foundation of tennis",
+				"research_basis": [
+					"ATP research: Serve dominance is #1 predictor of set outcomes",
+					"Return strength (break points) is #2 predictor",
+					"Class/skill gap (rankings+Elo) is #3 predictor",
+					"Mental factors matter less when execution gaps are large"
+				],
+				"best_for": [
+					"Matches with clear serve/return differentials",
+					"Players with strong serve statistics",
+					"Predicting dominant performances",
+					"Fast surfaces (grass, indoor hard) where serve matters most"
+				],
+				"less_effective_for": [
+					"Close mental battles",
+					"Clay court grinding matches",
+					"Players with similar serve/return stats but different mentality"
+				],
+				"testing_status": "untested - requires backtest validation"
+			}
+		},
+		"BREAK_POINT_RESEARCH_V1_NOV2025": {
+			"name": "Break Point Research V1 - November 2025",
+			"description": "Research-backed model based on break point momentum study (34.10% importance). Overlap model recognizing that break points are an outcome of multiple factors: return strength (creating opportunities), pressure performance (converting/defending), and serve dominance (holding under pressure). 50% total weight on execution factors that directly influence break point scenarios.",
+			"created": "2025-11-10",
+			"weights": {
+				"serve_dominance": 0.22,
+				"return_of_serve": 0.18,
+				"ranking_elo_blend": 0.12,
+				"recent_form": 0.12,
+				"pressure_performance": 0.1,
+				"psychological_resilience": 0.08,
+				"sets_in_losses": 0.07,
+				"surface_performance": 0.06,
+				"set_performance": 0.05,
+				"utr_rating": 0.0,
+				"momentum": 0.0,
+				"physical_factors": 0.0,
+				"mental_toughness": 0.0,
+				"clutch_factor": 0.0,
+				"atp_ranking": 0.0
+			},
+			"features": {
+				"tiebreak_performance": false,
+				"pressure_performance": true,
+				"serve_dominance": true,
+				"enhanced_year_blending": true,
+				"crowd_sentiment": true,
+				"dual_weighted_form": true,
+				"hannah_fry_amplification": true,
+				"return_of_serve_focus": true,
+				"surface_specific_serve_boost": true,
+				"aggressive_sample_size_caps": true,
+				"data_quality_crowd_gating": true,
+				"close_match_mental_amplification": true,
+				"elo_integration": true,
+				"psychological_resilience_merge": true
+			},
+			"performance": {
+				"total_bets": 0,
+				"wins": 0,
+				"losses": 0,
+				"win_rate": 0.0,
+				"profit_loss": 0.0,
+				"roi": 0.0,
+				"last_updated": "2025-11-10"
+			},
+			"notes": {
+				"research_basis": [
+					"Break point momentum study: 34.10% importance in match outcomes",
+					"ATP research: Serve dominance is #1 predictor",
+					"Return strength analysis: 12-20% importance range, 1-2% difference separates elite from mediocre",
+					"2025 ML research: Psychological momentum shows highest importance across models",
+					"Ensemble models using multiple stats achieve 93% accuracy vs ranking-only models"
+				],
+				"break_point_model": {
+					"philosophy": "Break points are an OUTCOME of multiple factors, not a single weight",
+					"overlap_factors": [
+						"Return of Serve (18%) - creating break opportunities",
+						"Pressure Performance (10%) - converting and defending break points",
+						"Serve Dominance (22%) - holding serve under pressure",
+						"Psychological Resilience (8%) - mental strength in key moments"
+					],
+					"combined_influence": "58% total weight on factors that directly influence break point scenarios"
+				},
+				"key_improvements": {
+					"vs_original_proposal": [
+						"Return weight increased 5X: 3% → 18% (research-backed 12-20% range)",
+						"Added pressure performance: 0% → 10% (break point conversion/defense)",
+						"Reduced ranking reliance: 25% → 12% (multi-stat models outperform ranking-only)",
+						"Increased sets_in_losses to 7% (key for +1.5 betting)",
+						"Total execution focus: 50% (serve+return+pressure)"
+					]
+				},
+				"best_for": [
+					"+1.5 sets betting (high sets_in_losses weight)",
+					"Players with strong break point conversion rates",
+					"Matches with clear execution differentials",
+					"Identifying competitive players vs quitters"
+				],
+				"philosophy": "Execution-first approach grounded in peer-reviewed tennis research, optimized for set-level predictions rather than match outcomes",
+				"testing_status": "untested - requires backtest validation against V1, V3, V3.5"
+			}
+		}
+	},
+	"active_config": "SERVE_STRENGTH_V3_OCT2025",
+	"metadata": {
+		"version": "1.2",
+		"last_updated": "2025-11-10",
+		"total_configs": 12
+	}
 }
