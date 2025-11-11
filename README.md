@@ -4,7 +4,7 @@
 
 A statistical tennis prediction system specializing in +1.5 set betting markets. Built on advanced statistical analysis, multi-year performance data (2023-2025), universal surface data quality filtering, and comprehensive risk management.
 
-![Tennis Prediction Dashboard](assets/prediction-dashboard2.png)
+![Tennis Prediction Dashboard](assets/prediction-dashboard.png)
 *Interactive prediction dashboard with real-time analysis and filtering*
 
 ---
