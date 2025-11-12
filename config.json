@@ -1,8 +1,8 @@
 {
   "surface_aggregation": {
-    "aggregate_indoor_outdoor_hardcourt": true,
+    "aggregate_indoor_outdoor_hardcourt": false,
     "_comment": "Set to true to combine indoor + outdoor hardcourt into 'Hard' (larger sample sizes). Set to false to keep them separate (more specific but smaller samples).",
-    "_recommendation": "true (default) - Better for data quality filtering",
+    "_recommendation": "false (updated) - Keep surfaces separate for more accurate predictions",
     "_examples": {
       "enabled": "Player with 10 indoor + 20 outdoor = 30 total 'Hard' matches",
       "disabled": "Player with 10 indoor and 20 outdoor kept separate"
