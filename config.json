@@ -1,0 +1,40 @@
+{
+  "surface_aggregation": {
+    "aggregate_indoor_outdoor_hardcourt": true,
+    "_comment": "Set to true to combine indoor + outdoor hardcourt into 'Hard' (larger sample sizes). Set to false to keep them separate (more specific but smaller samples).",
+    "_recommendation": "true (default) - Better for data quality filtering",
+    "_examples": {
+      "enabled": "Player with 10 indoor + 20 outdoor = 30 total 'Hard' matches",
+      "disabled": "Player with 10 indoor and 20 outdoor kept separate"
+    }
+  },
+  "multi_year_stats": {
+    "enable_three_year_stats": true,
+    "min_years_required": 2,
+    "_comment": "Set enable_three_year_stats to true for 2023-2024-2025 data, false for 2024-2025 only. min_years_required determines how many years of data are needed (1, 2, or 3).",
+    "_recommendation": "enable_three_year_stats: true, min_years_required: 2"
+  },
+  "surface_data_quality_filter": {
+    "min_confidence": 0.50,
+    "min_matches_per_player": 10,
+    "max_current_year_weight": 0.80,
+    "_comment": "Universal surface data quality filter settings. Matches are skipped if either player doesn't meet these thresholds.",
+    "_description": {
+      "min_confidence": "Minimum confidence level (0.50 = 50%) based on sample size",
+      "min_matches_per_player": "Minimum total matches on the surface across all years",
+      "max_current_year_weight": "Maximum weight from current year alone (0.80 = 80%)"
+    }
+  },
+  "_instructions": {
+    "how_to_apply": "Changes to this file require restarting the application or calling prediction_config functions",
+    "python_api": {
+      "surface_aggregation": "from prediction_config import enable_hardcourt_aggregation, disable_hardcourt_aggregation",
+      "multi_year": "from prediction_config import enable_three_year_stats, disable_three_year_stats",
+      "check_status": "from prediction_config import print_surface_aggregation_status, print_multi_year_stats_status"
+    },
+    "demo_scripts": {
+      "surface_aggregation": "python3 demo_surface_aggregation.py"
+    }
+  }
+}
+

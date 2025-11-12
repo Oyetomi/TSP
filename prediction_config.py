@@ -5,6 +5,8 @@ Configurable weights and feature toggles for the prediction system
 """
 
 from typing import Dict, Any
+import json
+import os
 
 class PredictionConfig:
     """Configuration management for tennis set predictions"""
@@ -174,6 +176,25 @@ class PredictionConfig:
             'comprehensive_weight': 0.25    # Weight for comprehensive form
         }
         
+        # Surface Aggregation Configuration
+        self.SURFACE_AGGREGATION = {
+            'aggregate_indoor_outdoor_hardcourt': True,  # Combine indoor + outdoor hardcourt into "Hard"
+            'description': 'Controls whether to aggregate indoor and outdoor hardcourt surfaces',
+            'rationale': {
+                'when_enabled': 'Larger sample sizes - better for data quality filtering and predictions',
+                'when_disabled': 'Surface-specific data - more accurate if sufficient data exists',
+                'recommendation': 'Enable for better sample sizes (indoor/outdoor often too small separately)'
+            },
+            'notes': {
+                'enabled_behavior': 'Indoor + Outdoor → "Hard" (aggregated for both stats and form analysis)',
+                'disabled_behavior': 'Indoor and Outdoor kept separate (may cause data quality rejections)',
+                'impact': 'Affects: Player statistics, form analysis, and surface data quality filtering'
+            }
+        }
+        
+        # Load settings from config.json if available
+        self.load_from_json()
+        
         # CRITICAL: Risk Management Settings (Based on Failed Prediction Analysis)
         self.RISK_MANAGEMENT = {
             # Ranking Gap Protection
@@ -290,6 +311,46 @@ class PredictionConfig:
             'resilience_factor': 0.15,      # "mindset towards failure" - psychological component
             'small_edge_threshold': 0.01    # 1% better at returning = meaningful advantage
         }
+    
+    def load_from_json(self, config_path: str = 'config.json'):
+        """
+        Load configuration settings from config.json file
+        
+        Args:
+            config_path: Path to the JSON config file (default: 'config.json')
+        """
+        try:
+            if os.path.exists(config_path):
+                with open(config_path, 'r') as f:
+                    json_config = json.load(f)
+                
+                # Load surface aggregation settings
+                if 'surface_aggregation' in json_config:
+                    agg_config = json_config['surface_aggregation']
+                    if 'aggregate_indoor_outdoor_hardcourt' in agg_config:
+                        self.SURFACE_AGGREGATION['aggregate_indoor_outdoor_hardcourt'] = agg_config['aggregate_indoor_outdoor_hardcourt']
+                        print(f"✅ Loaded surface aggregation from config.json: {'ENABLED' if agg_config['aggregate_indoor_outdoor_hardcourt'] else 'DISABLED'}")
+                
+                # Load multi-year stats settings
+                if 'multi_year_stats' in json_config:
+                    multi_config = json_config['multi_year_stats']
+                    if 'enable_three_year_stats' in multi_config:
+                        self.MULTI_YEAR_STATS['enable_three_year_stats'] = multi_config['enable_three_year_stats']
+                    if 'min_years_required' in multi_config:
+                        self.MULTI_YEAR_STATS['min_years_required'] = multi_config['min_years_required']
+                    print(f"✅ Loaded multi-year stats from config.json: 3-year mode {'ENABLED' if multi_config.get('enable_three_year_stats') else 'DISABLED'}")
+                
+                # Load surface data quality filter settings (if present)
+                # Note: These are currently hardcoded in betting_analysis_script.py
+                # This section is for future use when we make those configurable too
+                if 'surface_data_quality_filter' in json_config:
+                    filter_config = json_config['surface_data_quality_filter']
+                    # Store for potential future use
+                    self.SURFACE_DATA_QUALITY = filter_config
+                    
+        except Exception as e:
+            print(f"⚠️  Could not load config.json: {e}")
+            print(f"⚠️  Using default configuration values")
     
     def get_active_weights(self) -> Dict[str, float]:
         """Get the active weight configuration based on feature toggles"""
@@ -939,6 +1000,41 @@ def set_min_years_required(min_years: int):
 def print_multi_year_stats_status():
     """Print current multi-year statistics configuration"""
     config.print_multi_year_stats_status()
+
+def enable_hardcourt_aggregation():
+    """Enable aggregation of indoor + outdoor hardcourt surfaces"""
+    config.SURFACE_AGGREGATION['aggregate_indoor_outdoor_hardcourt'] = True
+    print("✅ HARDCOURT AGGREGATION ENABLED")
+    print("   Indoor + Outdoor hardcourt → 'Hard' (aggregated)")
+    print("   Benefit: Larger sample sizes for better predictions")
+
+def disable_hardcourt_aggregation():
+    """Disable hardcourt aggregation - keep indoor/outdoor separate"""
+    config.SURFACE_AGGREGATION['aggregate_indoor_outdoor_hardcourt'] = False
+    print("❌ HARDCOURT AGGREGATION DISABLED")
+    print("   Indoor and Outdoor hardcourt kept separate")
+    print("   Note: May cause more data quality rejections due to small samples")
+
+def print_surface_aggregation_status():
+    """Print current surface aggregation configuration"""
+    print("\n🎾 SURFACE AGGREGATION STATUS:")
+    print("=" * 60)
+    
+    enabled = config.SURFACE_AGGREGATION['aggregate_indoor_outdoor_hardcourt']
+    
+    if enabled:
+        print("   Status: ✅ ENABLED")
+        print("   Behavior: Indoor + Outdoor hardcourt → 'Hard' (combined)")
+        print("   Benefit: Larger sample sizes for predictions")
+        print("   Example: Player with 10 indoor + 20 outdoor = 30 total matches")
+    else:
+        print("   Status: ❌ DISABLED")
+        print("   Behavior: Indoor and Outdoor hardcourt kept separate")
+        print("   Impact: Smaller sample sizes per surface")
+        print("   ⚠️  Warning: May cause more data quality rejections")
+    
+    print("   Description: " + config.SURFACE_AGGREGATION['description'])
+    print("=" * 60)
 
 
 if __name__ == "__main__":

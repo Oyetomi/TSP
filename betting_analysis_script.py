@@ -39,9 +39,7 @@ from utils.injury_checker import InjuryChecker
 from forebet_provider import ForebetProvider
 from logging_config import setup_logging, log_section_header, log_match_info, log_forebet_status
 
-# Medium-confidence indoor hardcourt filter
-from medium_confidence_indoor_filter import MediumConfidenceIndoorFilter
-from indoor_filter_logger import IndoorFilterLogger
+# Medium-confidence indoor hardcourt filter - REMOVED (cleanup)
 
 @dataclass
 class BookmakerMatch:
@@ -494,11 +492,7 @@ class TennisBettingAnalyzer:
         # Initialize skip logger (clears log file on startup)
         self.skip_logger = SkipLogger()
         
-        # Initialize medium-confidence indoor hardcourt filter
-        self.medium_confidence_indoor_filter = MediumConfidenceIndoorFilter()
-        
-        # Initialize indoor filter logger (clears log file on startup)
-        self.indoor_filter_logger = IndoorFilterLogger()
+        # Medium-confidence indoor hardcourt filter - REMOVED (cleanup)
         
         # Store config reference for feature checking (MUST be before stats_handler init)
         self.config = prediction_config
@@ -552,6 +546,23 @@ class TennisBettingAnalyzer:
         
         # Track skipped matches for surface data quality
         self.skipped_matches_surface = []
+        
+        # Initialize surface filter log file
+        from datetime import datetime
+        log_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.surface_filter_log_path = f"surface_filter_log_{log_timestamp}.txt"
+        self.surface_filter_log = open(self.surface_filter_log_path, 'w', encoding='utf-8')
+        self.surface_filter_log.write("=" * 80 + "\n")
+        self.surface_filter_log.write("SURFACE DATA QUALITY FILTER LOG\n")
+        self.surface_filter_log.write("=" * 80 + "\n")
+        self.surface_filter_log.write(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        self.surface_filter_log.write(f"Min Confidence: {self.MIN_SURFACE_CONFIDENCE:.0%}\n")
+        self.surface_filter_log.write(f"Min Matches: {self.MIN_SURFACE_MATCHES}\n")
+        self.surface_filter_log.write(f"Max Current Year Weight: {self.MAX_CURRENT_YEAR_WEIGHT:.0%}\n")
+        self.surface_filter_log.write("=" * 80 + "\n\n")
+        self.surface_filter_log.flush()
+        
+        print(f"📋 Surface filter log: {self.surface_filter_log_path}")
         
         # Initialize V3.5 logger (if V3.5 config is active)
         self.v3_5_logger = None
@@ -692,74 +703,89 @@ class TennisBettingAnalyzer:
         p1_surface_data = self._get_surface_data_details(player1_id, surface)
         p2_surface_data = self._get_surface_data_details(player2_id, surface)
         
+        # Helper function to log rejection
+        def log_rejection(reason: str, quality_score: float):
+            from datetime import datetime
+            self.surface_filter_log.write("=" * 80 + "\n")
+            self.surface_filter_log.write(f"MATCH SKIPPED - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            self.surface_filter_log.write("=" * 80 + "\n")
+            self.surface_filter_log.write(f"Match: {player1_name} vs {player2_name}\n")
+            self.surface_filter_log.write(f"Surface: {surface}\n")
+            self.surface_filter_log.write(f"Reason: {reason}\n")
+            self.surface_filter_log.write(f"Quality Score: {quality_score:.2%}\n\n")
+            
+            # Player 1 details
+            self.surface_filter_log.write(f"🔵 {player1_name}:\n")
+            self.surface_filter_log.write(f"   Total Matches: {p1_surface_data.get('total_matches', 0)}\n")
+            self.surface_filter_log.write(f"   Confidence: {p1_surface_data.get('confidence', 0.0):.1%}\n")
+            self.surface_filter_log.write(f"   Current Year Weight: {p1_surface_data.get('current_year_weight', 0.0):.1%}\n")
+            self.surface_filter_log.write(f"   No Data Flag: {p1_surface_data.get('no_data', False)}\n")
+            
+            # Player 2 details
+            self.surface_filter_log.write(f"\n🔴 {player2_name}:\n")
+            self.surface_filter_log.write(f"   Total Matches: {p2_surface_data.get('total_matches', 0)}\n")
+            self.surface_filter_log.write(f"   Confidence: {p2_surface_data.get('confidence', 0.0):.1%}\n")
+            self.surface_filter_log.write(f"   Current Year Weight: {p2_surface_data.get('current_year_weight', 0.0):.1%}\n")
+            self.surface_filter_log.write(f"   No Data Flag: {p2_surface_data.get('no_data', False)}\n\n")
+            
+            self.surface_filter_log.flush()
+        
         # Check 1: Confidence threshold
         p1_confidence = p1_surface_data.get('confidence', 0.0)
         p2_confidence = p2_surface_data.get('confidence', 0.0)
         
         if p1_confidence < self.MIN_SURFACE_CONFIDENCE:
-            return (
-                True, 
-                f"{player1_name} surface confidence too low: {p1_confidence:.1%} < {self.MIN_SURFACE_CONFIDENCE:.0%}",
-                p1_confidence
-            )
+            reason = f"{player1_name} surface confidence too low: {p1_confidence:.1%} < {self.MIN_SURFACE_CONFIDENCE:.0%}"
+            log_rejection(reason, p1_confidence)
+            return (True, reason, p1_confidence)
         
         if p2_confidence < self.MIN_SURFACE_CONFIDENCE:
-            return (
-                True, 
-                f"{player2_name} surface confidence too low: {p2_confidence:.1%} < {self.MIN_SURFACE_CONFIDENCE:.0%}",
-                p2_confidence
-            )
+            reason = f"{player2_name} surface confidence too low: {p2_confidence:.1%} < {self.MIN_SURFACE_CONFIDENCE:.0%}"
+            log_rejection(reason, p2_confidence)
+            return (True, reason, p2_confidence)
         
         # Check 2: Sample size threshold
         p1_matches = p1_surface_data.get('total_matches', 0)
         p2_matches = p2_surface_data.get('total_matches', 0)
         
         if p1_matches < self.MIN_SURFACE_MATCHES:
-            return (
-                True,
-                f"{player1_name} insufficient matches on {surface}: {p1_matches} < {self.MIN_SURFACE_MATCHES}",
-                p1_matches / self.MIN_SURFACE_MATCHES
-            )
+            reason = f"{player1_name} insufficient matches on {surface}: {p1_matches} < {self.MIN_SURFACE_MATCHES}"
+            quality_score = p1_matches / self.MIN_SURFACE_MATCHES
+            log_rejection(reason, quality_score)
+            return (True, reason, quality_score)
         
         if p2_matches < self.MIN_SURFACE_MATCHES:
-            return (
-                True,
-                f"{player2_name} insufficient matches on {surface}: {p2_matches} < {self.MIN_SURFACE_MATCHES}",
-                p2_matches / self.MIN_SURFACE_MATCHES
-            )
+            reason = f"{player2_name} insufficient matches on {surface}: {p2_matches} < {self.MIN_SURFACE_MATCHES}"
+            quality_score = p2_matches / self.MIN_SURFACE_MATCHES
+            log_rejection(reason, quality_score)
+            return (True, reason, quality_score)
         
         # Check 3: No surface data flag
         if p1_surface_data.get('no_data', False):
-            return (
-                True,
-                f"{player1_name} has no surface-specific data for {surface}",
-                0.0
-            )
+            reason = f"{player1_name} has no surface-specific data for {surface}"
+            log_rejection(reason, 0.0)
+            return (True, reason, 0.0)
         
         if p2_surface_data.get('no_data', False):
-            return (
-                True,
-                f"{player2_name} has no surface-specific data for {surface}",
-                0.0
-            )
+            reason = f"{player2_name} has no surface-specific data for {surface}"
+            log_rejection(reason, 0.0)
+            return (True, reason, 0.0)
         
         # Check 4: Current year bias (only 2025 data with no historical baseline)
         p1_current_year_weight = p1_surface_data.get('current_year_weight', 0.0)
         p2_current_year_weight = p2_surface_data.get('current_year_weight', 0.0)
         
         if p1_current_year_weight > self.MAX_CURRENT_YEAR_WEIGHT:
-            return (
-                True,
-                f"{player1_name} has {p1_current_year_weight:.0%} data from current year only - no historical baseline",
-                1.0 - p1_current_year_weight
-            )
+            reason = f"{player1_name} has {p1_current_year_weight:.0%} data from current year only - no historical baseline"
+            quality_score = 1.0 - p1_current_year_weight
+            log_rejection(reason, quality_score)
+            return (True, reason, quality_score)
         
         if p2_current_year_weight > self.MAX_CURRENT_YEAR_WEIGHT:
-            return (
-                True,
-                f"{player2_name} has {p2_current_year_weight:.0%} data from current year only - no historical baseline",
-                1.0 - p2_current_year_weight
-            )
+            reason = f"{player2_name} has {p2_current_year_weight:.0%} data from current year only - no historical baseline"
+            quality_score = 1.0 - p2_current_year_weight
+            log_rejection(reason, quality_score)
+            return (True, reason, quality_score)
         
         # All checks passed
         avg_confidence = (p1_confidence + p2_confidence) / 2
@@ -819,11 +845,10 @@ class TennisBettingAnalyzer:
         confidence = self._calculate_confidence_from_sample_size(total_raw_matches)
         
         # Check for no data flag
-        no_data = (
-            total_raw_matches == 0 or 
-            'no_surface_data' in str(surface_data).lower() or
-            enhanced_stats.get('has_404_error', False)
-        )
+        # CRITICAL FIX: Only check total_raw_matches, not the blended surface_data
+        # The blended data might show "no_surface_data" if player has only 1 year,
+        # but we're now calculating RAW totals which might be much higher!
+        no_data = (total_raw_matches == 0)
         
         # Calculate current year weight
         current_year_weight = (
@@ -879,6 +904,33 @@ class TennisBettingAnalyzer:
             return 'Carpet'
         else:
             return surface
+    
+    def close_surface_filter_log(self):
+        """Close surface filter log file with summary"""
+        if hasattr(self, 'surface_filter_log') and self.surface_filter_log:
+            from datetime import datetime
+            
+            # Write summary
+            self.surface_filter_log.write("=" * 80 + "\n")
+            self.surface_filter_log.write("SUMMARY\n")
+            self.surface_filter_log.write("=" * 80 + "\n")
+            self.surface_filter_log.write(f"Completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            self.surface_filter_log.write(f"Total matches skipped: {len(self.skipped_matches_surface)}\n\n")
+            
+            # Breakdown by reason
+            if self.skipped_matches_surface:
+                reasons = {}
+                for skip in self.skipped_matches_surface:
+                    reason_type = skip['reason'].split(':')[0]  # Get first part of reason
+                    reasons[reason_type] = reasons.get(reason_type, 0) + 1
+                
+                self.surface_filter_log.write("Breakdown by reason:\n")
+                for reason_type, count in sorted(reasons.items(), key=lambda x: x[1], reverse=True):
+                    self.surface_filter_log.write(f"  - {reason_type}: {count}\n")
+            
+            self.surface_filter_log.write("=" * 80 + "\n")
+            self.surface_filter_log.close()
+            print(f"📋 Surface filter log saved: {self.surface_filter_log_path}")
     
     def _convert_gender(self, gender_code: Optional[str]) -> str:
         """Convert gender code from API (M/F) to readable format (Male/Female)"""
@@ -8266,6 +8318,9 @@ def main():
     
     # Run analysis
     results = analyzer.analyze_scheduled_matches(target_date)
+    
+    # Close surface filter log with summary
+    analyzer.close_surface_filter_log()
     
     if results:
         # Write to CSV

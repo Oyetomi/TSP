@@ -188,6 +188,49 @@ class PlayerAnalysisService:
             print(f"❌ Error analyzing H2H data: {e}")
             return self._create_empty_h2h_analysis()
     
+    def _normalize_surface_name(self, surface: str) -> str:
+        """
+        Normalize surface names for consistent matching.
+        
+        CONFIGURABLE: Behavior depends on config.SURFACE_AGGREGATION['aggregate_indoor_outdoor_hardcourt']:
+        - If True: Map indoor + outdoor hardcourt to "Hard" for aggregation (larger sample sizes)
+        - If False: Keep indoor/outdoor separate for surface-specific data (smaller samples)
+        
+        This matches the logic in EnhancedStatisticsHandler.
+        """
+        if not surface:
+            return None
+            
+        surface_lower = surface.lower()
+        
+        # Clay variants
+        if any(clay_type in surface_lower for clay_type in ['clay', 'red clay', 'blue clay']):
+            return 'Clay'
+        
+        # Grass
+        elif 'grass' in surface_lower:
+            return 'Grass'
+        
+        # Hardcourt variants - check config for aggregation behavior
+        elif any(hard_type in surface_lower for hard_type in ['hardcourt', 'hard', 'indoor', 'outdoor']):
+            # Check if aggregation is enabled in config
+            try:
+                from prediction_config import config
+                aggregate = config.SURFACE_AGGREGATION.get('aggregate_indoor_outdoor_hardcourt', True)
+                
+                if aggregate:
+                    # Aggregate: Indoor + Outdoor → "Hard" (larger sample sizes)
+                    return 'Hard'
+                else:
+                    # Keep separate: Return original surface (smaller samples but more specific)
+                    return surface
+            except Exception:
+                # Fallback to aggregation if config unavailable
+                return 'Hard'
+        
+        # Return original if no match
+        return surface
+    
     def _calculate_weighted_h2h_stats(self, matches: List[Dict[str, Any]], player1_id: int, player2_id: int) -> Dict[str, Any]:
         """Calculate recency-weighted H2H statistics based on actual API response structure"""
         total_weight = 0
@@ -891,10 +934,14 @@ class PlayerAnalysisService:
                 for surf, count in sorted(surface_counts.items(), key=lambda x: x[1], reverse=True):
                     print(f"      - {surf}: {count} matches")
                 
-                # Apply filter
-                singles_matches = [m for m in singles_matches if m.get('groundType', '').lower() == surface.lower()]
+                # Apply filter with surface normalization (aggregate hardcourt indoor + outdoor)
+                normalized_requested = self._normalize_surface_name(surface)
+                singles_matches = [
+                    m for m in singles_matches 
+                    if self._normalize_surface_name(m.get('groundType', '')) == normalized_requested
+                ]
                 filtered_count = len(singles_matches)
-                print(f"   ✅ After filtering to '{surface}': {filtered_count} matches")
+                print(f"   ✅ After filtering to '{surface}' (normalized to '{normalized_requested}'): {filtered_count} matches")
                 print(f"   🎯 Using {min(filtered_count, num_matches)} matches for form analysis")
                 
                 if not singles_matches:

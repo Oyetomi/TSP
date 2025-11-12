@@ -435,12 +435,14 @@ class EnhancedStatisticsHandler:
         """
         Normalize surface names for consistent matching
         
-        CRITICAL FIX: Preserve indoor/outdoor hardcourt distinction
+        CONFIGURABLE: Behavior depends on config.SURFACE_AGGREGATION['aggregate_indoor_outdoor_hardcourt']:
+        - If True: Map indoor + outdoor hardcourt to "Hard" for aggregation (larger sample sizes)
+        - If False: Keep indoor/outdoor separate for surface-specific data (smaller samples)
         
         MatchDataProvider API uses specific surface names like:
         - "Red clay", "Clay" → "Clay" 
-        - "Hardcourt outdoor" → "Hardcourt outdoor"
-        - "Hardcourt indoor" → "Hardcourt indoor" 
+        - "Hardcourt outdoor" → "Hard" (if aggregation enabled)
+        - "Hardcourt indoor" → "Hard" (if aggregation enabled)
         - "Hard" → "Hard" (generic fallback)
         - "Grass" → "Grass"
         """
@@ -453,17 +455,26 @@ class EnhancedStatisticsHandler:
         if any(clay_type in surface_lower for clay_type in ['clay', 'red clay', 'blue clay']):
             return 'Clay'
         
-        # Hardcourt variants - PRESERVE INDOOR/OUTDOOR DISTINCTION!
-        elif 'hardcourt indoor' in surface_lower or 'indoor' in surface_lower:
-            return 'Hardcourt indoor'
-        elif 'hardcourt outdoor' in surface_lower or ('hardcourt' in surface_lower and 'outdoor' in surface_lower):
-            return 'Hardcourt outdoor'
-        elif 'hardcourt' in surface_lower or 'hard' in surface_lower:
-            return 'Hard'  # Generic hardcourt fallback
-        
         # Grass
         elif 'grass' in surface_lower:
             return 'Grass'
+        
+        # Hardcourt variants - check config for aggregation behavior
+        elif any(hard_type in surface_lower for hard_type in ['hardcourt', 'hard', 'indoor', 'outdoor']):
+            # Check if aggregation is enabled in config
+            try:
+                from prediction_config import config
+                aggregate = config.SURFACE_AGGREGATION.get('aggregate_indoor_outdoor_hardcourt', True)
+                
+                if aggregate:
+                    # Aggregate: Indoor + Outdoor → "Hard" (larger sample sizes)
+                    return 'Hard'
+                else:
+                    # Keep separate: Return original surface (smaller samples but more specific)
+                    return surface
+            except Exception:
+                # Fallback to aggregation if config unavailable
+                return 'Hard'
         
         # Return original if no match
         return surface
@@ -472,29 +483,36 @@ class EnhancedStatisticsHandler:
         """
         Find surface statistics with intelligent matching
         
-        CRITICAL FIX: This fixes the bug where "Red clay" != "Clay" exact matching
-        caused massive data loss (23 matches → 4 matches for players like Simona Waltert)
+        CRITICAL FIX: For "Hard" surface, AGGREGATE indoor + outdoor hardcourt!
+        SofaScore separates "Hardcourt indoor" and "Hardcourt outdoor", but we want ALL hardcourt.
         """
         if not requested_surface:
             return {}
         
         normalized_requested = self._normalize_surface_name(requested_surface)
         
-        # First try: Exact match (for backward compatibility)
-        for stat in stats_list:
-            if stat.get('groundType') == requested_surface:
-                return stat
-        
-        # Second try: Normalized matching (THE FIX!)
+        # Collect ALL matching surfaces (for aggregation)
+        # Don't do exact match first - we need to aggregate hardcourt indoor + outdoor!
+        matching_surfaces = []
         for stat in stats_list:
             api_surface = stat.get('groundType', '')
             normalized_api = self._normalize_surface_name(api_surface)
             
             if normalized_api == normalized_requested:
-                print(f"   🔧 SURFACE MAPPING FIX: '{requested_surface}' → '{api_surface}' (normalized)")
-                return stat
+                matching_surfaces.append(stat)
         
-        # Third try: Partial matching for edge cases
+        # If we found matches, aggregate them (especially for "Hard" = indoor + outdoor)
+        if matching_surfaces:
+            if len(matching_surfaces) == 1:
+                print(f"   🔧 SURFACE MAPPING: '{requested_surface}' → '{matching_surfaces[0].get('groundType')}' (normalized)")
+                return matching_surfaces[0]
+            else:
+                # Aggregate multiple matches (e.g., "Hardcourt indoor" + "Hardcourt outdoor" → "Hard")
+                surface_names = [s.get('groundType') for s in matching_surfaces]
+                print(f"   🔧 SURFACE AGGREGATION: '{requested_surface}' → {surface_names} (combined)")
+                return self._aggregate_surface_stats(matching_surfaces)
+        
+        # Fallback: Partial matching for edge cases
         requested_lower = requested_surface.lower()
         for stat in stats_list:
             api_surface = stat.get('groundType', '').lower()
